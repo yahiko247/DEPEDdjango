@@ -53,7 +53,7 @@ class CustomUser(AbstractUser):
     grade_level = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=50)
-    profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True)
+    profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
 
     USERNAME_FIELD="email"
@@ -68,6 +68,19 @@ class CustomUser(AbstractUser):
 
 
 class LessonPlan(models.Model):
+    # STATUS_CHOICES = [
+    #     ("PENDING", "Pending"),
+    #     ("APPROVED", "Approved"),
+    #     ("REJECTED", "Rejected")]
+
+
      plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
-     User = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False)
+     teacher_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=False, blank=False)
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
+     status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
+     feedback = models.TextField(blank=True, null=False)
+     reviewed_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=False, blank=False)
+     created_at = models.DateTimeField(auto_now_add=True)
+     reviewed_at = models.DateTimeField(blank=True, null=True)
+     quarter = models.IntegerField(blank=False, null=False)
+    #  certificate = models.FileField(upload)
