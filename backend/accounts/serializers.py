@@ -24,7 +24,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         
         password = attrs.get("password1", "")
         if len(password) < 8:
-            raise serializers.ValidationsError("Password must be at least 8 characters!")
+            raise serializers.ValidationError("Password must be at least 8 characters!")
         return attrs
     
 
@@ -39,8 +39,8 @@ class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
-    def validat(self, data):
+    def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
             return user
-        raise serializers.ValidationErro("Incorrect Credentials")
+        raise serializers.ValidationError("Incorrect Credentials")
