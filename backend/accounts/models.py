@@ -75,11 +75,11 @@ class LessonPlan(models.Model):
 
 
      plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
-     teacher_id = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=False, blank=False)
+     teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
      feedback = models.TextField(blank=True, null=False)
-     reviewed_by = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=False, blank=False)
+     reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="lesson_plan_review")
      created_at = models.DateTimeField(auto_now_add=True)
      reviewed_at = models.DateTimeField(blank=True, null=True)
      quarter = models.IntegerField(blank=False, null=False)
