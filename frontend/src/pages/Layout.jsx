@@ -1,5 +1,4 @@
 import * as React from 'react';
-import PropTypes from 'prop-types';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -21,8 +20,7 @@ const drawerWidth = 240;
 // Define nav items with their paths
 const navItems = [
   { name: 'Home', path: '/' },
-  { name: 'Login', path: '/login' },
-  { name: 'Register', path: '/register' }
+  { name: 'Login', path: '/auth' },
 ];
 
 function Layout(props) {
@@ -136,8 +134,5 @@ function Layout(props) {
   );
 }
 
-Layout.propTypes = {
-  window: PropTypes.func
-};
 
 export default Layout;

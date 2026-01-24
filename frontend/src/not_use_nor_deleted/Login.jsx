@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from "axios"
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
     const [formData, setFormData] = useState({
@@ -20,6 +21,7 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     const [successMessage, setSuccesMessage] = useState(null);
     const [error, setError] = useState(null)
+    const navigate = useNavigate(); // initialize navigate
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,7 +36,8 @@ export default function Login() {
             console.log("Success!", response.data)
             setSuccesMessage("Login Successfull!")
             localStorage.setItem("accessToken", response.data.tokens.access);
-            localStorage.setItem("refreshToken", response.data.tokens.refresh)
+            localStorage.setItem("refreshToken", response.data.tokens.refresh);
+            navigate("/dashboard"); 
         }
         catch(error){
             console.log("Error during Login!", error.response?.data);

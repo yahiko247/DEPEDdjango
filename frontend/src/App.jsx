@@ -1,9 +1,10 @@
 import './App.css'
 import { BrowserRouter, Routes, Route} from "react-router-dom"
 import Home from './pages/home'
-import Login from './pages/login'
-import Register from './pages/register'
-import Layout from './pages/Layout'
+import Dashboard from './pages/dashboard'
+import AuthForm from './auth/authform'
+import Loading from './components/spinloader'
+
 
 
 function App() {
@@ -12,13 +13,10 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Layout/>}>
-         <Route index element={<Home/>}/>
-          <Route path='login' element={<Login/>}/>
-          <Route path='register' element={<Register/>}/>
-        </Route>
-       
-
+         <Route path='/' element={<Loading/>}>
+          <Route index element={<Home/>}/>
+          <Route path='/auth' element={<AuthForm/>}/>
+         </Route>
       </Routes>
     </BrowserRouter>
   )
