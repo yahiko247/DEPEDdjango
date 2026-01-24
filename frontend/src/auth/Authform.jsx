@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import "../css/auth.css"
 
 export default function AuthForm() {
   const [formData, setFormData] = useState({
@@ -34,7 +35,7 @@ export default function AuthForm() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/login/",
+        "http://192.168.1.106:8000/api/login/",
         formData,
       );
       console.log("Success!", response.data);
@@ -88,7 +89,7 @@ export default function AuthForm() {
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/register/",
+        "http://192.168.1.106:8000/api/register/",
         formData2,
       );
       console.log("Success!", response.data);

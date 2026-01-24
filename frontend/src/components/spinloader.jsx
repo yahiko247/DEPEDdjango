@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import spinner from '../assets/spinloader.svg';
 import Layout from '../pages/Layout';
-import Home from '../pages/home';
 
 export default function Loading() {
   const [showSpinner, setShowSpinner] = useState(true);

@@ -7,6 +7,7 @@ import Loading from './components/spinloader'
 
 
 
+
 function App() {
  
 
@@ -17,6 +18,7 @@ function App() {
           <Route index element={<Home/>}/>
           <Route path='/auth' element={<AuthForm/>}/>
          </Route>
+         <Route path='/dashboard' element={<Dashboard/>}/>
       </Routes>
     </BrowserRouter>
   )
