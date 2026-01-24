@@ -1,0 +1,3 @@
+# Django SQLite database
+db.sqlite3
+backend/db.sqlite3

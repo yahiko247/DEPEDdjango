@@ -28,23 +28,33 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+]
+
 
 # Application definition
 
 INSTALLED_APPS = [
+
+    'djoser',
+    'accounts',
+    'rest_framework',
+    'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts',
-    'rest_framework',
-    'rest_framework_simplejwt.token_blacklist',
-    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,11 +134,34 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 AUTH_USER_MODEL = "accounts.CustomUser"
-REST_FRAMEWORK = {
- 'DEFAULT_AUTHENTICATION_CLASSES': (  
-    'rest_framework_simplejwt.authentication.JWTAuthentication',
- )
 
+REST_FRAMEWORK={
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+DJOSER = {
+    "LOGIN_FIELD" : "email",
+    "USER_CREATE_PASSWORD_RETYPE" : True,
+    "USER_CHANGED_EMAIL_CONFIRMATION" : True,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION" : True,
+    "SEND_CONFIRMATION_EMAIL" : True,
+    "SET_USERNAME_RETYPE" : True,
+    "SET_PASSWORD_RETYPE" : True,
+    "PASSWORD_RESET_CONFIRM_URL" : 'api/password/reset/confirm/{uid}/{token}',
+    "USERNAME_RESET_CONFIRM_URL" : 'email/reset/confirm/{uid}/{token}',
+    "ACTIVATION_URL" : 'activate/{uid}/{token}',
+    "SEND_ACTIVATION_EMAIL" : False,
+    'SERIALIZERS': {
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        'current_user':'backend.serializers.CustomUserSerializer',
+        'user_create': 'backend.serializers.UserCreateSerializer',
+        'user' : 'backend.serializers.UserCreateSerializer',
+    },
 }
 
 SIMPLE_JWT = {
@@ -178,4 +211,3 @@ SIMPLE_JWT = {
 }
 
 
-CORS_ALLOW_ALL_ORIGINS = True
