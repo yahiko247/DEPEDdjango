@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "../css/auth.css"
+import "../css/auth.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function AuthForm() {
   const [formData, setFormData] = useState({
@@ -38,20 +40,22 @@ export default function AuthForm() {
         "http://192.168.1.106:8000/api/login/",
         formData,
       );
+
       console.log("Success!", response.data);
       setSuccesMessage("Login Successfull!");
       localStorage.setItem("accessToken", response.data.tokens.access);
       localStorage.setItem("refreshToken", response.data.tokens.refresh);
-      navigate("/dashboard");
+      toast.success("Login successful ", {
+        onClose: () => navigate("/dashboard"),
+      });
     } catch (error) {
-      console.log("Error during Login!", error.response?.data);
-      if (error.response && error.response.data) {
-        Object.keys(error.response.data).forEach((field) => {
-          const errorMessages = error.response.data[field];
-          if (errorMessages && errorMessages.length > 0) {
-            setError(errorMessages[0]);
-          }
-        });
+      // Invalid credentials
+      if (error.response?.status === 401) {
+        toast.error(" Invalid email or password");
+      }
+      // Other errors
+      else {
+        toast.error("Something went wrong. Please try again.");
       }
     } finally {
       setIsLoading(false);
@@ -126,7 +130,6 @@ export default function AuthForm() {
             SignUp
           </button>
         </div>
-
         {isLogin ? (
           <>
             <div className="form">
@@ -197,7 +200,8 @@ export default function AuthForm() {
               </button>
             </div>
           </>
-        )}
+        )}{" "}
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </div>
   );
