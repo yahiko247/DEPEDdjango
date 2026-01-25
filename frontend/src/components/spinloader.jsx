@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import spinner from '../assets/spinloader.svg';
-import Layout from '../pages/Layout';
+import spinner from '../assets/loadingtransparen.svg';
+
+import AuthForm from '../auth/authform';
 
 export default function Loading() {
   const [showSpinner, setShowSpinner] = useState(true);
@@ -23,7 +24,7 @@ export default function Loading() {
       {showSpinner ? (
         <img src={spinner} alt="loading" />
       ) : (
-       <Layout/>
+       <AuthForm/>
       )}
     </div>
   );

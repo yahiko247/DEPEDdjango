@@ -49,13 +49,15 @@ export default function AuthForm() {
         onClose: () => navigate("/dashboard"),
       });
     } catch (error) {
-      // Invalid credentials
-      if (error.response?.status === 401) {
-        toast.error(" Invalid email or password");
-      }
-      // Other errors
-      else {
-        toast.error("Something went wrong. Please try again.");
+      toast.error(" Invalid email or password");
+      console.log("Error during Login!", error.response?.data);
+      if (error.response && error.response.data) {
+        Object.keys(error.response.data).forEach((field) => {
+          const errorMessages = error.response.data[field];
+          if (errorMessages && errorMessages.length > 0) {
+            setError(errorMessages[0]);
+          }
+        });
       }
     } finally {
       setIsLoading(false);
@@ -96,9 +98,13 @@ export default function AuthForm() {
         "http://192.168.1.106:8000/api/register/",
         formData2,
       );
+      toast.success("Successfully Registered ", {
+        onClose: () => navigate("/dashboard"),
+      });
       console.log("Success!", response.data);
       setSuccesMessage2("Registration Successfull!");
     } catch (error) {
+      toast.error(" Invalid email or password");
       console.log("Error during registration!", error.response?.data);
       if (error.response && error.response.data) {
         Object.keys(error.response.data).forEach((field) => {
