@@ -169,6 +169,7 @@ export default function AuthForm() {
           <>
             <div className="form">
               <h2>Sign Up Form</h2>
+              
               <input
                 type="text"
                 name="username"

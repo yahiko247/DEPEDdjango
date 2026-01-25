@@ -27,6 +27,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import background from "../assets/cover.jpg";
+import Gridbox from "../components/GridBoxs/Gridbox";
 
 const drawerWidth = 240;
 
@@ -57,6 +59,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
+  backgroundColor: "#123745",
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -88,7 +91,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-   
+
   const [isLoggedIn, setLoggedIn] = useState(false);
   const [username, setUsername] = useState("");
   const navigate = useNavigate();
@@ -141,7 +144,6 @@ export default function Dashboard() {
     checkLoggedInUser();
   }, []);
 
-
   const handleLogout = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -164,9 +166,8 @@ export default function Dashboard() {
         setUsername("");
         console.log("Log out successful!");
         toast.success("logging out", {
-          onClose: ()=> navigate("/")
+          onClose: () => navigate("/"),
         });
-        
       }
     } catch (error) {
       console.error("Failed to logout", error.response?.data || error.message);
@@ -280,21 +281,47 @@ export default function Dashboard() {
           ))}
         </List>
       </Drawer>
-      <Main open={open}>
+      <Main
+        open={open}
+        sx={{
+          minHeight: "100vh",
+          position: "relative",
+          backgroundImage: `url(${background})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center center",
+          backgroundAttachment: "fixed",
+          "&::before": {
+            content: '""',
+            position: "absolute",
+            inset: 0,
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 0,
+          },
+          "& > *": {
+            position: "relative",
+            zIndex: 1,
+          },
+        }}
+      >
         <DrawerHeader />
-        <Typography sx={{ marginBottom: 2 }}>
-            {isLoggedIn ? (
-              <>
-                <h2>Hi, {username}. Thanks for loggin in!</h2>
-              
-              </>
-            ) : (
-              <h2>Please Login</h2>
-            )}
-        </Typography>
-        <Typography sx={{ marginBottom: 2 }}></Typography>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <Box
+          sx={{
+            width: "100%",
+            textAlign: "center",
+            mt: 4,
+            mb: 2,
+            color: "white",
+          }}
+        >
+          {isLoggedIn ? (
+            <h2>Hello teacher {username}. Thanks for logging in!</h2>
+          ) : (
+            <h2>Please Login</h2>
+          )}
+        </Box>
+        <Gridbox/>
       </Main>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
 }
