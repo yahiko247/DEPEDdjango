@@ -21,7 +21,7 @@ export default function MultiActionAreaCard() {
            Submit Lesson Plan
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-           Submit You're Lesson Plan
+           Submit Your Lesson Plan
           </Typography>
         </CardContent>
       </CardActionArea>

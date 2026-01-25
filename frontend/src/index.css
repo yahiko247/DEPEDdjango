@@ -7,19 +7,20 @@ html, body, #root {
 body {
   font-family: Arial, sans-serif;
   margin: 0;
-  background: #123745;
+  
 }
 
 .container {
   display: flex;
+  background: #123745;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vh;
+  height: 100%;
+  width: 100%;
 }
 
 .form-container {
-  background-color: white;
+  background-color: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -43,7 +44,7 @@ body {
 }
 
 .form-toggle .active {
-  background-color: #064870;
+  background-color: #064770;
   color: white;
 }
 

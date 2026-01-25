@@ -59,7 +59,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
 })(({ theme }) => ({
-  backgroundColor: "#123745",
+  backgroundColor: "#2c8aad98",
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -290,17 +290,6 @@ export default function Dashboard() {
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundAttachment: "fixed",
-          "&::before": {
-            content: '""',
-            position: "absolute",
-            inset: 0,
-            backgroundColor: "rgba(0,0,0,0.4)",
-            zIndex: 0,
-          },
-          "& > *": {
-            position: "relative",
-            zIndex: 1,
-          },
         }}
       >
         <DrawerHeader />

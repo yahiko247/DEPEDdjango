@@ -20,7 +20,7 @@ export default function MultiActionAreaCard() {
            My lesson Plan
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            View You're Lesson Quarterly
+           View Your Lesson Quarterly
           </Typography>
         </CardContent>
       </CardActionArea>

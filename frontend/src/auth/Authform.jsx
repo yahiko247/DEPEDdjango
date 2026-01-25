@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../css/auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import background from "../assets/cover.jpg";
 
 export default function AuthForm() {
   const [formData, setFormData] = useState({
@@ -120,7 +121,17 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="container">
+    <div
+      className="container"
+      style={{
+        backgroundImage: `url(${background})`,
+        backgroundSize: "cover", // makes it cover the container
+        backgroundPosition: "center", // keeps it centered
+        backgroundRepeat: "no-repeat", // prevents tiling
+        minHeight: "100vh",
+        
+      }}
+    >
       <div className="form-container">
         <div className="form-toggle">
           <button
@@ -169,7 +180,7 @@ export default function AuthForm() {
           <>
             <div className="form">
               <h2>Sign Up Form</h2>
-              
+
               <input
                 type="text"
                 name="username"
