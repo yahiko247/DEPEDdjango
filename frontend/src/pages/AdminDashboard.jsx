@@ -17,6 +17,9 @@ import "react-toastify/dist/ReactToastify.css";
 import background from "../assets/cover.jpg";
 import digatImg from "../assets/DepED-Logo.png";
 
+
+//principal ni na dashboard
+
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));

@@ -18,6 +18,8 @@ import background from "../assets/cover.jpg";
 import digatImg from "../assets/DepED-Logo.png";
 import Gridbox from "../components/GridBoxs/Gridbox";
 
+//teacher ni na dashboard
+
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));
