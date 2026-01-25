@@ -4,6 +4,7 @@ import ProtectedRoute from "./auth/protectelement";
 import Dashboard from "./pages/dashboard";
 import AuthForm from "./auth/authform";
 import Loading from "./components/spinloader";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/admin" element={<AdminDashboard/>}></Route>
       </Routes>
     </BrowserRouter>
   );

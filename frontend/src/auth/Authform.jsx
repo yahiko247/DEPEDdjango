@@ -183,6 +183,20 @@ export default function AuthForm() {
 
               <input
                 type="text"
+                name="Subject"
+                value={formData2.username}
+                onChange={handleChange2}
+                placeholder="Subject"
+              />
+               <input
+                type="text"
+                name="GradeLevel"
+                value={formData2.username}
+                onChange={handleChange2}
+                placeholder="Grade Level"
+              />
+               <input
+                type="text"
                 name="username"
                 value={formData2.username}
                 onChange={handleChange2}
