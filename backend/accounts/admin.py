@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import *
 from .forms import CustomUserChangeForm, CustomUserCreationForm
 from django.contrib.auth.admin import UserAdmin
 
@@ -11,3 +11,6 @@ class CustomAdminUser(UserAdmin):
     form = CustomUserChangeForm
 
     model = CustomUser
+
+admin.site.register(LessonPlan)
+admin.site.register(ReviewedLessonPlan)
