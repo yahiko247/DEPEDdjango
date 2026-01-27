@@ -1,4 +1,4 @@
-from .models import LessonPlan
+from .models import *
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 from djoser.serializers import UserSerializer, UserCreateSerializer
@@ -23,17 +23,15 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         fields = ["first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "password", "profilepic"]
 
 
-
-
 class LessonPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonPlan
-        fields = ["plan_id", "teacher_id", "lesson_plan", "status", "feedback", "reviewed_by", "created_at", "reviewed_at"]
+        fields = ["plan_id", "teacher_id", "lesson_plan", "status", "feedback", "created_at"]
 
 class UpdateLessonPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonPlan
-        fields = ["teacher_id", "lesson_plan", "status", "feedback", "reviewed_by", "created_at", "reviewed_at"]
+        fields = ["teacher_id", "lesson_plan", "status", "feedback"]
 
 
 

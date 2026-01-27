@@ -53,7 +53,9 @@ class CustomUser(AbstractUser):
     grade_level = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=50)
+    role = models.CharField(max_length=20, default="Teacher", blank=False, null=False)
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
+
 
 
     USERNAME_FIELD="email"
@@ -79,8 +81,13 @@ class LessonPlan(models.Model):
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
      feedback = models.TextField(blank=True, null=False)
-     reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="lesson_plan_review")
+  
      created_at = models.DateTimeField(auto_now_add=True)
      reviewed_at = models.DateTimeField(blank=True, null=True)
      quarter = models.IntegerField(blank=False, null=False)
+    #  reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True, related_name="lesson_plan_review")
     #  certificate = models.FileField(upload)
+
+class ReviewedLessonPlan(models.Model):
+     reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lesson_plan_review")
+     reviewed_at = models.DateTimeField(auto_now_add=True)
