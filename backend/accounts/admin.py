@@ -13,3 +13,4 @@ class CustomAdminUser(UserAdmin):
     model = CustomUser
 
 admin.site.register(LessonPlan)
+admin.site.register(ReviewedLessonPlan)

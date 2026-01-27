@@ -31,10 +31,12 @@ class LessonPlanSerializer(serializers.ModelSerializer):
 class UpdateLessonPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonPlan
-        fields = ["teacher_id", "lesson_plan", "status", "feedback"]
+        fields = ["status", "feedback"]
 
-
-
+class ReviewedLessonPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReviewedLessonPlan
+        fields = ["reviewed_by","lesson_plan"]
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):

@@ -9,6 +9,7 @@ urlpatterns = [
     path("register/", views.UserRegistrationAPIView.as_view(), name="register-user"),
     path("login/", views.UserLoginAPIView.as_view(), name="login-user"),
     path("logout/", views.UserLogoutAPIView.as_view(), name="logout-user"),
-    path("token/refresh/", views.TokenRefreshView.as_view(), name="token-refresh"),
-    path("lessonplan/",views.LessonPlanView.as_view(),name="lesson-plan")
+    path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
+    path("lessonplan/",views.LessonPlanView.as_view(),name="lesson-plan"),
+    path("reviewlessonplan/<uuid:plan_id>/",views.LessonPlanView.as_view(),name="review-lesson-plan")
 ]
