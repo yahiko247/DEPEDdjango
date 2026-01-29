@@ -156,10 +156,10 @@ REST_FRAMEWORK={
 
 DJOSER = {
     "LOGIN_FIELD" : "email",
-    "USER_CREATE_PASSWORD_RETYPE" : True,
-    "USER_CHANGED_EMAIL_CONFIRMATION" : True,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION" : True,
-    "SEND_CONFIRMATION_EMAIL" : True,
+    "USER_CREATE_PASSWORD_RETYPE" : False,
+    "USER_CHANGED_EMAIL_CONFIRMATION" : False,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION" : False,
+    "SEND_CONFIRMATION_EMAIL" : False,
     "SET_USERNAME_RETYPE" : True,
     "SET_PASSWORD_RETYPE" : True,
     "PASSWORD_RESET_CONFIRM_URL" : 'api/password/reset/confirm/{uid}/{token}',
@@ -173,6 +173,8 @@ DJOSER = {
         'user' : 'accounts.serializers.UserCreateSerializer',
     },
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=2),

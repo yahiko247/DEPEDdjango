@@ -1,10 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 import uuid
 
 class AppUserManager(BaseUserManager):
-    def create_user(self, first_name, middle_initial, last_name, username, subject, grade_level, email, password=None):
+    def create_user(self, first_name, middle_initial, last_name, subject, grade_level, email, role, password=None):
             if not email:
                 raise ValueError('An Email is Required')
             if not password:
@@ -15,16 +15,16 @@ class AppUserManager(BaseUserManager):
                  first_name=first_name,
                  middle_initial = middle_initial,
                  last_name=last_name,
-                 username = username,
                  subject=subject, 
                  grade_level=grade_level, 
-                 email=email)
+                 email=email,
+                 role=role)
 
             user.set_password(password)
             user.save()
 
             return user
-    def create_superuser(self, first_name, middle_initial, last_name, username, subject, grade_level, email, password=None):
+    def create_superuser(self, first_name, middle_initial, last_name, subject, grade_level, email, role, password=None):
             if not email:
                 raise ValueError('An email is required.')
             if not password:
@@ -34,11 +34,11 @@ class AppUserManager(BaseUserManager):
                  first_name=first_name,
                  middle_initial = middle_initial,
                  last_name=last_name,
-                 username = username,
                  subject=subject, 
                  grade_level=grade_level, 
                  email=email,
-                 password=password)
+                 password=password,
+                 role=role)
 
             user.is_superuser = True
             user.is_staff = True
@@ -46,31 +46,26 @@ class AppUserManager(BaseUserManager):
 
             return user
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractBaseUser, PermissionsMixin):
     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False, null=False)
     first_name = models.CharField(max_length=50)
     middle_initial = models.CharField(max_length=1, null=True, blank=True)
     last_name = models.CharField(max_length=50)
-    username = models.CharField(max_length=150, unique=False, blank=True, null=True)
     subject = models.CharField(max_length=50)
     grade_level = models.CharField(max_length=10)
     email = models.EmailField(unique=True)
-    # password = models.CharField(max_length=50)
     role = models.CharField(max_length=20, default="Teacher", blank=False, null=False, editable=True)
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
-
-
     USERNAME_FIELD="email"
-    REQUIRED_FIELDS=['first_name','middle_initial','last_name','username','subject','grade_level']
+    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level']
 
-    # is_staff=models.BooleanField(default=False)
+    is_staff=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     objects = AppUserManager()
 
     def __str__(self) -> str:
-        return self.email
-
+        return f" {self.email}  UID: {self.UID}"
 
 class LessonPlan(models.Model):
     # STATUS_CHOICES = [
@@ -86,6 +81,7 @@ class LessonPlan(models.Model):
      reviewed_at = models.DateTimeField(blank=True, null=True)
      quarter = models.IntegerField(blank=False, null=False)
     #  certificate = models.FileField(upload)
+
      def __str__(self):
           return f" {self.teacher.first_name} {self.teacher.last_name}  review_id: {self.plan_id}"
      

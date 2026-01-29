@@ -27,18 +27,22 @@ class UserLogoutAPIView(APIView):
 
 
 class LessonPlanView(APIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
         data = request.data
         teacher_id = request.user.UID
-        serializer = LessonPlanSerializer(data=data)
+        role = request.user.role
+        serializer = PostLessonPlanSerializer(data=data)
 
         if not teacher_id:
             return Response({'error':'Teacher ID is required'}, status=status.HTTP_400_BAD_REQUEST)
         
+        if role != "Teacher" or role != "TEACHER":
+            return Response({'error':'Only a Teacher can create a lesson plan'}, status=status.HTTP_403_FORBIDDEN)
+        
         if serializer.is_valid():
-            serializer.save()
+            serializer.save(teacher = request.user)
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -102,34 +106,34 @@ class ReviewedByLessonPlan(APIView):
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     
-class UserRegistrationAPIView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = UserRegistrationSerializer
+# class UserRegistrationAPIView(GenericAPIView):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = UserRegistrationSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        token = RefreshToken.for_user(user)
-        data = serializer.data
-        data["tokens"] = {"refresh":str(token),
-                        "access": str(token.access_token)}
-        return Response(data, status= status.HTTP_201_CREATED)
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data=request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.save()
+#         token = RefreshToken.for_user(user)
+#         data = serializer.data
+#         data["tokens"] = {"refresh":str(token),
+#                         "access": str(token.access_token)}
+#         return Response(data, status= status.HTTP_201_CREATED)
     
-class UserLoginAPIView(GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = UserLoginSerializer
+# class UserLoginAPIView(GenericAPIView):
+#     permission_classes = (permissions.AllowAny,)
+#     serializer_class = UserLoginSerializer
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data= request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        serializer = CustomUserSerializer(user)
-        token = RefreshToken.for_user(user)
-        data = serializer.data
-        data["tokens"] = {"refresh":str(token),
-                        "access": str(token.access_token)}
-        return Response(data, status=status.HTTP_200_OK)
+#     def post(self, request, *args, **kwargs):
+#         serializer = self.get_serializer(data= request.data)
+#         serializer.is_valid(raise_exception=True)
+#         user = serializer.validated_data
+#         serializer = CustomUserSerializer(user)
+#         token = RefreshToken.for_user(user)
+#         data = serializer.data
+#         data["tokens"] = {"refresh":str(token),
+#                         "access": str(token.access_token)}
+#         return Response(data, status=status.HTTP_200_OK)
     
 
 class UserLogoutAPIView(GenericAPIView):
@@ -143,9 +147,9 @@ class UserLogoutAPIView(GenericAPIView):
         except Exception as e:
             return Response(status= status.HTTP_400_BAD_REQUEST)
 
-class UserInfoAPIView(RetrieveAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = CustomUserSerializer
+# class UserInfoAPIView(RetrieveAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = CustomUserSerializer
     
-    def get_object(self):
-        return self.request.user
+#     def get_object(self):
+#         return self.request.user
