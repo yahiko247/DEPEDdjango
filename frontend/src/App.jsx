@@ -20,7 +20,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin" element={<AdminDashboard/>}></Route>
+        <Route path="/admin" element={<AdminDashboard />}></Route>
       </Routes>
     </BrowserRouter>
   );
