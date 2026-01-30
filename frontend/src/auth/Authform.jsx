@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import background from "../assets/cover.jpg";
 
 export default function AuthForm() {
+  const BASE_URL = import.meta.env.VITE_BASE_URL;
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -38,14 +39,15 @@ export default function AuthForm() {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.106:8000/api/login/",
+        `${BASE_URL}/auth/jwt/create/`,
         formData,
       );
 
       console.log("Success!", response.data);
+      console.log("Access:", response.data.access);
       setSuccesMessage("Login Successfull!");
-      localStorage.setItem("accessToken", response.data.tokens.access);
-      localStorage.setItem("refreshToken", response.data.tokens.refresh);
+      localStorage.setItem("accessToken", response.data.access);
+      localStorage.setItem("refreshToken", response.data.refresh);
       toast.success("Login successful ", {
         onClose: () => navigate("/dashboard"),
       });
@@ -95,10 +97,7 @@ export default function AuthForm() {
     setIsLoading2(true);
 
     try {
-      const response = await axios.post(
-        "http://192.168.1.106:8000/api/register/",
-        formData2,
-      );
+      const response = await axios.post(`${BASE_URL}/djoser/users/`, formData2);
       toast.success("Successfully Registered ", {
         onClose: () => navigate("/dashboard"),
       });
@@ -129,7 +128,6 @@ export default function AuthForm() {
         backgroundPosition: "center", // keeps it centered
         backgroundRepeat: "no-repeat", // prevents tiling
         minHeight: "100vh",
-        
       }}
     >
       <div className="form-container">
@@ -188,14 +186,14 @@ export default function AuthForm() {
                 onChange={handleChange2}
                 placeholder="Subject"
               />
-               <input
+              <input
                 type="text"
                 name="GradeLevel"
                 value={formData2.username}
                 onChange={handleChange2}
                 placeholder="Grade Level"
               />
-               <input
+              <input
                 type="text"
                 name="username"
                 value={formData2.username}

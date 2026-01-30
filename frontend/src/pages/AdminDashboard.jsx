@@ -16,7 +16,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import background from "../assets/cover.jpg";
 import digatImg from "../assets/DepED-Logo.png";
-
+import Cards from "../components/cards/Cards.jsx";
 
 //principal ni na dashboard
 
@@ -25,7 +25,8 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }));
 
 export default function AdminDashboard() {
-
+  const image =
+    "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=1000";
   // Menu for account icon
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
@@ -74,7 +75,23 @@ export default function AdminDashboard() {
         </Toolbar>
       </AppBar>
 
-      <Box
+      <div
+        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
+        style={{ backgroundImage: `url(${background})` }}
+      >
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+      </div>
+
+      {/* <Box
         sx={{
           flexGrow: 1,
           minHeight: "100vh",
@@ -83,10 +100,23 @@ export default function AdminDashboard() {
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundAttachment: "fixed",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
         }}
       >
-      </Box>
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+      </Box> */}
       <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
