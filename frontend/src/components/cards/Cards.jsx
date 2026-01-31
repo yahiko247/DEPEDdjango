@@ -4,10 +4,15 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
 
-export default function MultiActionAreaCard({ title, subtitle, image }) {
+export default function MultiActionAreaCard({
+  title,
+  subtitle,
+  image,
+  onClick,
+}) {
   return (
     <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
+      <CardActionArea onClick={onClick}>
         <CardMedia
           component="img"
           height="140"

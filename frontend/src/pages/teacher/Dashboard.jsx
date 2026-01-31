@@ -14,19 +14,21 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import background from "../assets/cover.jpg";
-import digatImg from "../assets/DepED-Logo.png";
-import Cards from "../components/cards/Cards.jsx";
+import Gridbox from "../../components/GridBoxs/Gridbox";
 
-//principal ni na dashboard
+import { Background, DEPED } from "../../assets";
+
+//teacher ni na dashboard
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));
 
-export default function AdminDashboard() {
-  const image =
-    "https://images.unsplash.com/photo-1544377193-33dcf4d68fb5?q=80&w=1000";
+export default function Dashboard() {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
+  const navigate = useNavigate();
+
   // Menu for account icon
   const [anchorEl, setAnchorEl] = useState(null);
   const menuOpen = Boolean(anchorEl);
@@ -39,6 +41,55 @@ export default function AdminDashboard() {
     setAnchorEl(null);
   };
 
+  const handleLogout = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const refreshToken = localStorage.getItem("refreshToken");
+
+      if (accessToken && refreshToken) {
+        const config = { headers: { Authorization: `Bearer ${accessToken}` } };
+        await axios.post(
+          "http://192.168.1.106:8000/api/logout/",
+          { refresh: refreshToken },
+          config,
+        );
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        setLoggedIn(false);
+        setUsername("");
+        toast.success("Logging out", { onClose: () => navigate("/") });
+      }
+    } catch (error) {
+      console.error("Failed to logout", error.response?.data || error.message);
+      toast.error("Logout failed");
+    }
+  };
+
+  // Check login status
+  useEffect(() => {
+    const checkLoggedInUser = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          const config = { headers: { Authorization: `Bearer ${token}` } };
+          const response = await axios.get(
+            "http://192.168.1.106:8000/api/user/",
+            config,
+          );
+          setLoggedIn(true);
+          setUsername(response.data.username);
+        } else {
+          setLoggedIn(false);
+          setUsername("");
+        }
+      } catch (error) {
+        setLoggedIn(false);
+        setUsername("");
+      }
+    };
+    checkLoggedInUser();
+  }, []);
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -47,7 +98,7 @@ export default function AdminDashboard() {
         <Toolbar>
           <Box
             component="img"
-            src={digatImg}
+            src={DEPED}
             sx={{ height: 40, width: "auto", mr: 2 }}
           />
           <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
@@ -70,53 +121,40 @@ export default function AdminDashboard() {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem>Log out</MenuItem>
+            <MenuItem onClick={handleLogout}>Log out</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
 
-      <div
-        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
-        style={{ backgroundImage: `url(${background})` }}
-      >
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-      </div>
-
-      {/* <Box
+      <Box
         sx={{
           flexGrow: 1,
           minHeight: "100vh",
           position: "relative",
-          backgroundImage: `url(${background})`,
+          backgroundImage: `url(${Background})`,
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundAttachment: "fixed",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
         }}
       >
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-      </Box> */}
+        <Box
+          sx={{
+            width: "100%",
+            textAlign: "center",
+            mb: 2,
+            color: "white",
+            pt: { xs: "56px", sm: "64px" },
+          }}
+        >
+          {isLoggedIn ? (
+            <h2>Hello teacher {username}. Thanks for logging in!</h2>
+          ) : (
+            <h2>Please Login</h2>
+          )}
+        </Box>
+        <Gridbox />
+      </Box>
       <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );

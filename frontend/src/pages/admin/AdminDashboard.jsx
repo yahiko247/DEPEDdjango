@@ -14,20 +14,18 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import background from "../assets/cover.jpg";
-import digatImg from "../assets/DepED-Logo.png";
-import Gridbox from "../components/GridBoxs/Gridbox";
+import Cards from "../../components/cards/Cards.jsx";
+import { Background, DEPED, LessonPlan } from "../../assets/index.js";
 
-//teacher ni na dashboard
+//principal ni na dashboard
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));
 
-export default function Dashboard() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
-  const [username, setUsername] = useState("");
+export default function AdminDashboard() {
   const navigate = useNavigate();
+  const image = LessonPlan;
 
   // Menu for account icon
   const [anchorEl, setAnchorEl] = useState(null);
@@ -41,55 +39,6 @@ export default function Dashboard() {
     setAnchorEl(null);
   };
 
-  const handleLogout = async () => {
-    try {
-      const accessToken = localStorage.getItem("accessToken");
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      if (accessToken && refreshToken) {
-        const config = { headers: { Authorization: `Bearer ${accessToken}` } };
-        await axios.post(
-          "http://192.168.1.106:8000/api/logout/",
-          { refresh: refreshToken },
-          config,
-        );
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        setLoggedIn(false);
-        setUsername("");
-        toast.success("Logging out", { onClose: () => navigate("/") });
-      }
-    } catch (error) {
-      console.error("Failed to logout", error.response?.data || error.message);
-      toast.error("Logout failed");
-    }
-  };
-
-  // Check login status
-  useEffect(() => {
-    const checkLoggedInUser = async () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-          const config = { headers: { Authorization: `Bearer ${token}` } };
-          const response = await axios.get(
-            "http://192.168.1.106:8000/api/user/",
-            config,
-          );
-          setLoggedIn(true);
-          setUsername(response.data.username);
-        } else {
-          setLoggedIn(false);
-          setUsername("");
-        }
-      } catch (error) {
-        setLoggedIn(false);
-        setUsername("");
-      }
-    };
-    checkLoggedInUser();
-  }, []);
-
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -98,7 +47,7 @@ export default function Dashboard() {
         <Toolbar>
           <Box
             component="img"
-            src={digatImg}
+            src={DEPED}
             sx={{ height: 40, width: "auto", mr: 2 }}
           />
           <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
@@ -121,12 +70,31 @@ export default function Dashboard() {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            <MenuItem>Log out</MenuItem>
           </Menu>
         </Toolbar>
       </AppBar>
 
-      <Box
+      <div
+        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
+        style={{ backgroundImage: `url(${Background})` }}
+      >
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+          onClick={() => navigate("/view")}
+        ></Cards>
+
+        {/* Will have to find another use for this Card*/}
+        {/* <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards> */}
+      </div>
+
+      {/* <Box
         sx={{
           flexGrow: 1,
           minHeight: "100vh",
@@ -135,26 +103,23 @@ export default function Dashboard() {
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundAttachment: "fixed",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
           pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            textAlign: "center",
-            mb: 2,
-            color: "white",
-            pt: { xs: "56px", sm: "64px" },
-          }}
-        >
-          {isLoggedIn ? (
-            <h2>Hello teacher {username}. Thanks for logging in!</h2>
-          ) : (
-            <h2>Please Login</h2>
-          )}
-        </Box>
-        <Gridbox />
-      </Box>
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+        <Cards
+          title="View Lesson Plans"
+          subtitle="View Teacher Lesson Plan"
+          image={image}
+        ></Cards>
+      </Box> */}
       <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );
