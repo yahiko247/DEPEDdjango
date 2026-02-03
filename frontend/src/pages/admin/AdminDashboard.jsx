@@ -27,100 +27,48 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const image = LessonPlan;
 
-  // Menu for account icon
-  const [anchorEl, setAnchorEl] = useState(null);
-  const menuOpen = Boolean(anchorEl);
-
-  const handleMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
-
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    //change routing to a different file for cleaner option kinda like an env but for routes
 
-      <AppBar position="fixed">
-        <Toolbar>
-          <Box
-            component="img"
-            src={DEPED}
-            sx={{ height: 40, width: "auto", mr: 2 }}
-          />
-          <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
+    <Cards
+      title="View Lesson Plans"
+      subtitle="View Teacher Lesson Plan"
+      image={image}
+      onClick={() => navigate("../view")}
+    ></Cards>
 
-          <IconButton
-            color="inherit"
-            onClick={handleMenuOpen}
-            aria-controls={menuOpen ? "account-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={menuOpen ? "true" : undefined}
-          >
-            <AccountCircle />
-          </IconButton>
-          <Menu
-            id="account-menu"
-            anchorEl={anchorEl}
-            open={menuOpen}
-            onClose={handleMenuClose}
-            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-            transformOrigin={{ vertical: "top", horizontal: "right" }}
-          >
-            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem>Log out</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
+    //   {/* Will have to find another use for this Card*/}
+    //   {/* <Cards
+    //     title="View Lesson Plans"
+    //     subtitle="View Teacher Lesson Plan"
+    //     image={image}
+    //   ></Cards> */}
 
-      <div
-        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
-        style={{ backgroundImage: `url(${Background})` }}
-      >
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-          onClick={() => navigate("/view")}
-        ></Cards>
-
-        {/* Will have to find another use for this Card*/}
-        {/* <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards> */}
-      </div>
-
-      {/* <Box
-        sx={{
-          flexGrow: 1,
-          minHeight: "100vh",
-          position: "relative",
-          backgroundImage: `url(${background})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundAttachment: "fixed",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
-        }}
-      >
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-        <Cards
-          title="View Lesson Plans"
-          subtitle="View Teacher Lesson Plan"
-          image={image}
-        ></Cards>
-      </Box> */}
-      <ToastContainer position="top-right" autoClose={3000} />
-    </Box>
+    // {/* <Box
+    //   sx={{
+    //     flexGrow: 1,
+    //     minHeight: "100vh",
+    //     position: "relative",
+    //     backgroundImage: `url(${background})`,
+    //     backgroundSize: "cover",
+    //     backgroundPosition: "center center",
+    //     backgroundAttachment: "fixed",
+    //     display: "flex",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
+    //   }}
+    // >
+    //   <Cards
+    //     title="View Lesson Plans"
+    //     subtitle="View Teacher Lesson Plan"
+    //     image={image}
+    //   ></Cards>
+    //   <Cards
+    //     title="View Lesson Plans"
+    //     subtitle="View Teacher Lesson Plan"
+    //     image={image}
+    //   ></Cards>
+    // </Box> */}
   );
 }

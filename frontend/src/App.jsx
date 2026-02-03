@@ -6,6 +6,8 @@ import AuthForm from "./pages/auth/Authform";
 import Loading from "./components/Loading";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ViewAdminLessonPlan from "./pages/admin/ViewAdminLessonPlan";
+import Layout from "./layout";
+import QuarterlyView from "./pages/admin/QuarterlyView";
 
 function App() {
   return (
@@ -28,8 +30,12 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/admin" element={<AdminDashboard />}></Route>
-        <Route path="/view" element={<ViewAdminLessonPlan />}></Route>
+
+        <Route path="/layout" element={<Layout />}>
+          <Route path="admin" element={<AdminDashboard />}></Route>
+          <Route path="view" element={<ViewAdminLessonPlan />}></Route>
+          <Route path="quarter/:quarter" element={<QuarterlyView />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
