@@ -6,7 +6,7 @@ import {
   TfiWrite,
   MdPerson,
   MdOutlinePendingActions,
-  FaSquareCheck,
+  FaCheck,
 } from "../../icons/index.js";
 
 const ViewLessonPlan = () => {
@@ -16,37 +16,46 @@ const ViewLessonPlan = () => {
       title: "Total Teachers",
       amount: 0,
       icon: <MdPerson className="size-6" />,
+      colorClass: "border-blue-500/30 bg-blue-500/30",
     },
     {
       index: 2,
       title: "Total Submission",
       amount: 0,
       icon: <TfiWrite className="size-6" />,
+      colorClass: "border-green-500/30 bg-green-500/30",
     },
     {
       index: 3,
       title: "Pending Review",
       amount: 0,
       icon: <MdOutlinePendingActions className="size-6" />,
+      colorClass: "border-orange-500/30 bg-orange-500/30",
     },
     {
       index: 4,
       title: "Approved",
       amount: 0,
-      icon: <FaSquareCheck className="size-6" />,
+      icon: <FaCheck className="size-6" />,
+      colorClass: "border-green-500/30 bg-green-500/30",
     },
   ];
 
   return (
-    <div className="border border-black min-w-full flex flex-col flex-1 items-center justify-center overflow-y-scroll gap-6 p-2">
+    <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4">
       {/*Status Cards*/}
-      <div className="grid grid-cols-2 gap-6">
+      <div className="grid grid-cols-2 lg:flex lg:flex-row gap-6">
         {cardData.map((card) => (
-          <StatusCards title={card.title} icon={card.icon} data={card.amount} />
+          <StatusCards
+            title={card.title}
+            icon={card.icon}
+            data={card.amount}
+            colorClass={card.colorClass}
+          />
         ))}
       </div>
       {/*Quarter Tabs*/}
-      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full"></div>
+      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto "></div>
     </div>
 
     // <div className="border border-black flex flex-col flex-1  gap-y-5">
