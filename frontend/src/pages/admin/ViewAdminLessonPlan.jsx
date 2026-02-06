@@ -8,6 +8,8 @@ import {
   MdOutlinePendingActions,
   FaCheck,
 } from "../../icons/index.js";
+import Tabs from "../../components/tabs/Tabs.jsx";
+import TabContent from "../../components/tabs/TabContent.jsx";
 
 const ViewLessonPlan = () => {
   const cardData = [
@@ -41,10 +43,29 @@ const ViewLessonPlan = () => {
     },
   ];
 
+  const tabs = [
+    {
+      name: "quarter_tab_1",
+      label: "Quarter 1",
+    },
+    {
+      name: "quarter_tab_1",
+      label: "Quarter 2",
+    },
+    {
+      name: "quarter_tab_1",
+      label: "Quarter 3",
+    },
+    {
+      name: "quarter_tab_1",
+      label: "Quarter 4",
+    },
+  ];
+
   return (
-    <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4">
+    <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4 lg:w-3/4">
       {/*Status Cards*/}
-      <div className="grid grid-cols-2 lg:flex lg:flex-row gap-6">
+      <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
         {cardData.map((card) => (
           <StatusCards
             title={card.title}
@@ -55,7 +76,26 @@ const ViewLessonPlan = () => {
         ))}
       </div>
       {/*Quarter Tabs*/}
-      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto "></div>
+      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto px-4 py-2">
+        {/*All Lesson Plan Submissions Text*/}
+        <div className="h-20 flex flex-row justify-between items-center">
+          <div>
+            <h1>All Lesson Plan Submissions</h1>
+            <div>Review and manage teacher submissions organized by week</div>
+          </div>
+          <div>All Teachers</div>
+        </div>
+        <div className="flex flex-row justify-between tabs tabs-box tabs-sm w-full bg-gray-300 rounded-full">
+          {tabs.map((tab) => (
+            <Tabs name={tab.name} label={tab.label} />
+          ))}
+        </div>
+        {tabs.map((tab) => (
+          <React.Fragment key={tab.index}>
+            <TabContent content={tab.label} />
+          </React.Fragment>
+        ))}
+      </div>
     </div>
 
     // <div className="border border-black flex flex-col flex-1  gap-y-5">
