@@ -8,8 +8,8 @@ import {
   MdOutlinePendingActions,
   FaCheck,
 } from "../../icons/index.js";
-import Tabs from "../../components/tabs/Tabs.jsx";
 import TabContent from "../../components/tabs/TabContent.jsx";
+import { useState } from "react";
 
 const ViewLessonPlan = () => {
   const cardData = [
@@ -45,22 +45,32 @@ const ViewLessonPlan = () => {
 
   const tabs = [
     {
+      index: 1,
+      id: "Quarter 1",
       name: "quarter_tab_1",
       label: "Quarter 1",
     },
     {
+      index: 2,
+      id: "Quarter 2",
       name: "quarter_tab_1",
       label: "Quarter 2",
     },
     {
+      index: 3,
+      id: "Quarter 3",
       name: "quarter_tab_1",
       label: "Quarter 3",
     },
     {
+      index: 4,
+      id: "Quarter 4",
       name: "quarter_tab_1",
       label: "Quarter 4",
     },
   ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0].id);
 
   return (
     <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4 lg:w-3/4">
@@ -75,26 +85,37 @@ const ViewLessonPlan = () => {
           />
         ))}
       </div>
-      {/*Quarter Tabs*/}
-      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto px-4 py-2">
+      {/*Quarter View Lesson Plan Section*/}
+      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto px-4 py-4">
         {/*All Lesson Plan Submissions Text*/}
-        <div className="h-20 flex flex-row justify-between items-center">
-          <div>
-            <h1>All Lesson Plan Submissions</h1>
+        <div className="h-15 flex flex-row justify-between items-center">
+          <div className="text-[10px] sm:text-sm md:text-base">
+            <h1 className="font-bold">All Lesson Plan Submissions</h1>
             <div>Review and manage teacher submissions organized by week</div>
           </div>
-          <div>All Teachers</div>
+          <div className="text-xs sm:text-sm md:text-base">All Teachers</div>
         </div>
-        <div className="flex flex-row justify-between tabs tabs-box tabs-sm w-full bg-gray-300 rounded-full">
+        <div className="flex flex-row tabs tabs-box tabs-xs bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
           {tabs.map((tab) => (
-            <Tabs name={tab.name} label={tab.label} />
+            <button
+              key={tab.id}
+              className={`flex flex-1 font-bold rounded-full tab transition-all ${
+                activeTab === tab.id ? "tab-active bg-white" : ""
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
           ))}
         </div>
-        {tabs.map((tab) => (
-          <React.Fragment key={tab.index}>
-            <TabContent content={tab.label} />
-          </React.Fragment>
-        ))}
+        <div className="bg-white rounded-md p-4 border flex flex-1">
+          {tabs.map(
+            (tab) =>
+              activeTab === tab.id && (
+                <TabContent key={tab.id} content={tab.label} />
+              ),
+          )}
+        </div>
       </div>
     </div>
 
