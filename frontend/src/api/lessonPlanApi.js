@@ -4,6 +4,7 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
 });
+
 export const getLessonPlan = ({ params }) => {
   axios.get("/lessonplan");
 };
