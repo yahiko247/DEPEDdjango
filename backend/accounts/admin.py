@@ -8,3 +8,5 @@ from django.contrib.auth.admin import UserAdmin
 admin.site.register(CustomUser)
 admin.site.register(LessonPlan)
 admin.site.register(ReviewedLessonPlan)
+admin.site.register(SchoolYear)
+admin.site.register(Quarter)

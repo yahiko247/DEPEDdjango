@@ -45,6 +45,8 @@ class AppUserManager(BaseUserManager):
             user.save()
 
             return user
+    
+
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False, null=False)
@@ -66,24 +68,37 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self) -> str:
         return f" {self.email}  UID: {self.UID}"
+    
+class SchoolYear(models.Model):
+     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     name = models.CharField(max_length=9)
+
+class Quarter(models.Model):
+     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
+     quarter_number = models.PositiveSmallIntegerField()
+     deadline = models.DateTimeField()
 
 class LessonPlan(models.Model):
     # STATUS_CHOICES = [
     #     ("PENDING", "Pending"),
     #     ("APPROVED", "Approved"),
     #     ("REJECTED", "Rejected")]
+    #will have to add quarter from foreign field
      plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE, blank=False, null=False, related_name="quarters")
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
      feedback = models.TextField(blank=True, null=False)
      created_at = models.DateTimeField(auto_now_add=True)
      reviewed_at = models.DateTimeField(blank=True, null=True)
-     quarter = models.IntegerField(blank=False, null=False)
+     
     #  certificate = models.FileField(upload)
 
      def __str__(self):
           return f" {self.teacher.first_name} {self.teacher.last_name}  review_id: {self.plan_id}"
+     
      
 class ReviewedLessonPlan(models.Model):
      review_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)

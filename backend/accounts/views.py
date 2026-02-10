@@ -48,6 +48,7 @@ class LessonPlanView(APIView):
             return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
     def get(self, request):
+        lp = LessonPlan.objects.all
         user = request.user
         role = request.user.role
         if role == "PRINCIPAL" or role == "Principal":
@@ -58,6 +59,8 @@ class LessonPlanView(APIView):
 
         else:
             return Response({"error":"Unauthorized"},status=status.HTTP_403_FORBIDDEN)
+        
+        
         
         serializer = LessonPlanSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
