@@ -9,7 +9,8 @@ import {
   FaCheck,
 } from "../../icons/index.js";
 import TabContent from "../../components/tabs/TabContent.jsx";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { Profile } from "../../assets";
 
 const ViewLessonPlan = () => {
   const cardData = [
@@ -43,73 +44,28 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  const mockData = [
-    {
-      index: 1,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-    {
-      index: 2,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-    {
-      index: 3,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-    {
-      index: 4,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-    {
-      index: 5,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-    {
-      index: 6,
-      teacherName: "Juan Dela Cruz",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-    },
-  ];
-
   const tabsMock = [
     {
       index: 1,
-      id: "Quarter 1",
+      id: 1,
       tcaher: "quarter_tab_1",
       label: "Quarter 1",
     },
     {
       index: 2,
-      id: "Quarter 2",
+      id: 2,
       name: "quarter_tab_1",
       label: "Quarter 2",
     },
     {
       index: 3,
-      id: "Quarter 3",
+      id: 3,
       name: "quarter_tab_1",
       label: "Quarter 3",
     },
     {
       index: 4,
-      id: "Quarter 4",
+      id: 4,
       name: "quarter_tab_1",
       label: "Quarter 4",
     },
@@ -143,7 +99,122 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState(tabsMock[0].id);
+  const mockData = [
+    {
+      index: 1,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz1",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 1,
+    },
+    {
+      index: 2,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz1",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 1,
+    },
+    {
+      index: 3,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz1",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 1,
+    },
+    {
+      index: 4,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz2",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 2,
+    },
+    {
+      index: 5,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz2",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 2,
+    },
+    {
+      index: 6,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz2",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 2,
+    },
+    {
+      index: 7,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz3",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 3,
+    },
+    {
+      index: 8,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz3",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 3,
+    },
+    {
+      index: 9,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz3",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 3,
+    },
+    {
+      index: 10,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz4",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 4,
+    },
+    {
+      index: 11,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz4",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 4,
+    },
+    {
+      index: 12,
+      profile: Profile,
+      teacherName: "Juan Dela Cruz4",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+      quarter: 4,
+    },
+  ];
+
+  const [activeTab, setActiveTab] = useState(1);
+
+  const filteredData = useMemo(() => {
+    return mockData.filter((item) => item.quarter === activeTab);
+  }, [activeTab]);
 
   return (
     <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4 lg:w-3/4">
@@ -181,27 +252,9 @@ const ViewLessonPlan = () => {
             </button>
           ))}
         </div>
-        {/*Headers*/}
-        <div className="flex flex-row text-sm justify-between border border-red-500 px-2 xs:px-6">
-          {headers.map((header) => (
-            <div
-              className={`flex flex-row items-center text-xs ${
-                header.hideOnMobile ? "hidden md:table-cell" : ""
-              }`}
-              key={header.key}
-            >
-              {header.name}
-            </div>
-          ))}
-        </div>
 
         <div className="bg-white rounded-md border flex flex-1">
-          {tabsMock.map(
-            (tab) =>
-              activeTab === tab.id && (
-                <TabContent key={tab.id} content={tab.label} />
-              ),
-          )}
+          <TabContent data={filteredData} />
         </div>
       </div>
     </div>
