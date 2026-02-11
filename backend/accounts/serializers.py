@@ -32,13 +32,20 @@ class PostLessonPlanSerializer(serializers.ModelSerializer):
         model = LessonPlan
         fields = ["plan_id", "lesson_plan", "status", "feedback", "created_at", "quarter"]
 
-
 class LessonPlanSerializer(serializers.ModelSerializer):
+
     teacher = GetTeacherSerializer(read_only=True)
+    year_id = serializers.UUIDField(source="quarter.school_year.year_id", read_only=True)
+    school_year = serializers.CharField(source="quarter.school_year.name", read_only=True)
+    quarter_id = serializers.UUIDField(source="quarter.quarter_id", read_only=True)
+    quarter = serializers.IntegerField( source="quarter.quarter_number", read_only=True)
+    deadline = serializers.DateTimeField(source="quarter.deadline",read_only=True)
+    is_late = serializers.ReadOnlyField()
+
 
     class Meta:
         model = LessonPlan
-        fields = ["plan_id", "teacher", "lesson_plan", "status", "feedback", "created_at", "quarter"]
+        fields = ["plan_id", "teacher","year_id", "school_year", "quarter_id", "quarter","lesson_plan", "status", "feedback", "created_at", "deadline", "is_late"]
 
 class UpdateLessonPlanSerializer(serializers.ModelSerializer):
     class Meta:

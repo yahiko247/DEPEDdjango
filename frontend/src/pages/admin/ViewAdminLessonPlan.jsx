@@ -43,11 +43,56 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  const tabs = [
+  const mockData = [
+    {
+      index: 1,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+    {
+      index: 2,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+    {
+      index: 3,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+    {
+      index: 4,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+    {
+      index: 5,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+    {
+      index: 6,
+      teacherName: "Juan Dela Cruz",
+      reviewStatus: "Pending",
+      dateSubmitted: "January 31, 2026",
+      submissionStatus: "On Time",
+    },
+  ];
+
+  const tabsMock = [
     {
       index: 1,
       id: "Quarter 1",
-      name: "quarter_tab_1",
+      tcaher: "quarter_tab_1",
       label: "Quarter 1",
     },
     {
@@ -70,7 +115,35 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  const [activeTab, setActiveTab] = useState(tabs[0].id);
+  const headers = [
+    {
+      index: 1,
+      name: "Profile",
+      hideOnMobile: true,
+    },
+    {
+      index: 2,
+      name: "Name",
+      hideOnMobile: false,
+    },
+    {
+      index: 3,
+      name: "Review Status",
+      hideOnMobile: false,
+    },
+    {
+      index: 4,
+      name: "Date Submitted",
+      hideOnMobile: false,
+    },
+    {
+      index: 5,
+      name: "Submission Status",
+      hideOnMobile: false,
+    },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabsMock[0].id);
 
   return (
     <div className="border border-black w-full min-h-screen flex flex-col items-center gap-6 p-4 lg:w-3/4">
@@ -96,7 +169,7 @@ const ViewLessonPlan = () => {
           <div className="text-xs sm:text-sm md:text-base">All Teachers</div>
         </div>
         <div className="flex flex-row tabs tabs-box tabs-xs bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
-          {tabs.map((tab) => (
+          {tabsMock.map((tab) => (
             <button
               key={tab.id}
               className={`flex flex-1 font-bold rounded-full tab transition-all ${
@@ -108,8 +181,22 @@ const ViewLessonPlan = () => {
             </button>
           ))}
         </div>
-        <div className="bg-white rounded-md p-4 border flex flex-1">
-          {tabs.map(
+        {/*Headers*/}
+        <div className="flex flex-row text-sm justify-between border border-red-500 px-2 xs:px-6">
+          {headers.map((header) => (
+            <div
+              className={`flex flex-row items-center text-xs ${
+                header.hideOnMobile ? "hidden md:table-cell" : ""
+              }`}
+              key={header.key}
+            >
+              {header.name}
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-white rounded-md border flex flex-1">
+          {tabsMock.map(
             (tab) =>
               activeTab === tab.id && (
                 <TabContent key={tab.id} content={tab.label} />
@@ -118,92 +205,6 @@ const ViewLessonPlan = () => {
         </div>
       </div>
     </div>
-
-    // <div className="border border-black flex flex-col flex-1  gap-y-5">
-    //   <div className="grid grid-cols-2  gap-6">
-    //     {cardData.map((card) => (
-    //       <div className="border border-white rounded-md min-w-60">
-    //         <div className="flex flex-row">
-    //           image
-    //           <div className="flex flex-col">
-    //             <div>total teacher</div>
-    //             <div>asdas</div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     ))}
-    //   </div>
-    //   {/* <div className="flex flex-row gap-6">
-    //     {cardData.map((card) => (
-    //       <div className="border border-white rounded-md min-w-60">
-    //         <div className="flex flex-row">
-    //           image
-    //           <div className="flex flex-col">
-    //             <div>total teacher</div>
-    //             <div>asdas</div>
-    //           </div>
-    //         </div>
-    //       </div>
-    //     ))}
-    //   </div> */}
-    //   <div className="flex flex-col min-w-60 min-h-60 border border-red-500 bg-gray-100 p-5">
-    //     <div>All Lesson Plan Submissions</div>
-    //     <div>Review and manage teacher submissions organized by week</div>
-    //     <div className="flex justify-between tabs tabs-lift">
-    //       <input
-    //         type="radio"
-    //         name="my_tabs_3"
-    //         className="tab"
-    //         aria-label="Tab 1"
-    //       />
-    //       <div className="tab-content bg-base-100 border-base-300 p-6">
-    //         Tab content 1
-    //       </div>
-
-    //       <input
-    //         type="radio"
-    //         name="my_tabs_3"
-    //         className="tab"
-    //         aria-label="Tab 2"
-    //         defaultChecked
-    //       />
-    //       <div className="tab-content bg-base-100 border-base-300 p-6">
-    //         Tab content 2
-    //       </div>
-
-    //       <input
-    //         type="radio"
-    //         name="my_tabs_3"
-    //         className="tab"
-    //         aria-label="Tab 3"
-    //       />
-    //       <div className="tab-content bg-base-100 border-base-300 p-6">
-    //         Tab content 3
-    //       </div>
-
-    //       <input
-    //         type="radio"
-    //         name="my_tabs_3"
-    //         className="tab"
-    //         aria-label="Tab 4"
-    //       />
-    //       <div className="tab-content bg-base-100 border-base-300 p-6">
-    //         Tab content 4
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
-    // <div className="grid grid-cols-2 gap-4">
-    //   {cardData.map((card) => (
-    //     <Cards
-    //       title={card.title}
-    //       subtitle={card.subtitle}
-    //       onClick={() => navigate(`/quarter/${card.index}`)}
-    //       image={card.image}
-    //       key={card.index}
-    //     ></Cards>
-    //   ))}
-    // </div>
   );
 };
 

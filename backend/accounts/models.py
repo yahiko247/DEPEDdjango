@@ -60,7 +60,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
     USERNAME_FIELD="email"
-    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level']
+    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
 
     is_staff=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -70,14 +70,22 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return f" {self.email}  UID: {self.UID}"
     
 class SchoolYear(models.Model):
-     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     year_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
      name = models.CharField(max_length=9)
 
+     def __str__(self) -> str:
+        return f" {self.name}  UID: {self.year_id}"
+    
+
 class Quarter(models.Model):
-     UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
      school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
      quarter_number = models.PositiveSmallIntegerField()
      deadline = models.DateTimeField()
+
+     def __str__(self) -> str:
+        return f" {self.school_year}, Quarter: {self.quarter_number}  UID: {self.quarter_id}"
+    
 
 class LessonPlan(models.Model):
     # STATUS_CHOICES = [
@@ -95,6 +103,9 @@ class LessonPlan(models.Model):
      reviewed_at = models.DateTimeField(blank=True, null=True)
      
     #  certificate = models.FileField(upload)
+     @property
+     def is_late(self):
+        return self.created_at > self.quarter.deadline
 
      def __str__(self):
           return f" {self.teacher.first_name} {self.teacher.last_name}  review_id: {self.plan_id}"

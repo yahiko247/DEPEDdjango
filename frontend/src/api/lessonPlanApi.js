@@ -5,6 +5,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const getLessonPlan = ({ params }) => {
-  axios.get("/lessonplan");
+export const getLessonPlan = (params) => {
+  axios.get("/lessonplan", { params });
 };
