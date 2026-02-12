@@ -2,6 +2,12 @@ import React, { useEffect } from "react";
 import { Profile } from "../../assets";
 
 const TabContent = ({ data }) => {
+  const reviewStatusStyles = {
+    Pending: "text-yellow-500",
+    Approved: "text-green-500",
+    Rejected: "text-red-500",
+  };
+
   useEffect(() => {
     console.log("Data:", data);
   });
@@ -11,26 +17,35 @@ const TabContent = ({ data }) => {
   }
   return (
     <div className="flex flex-col w-full gap-y-2 p-2">
-      <div className="grid grid-cols-5 text-xs border border-amber-500 text-center">
+      <div className="grid  grid-cols-4 md:grid-cols-5 text-xs border border-amber-500 text-center justify-items-center">
         <div className="hidden md:block">Profile</div>
         <div>Name</div>
         <div>Review Status</div>
         <div>Date Submitted</div>
-        <div>Submission Status</div>
+        <div>Submitted</div>
       </div>
 
-      {data.map((item) => (
-        <div className="grid grid-cols-5 text-center items-center justify-items-center border border-red-400 rounded-md">
-          <img
-            src={item.profile}
-            className="rounded-full size-10 bg-cover border border-blue-500 hidden md:block"
-          />
-          <div>{item.teacherName}</div>
-          <div>{item.reviewStatus}</div>
-          <div>{item.dateSubmitted}</div>
-          <div>{item.submissionStatus}</div>
-        </div>
-      ))}
+      {data.map((item) => {
+        const isLate = item.submissionStatus === "Late";
+        const reviewClass =
+          reviewStatusStyles[item.reviewStatus] || "text-gray-500";
+        return (
+          <div className="grid grid-cols-4 md:grid-cols-5 text-center items-center justify-items-center h-20 border border-gray-300 rounded-md text-sm">
+            <img
+              src={item.profile}
+              className="rounded-full size-8 bg-cover border border-blue-500 hidden md:block"
+            />
+            <div className="font-bold">{item.teacherName}</div>
+            <div className={`font-semibold ${reviewClass}`}>
+              {item.reviewStatus}
+            </div>
+            <div>{item.dateSubmitted}</div>
+            <span className={`${isLate ? "text-red-500" : "text-green-500"}`}>
+              {item.submissionStatus}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 };

@@ -71,34 +71,6 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  const headers = [
-    {
-      index: 1,
-      name: "Profile",
-      hideOnMobile: true,
-    },
-    {
-      index: 2,
-      name: "Name",
-      hideOnMobile: false,
-    },
-    {
-      index: 3,
-      name: "Review Status",
-      hideOnMobile: false,
-    },
-    {
-      index: 4,
-      name: "Date Submitted",
-      hideOnMobile: false,
-    },
-    {
-      index: 5,
-      name: "Submission Status",
-      hideOnMobile: false,
-    },
-  ];
-
   const mockData = [
     {
       index: 1,
@@ -113,7 +85,7 @@ const ViewLessonPlan = () => {
       index: 2,
       profile: Profile,
       teacherName: "Juan Dela Cruz1",
-      reviewStatus: "Pending",
+      reviewStatus: "Approved",
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 1,
@@ -122,7 +94,7 @@ const ViewLessonPlan = () => {
       index: 3,
       profile: Profile,
       teacherName: "Juan Dela Cruz1",
-      reviewStatus: "Pending",
+      reviewStatus: "Rejected",
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 1,
@@ -233,17 +205,17 @@ const ViewLessonPlan = () => {
       <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto px-4 py-4">
         {/*All Lesson Plan Submissions Text*/}
         <div className="h-15 flex flex-row justify-between items-center">
-          <div className="text-[10px] sm:text-sm md:text-base">
+          <div className="text-xxs sm:text-sm md:text-base">
             <h1 className="font-bold">All Lesson Plan Submissions</h1>
             <div>Review and manage teacher submissions organized by week</div>
           </div>
           <div className="text-xs sm:text-sm md:text-base">All Teachers</div>
         </div>
-        <div className="flex flex-row tabs tabs-box tabs-xs bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
+        <div className="flex flex-row tabs tabs-box tabs-xs  bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
           {tabsMock.map((tab) => (
             <button
               key={tab.id}
-              className={`flex flex-1 font-bold rounded-full tab transition-all ${
+              className={`flex flex-1 font-bold text-xxs sm:text-xs md:text-sm rounded-full tab transition-all ${
                 activeTab === tab.id ? "tab-active bg-white" : ""
               }`}
               onClick={() => setActiveTab(tab.id)}

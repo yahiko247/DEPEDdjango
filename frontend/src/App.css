@@ -8,4 +8,8 @@
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
   --breakpoint-2xl: 1536px;
+
+  --text-xxs: 10px;
+  --text-xs: 12px;
+  --text-sm: 14px;
 }
