@@ -10,7 +10,38 @@ from rest_framework.response import Response
 from typing import Any
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+
+class CreateTokenAPIView(TokenObtainPairView):
+
+    def post(self, request, *args, **kwargs):
+        # Let SimpleJWT generate tokens first
+        response = super().post(request, *args, **kwargs)
+
+        access = response.data.get("access")
+        refresh = response.data.get("refresh")
+
+        # Create new clean response
+        new_response = Response({"message": "Login successful"})
+
+        new_response.set_cookie(
+            key="access",
+            value=access,
+            httponly=True,
+            secure=False,  # True in production
+            samesite="Lax",
+        )
+
+        new_response.set_cookie(
+            key="refresh",
+            value=refresh,
+            httponly=True,
+            secure=False,
+            samesite="Lax",
+        )
+
+        return new_response
 
 class UserLogoutAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)

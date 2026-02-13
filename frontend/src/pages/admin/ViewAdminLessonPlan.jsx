@@ -78,7 +78,7 @@ const ViewLessonPlan = () => {
       teacherName: "Juan Dela Cruz1",
       reviewStatus: "Pending",
       dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
+      submissionStatus: "Late",
       quarter: 1,
     },
     {
