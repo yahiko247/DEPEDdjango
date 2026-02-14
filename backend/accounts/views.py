@@ -37,7 +37,7 @@ class CreateTokenAPIView(TokenObtainPairView):
             key="refresh",
             value=refresh,
             httponly=True,
-            secure=False,
+            secure=False, # True in production
             samesite="Lax",
         )
 

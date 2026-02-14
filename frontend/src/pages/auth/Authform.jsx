@@ -97,6 +97,7 @@ export default function AuthForm() {
       const response = await axios.post(
         `${BASE_URL}/auth/jwt/create/`,
         loginFormData,
+        { withCredentials: true },
       );
 
       console.log("Success!", response.data);
