@@ -14,21 +14,19 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Gridbox from "../../components/GridBoxs/Gridbox";
+import background from "../assets/cover.jpg";
+import digatImg from "../assets/DepED-Logo.png";
+import Gridbox from "../components/GridBoxs/Gridbox";
 
-
-import { Background, DEPED } from "../../assets";
-
-//teacher ni na dashboard
-
+//teacher ni na dashboard                                                           
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));
 
 export default function Dashboard() {
- const [isLoggedIn, setIsLoggedIn] = useState(false);
-const [firstName, setFirstName] = useState("");
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
   // Menu for account icon
@@ -43,67 +41,54 @@ const [firstName, setFirstName] = useState("");
     setAnchorEl(null);
   };
 
-  
-
   const handleLogout = async () => {
     try {
+      const accessToken = localStorage.getItem("accessToken");
       const refreshToken = localStorage.getItem("refreshToken");
 
-      if (refreshToken) {
-        await axios.post(`${BASE_URL}/auth/jwt/blacklist/`, {
-          refresh: refreshToken,
-        });
+      if (accessToken && refreshToken) {
+        const config = { headers: { Authorization: `Bearer ${accessToken}` } };
+        await axios.post(
+          "http://192.168.1.106:8000/api/logout/",
+          { refresh: refreshToken },
+          config,
+        );
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        setLoggedIn(false);
+        setUsername("");
+        toast.success("Logging out", { onClose: () => navigate("/") });
       }
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
-      toast.success("Logged out", {
-        onClose: () => navigate("/"),
-      });
     } catch (error) {
-      console.error("Logout error", error.response?.data || error.message);
-
-      // Even if blacklist fails, still logout locally
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      navigate("/");
+      console.error("Failed to logout", error.response?.data || error.message);
+      toast.error("Logout failed");
     }
   };
 
   // Check login status
   useEffect(() => {
-  const checkLoggedInUser = async () => {
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      setIsLoggedIn(false);
-      setFirstName("");
-      return;
-    }
-
-    try {
-      const response = await axios.get(
-        "http://192.168.1.106:8000/api/user/",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+    const checkLoggedInUser = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          const config = { headers: { Authorization: `Bearer ${token}` } };
+          const response = await axios.get(
+            "http://192.168.1.106:8000/api/user/",
+            config,
+          );
+          setLoggedIn(true);
+          setUsername(response.data.username);
+        } else {
+          setLoggedIn(false);
+          setUsername("");
         }
-      );
-
-      setIsLoggedIn(true);
-      setFirstName(response.data.first_name);
-    } catch (error) {
-      console.error("Invalid token", error);
-      setIsLoggedIn(false);
-      setFirstName("");
-      localStorage.removeItem("accessToken"); // optional but recommended
-    }
-  };
-
-  checkLoggedInUser();
-}, []);
+      } catch (error) {
+        setLoggedIn(false);
+        setUsername("");
+      }
+    };
+    checkLoggedInUser();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -113,7 +98,7 @@ const [firstName, setFirstName] = useState("");
         <Toolbar>
           <Box
             component="img"
-            src={DEPED}
+            src={digatImg}
             sx={{ height: 40, width: "auto", mr: 2 }}
           />
           <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
@@ -146,7 +131,7 @@ const [firstName, setFirstName] = useState("");
           flexGrow: 1,
           minHeight: "100vh",
           position: "relative",
-          backgroundImage: `url(${Background})`,
+          backgroundImage: `url(${background})`,
           backgroundSize: "cover",
           backgroundPosition: "center center",
           backgroundAttachment: "fixed",
@@ -163,7 +148,7 @@ const [firstName, setFirstName] = useState("");
           }}
         >
           {isLoggedIn ? (
-            <h2>Hello teacher {firstName}. Thanks for logging in!</h2>
+            <h2>Hello teacher {username}. Thanks for logging in!</h2>
           ) : (
             <h2>Please Login</h2>
           )}

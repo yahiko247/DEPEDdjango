@@ -49,7 +49,7 @@ class AppUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False, null=False)
+    UID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)
     first_name = models.CharField(max_length=50)
     middle_initial = models.CharField(max_length=1, null=True, blank=True)
     last_name = models.CharField(max_length=50)
@@ -60,6 +60,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
     USERNAME_FIELD="email"
+    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
     REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
 
     is_staff=models.BooleanField(default=False)
@@ -92,9 +93,7 @@ class LessonPlan(models.Model):
     #     ("PENDING", "Pending"),
     #     ("APPROVED", "Approved"),
     #     ("REJECTED", "Rejected")]
-    #will have to add quarter from foreign field
-     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
-     quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE, blank=False, null=False, related_name="quarters")
+     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
@@ -112,7 +111,7 @@ class LessonPlan(models.Model):
      
      
 class ReviewedLessonPlan(models.Model):
-     review_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
      reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lessonPlan_reviewedBy")
      lesson_plan = models.ForeignKey(LessonPlan, on_delete=models.CASCADE, related_name="lessonPlan")
      reviewed_at = models.DateTimeField(auto_now_add=True)
