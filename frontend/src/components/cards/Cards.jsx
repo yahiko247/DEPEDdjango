@@ -15,9 +15,13 @@ export default function MultiActionAreaCard({
       <CardActionArea onClick={onClick}>
         <CardMedia
           component="img"
-          height="140"
           image={image}
           alt="Lesson Plan"
+          style={{
+            height: "180px",
+            width: "100rem",
+            objectFit: "cover",
+          }}
         />
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">

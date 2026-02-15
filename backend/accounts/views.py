@@ -147,9 +147,9 @@ class UserLogoutAPIView(GenericAPIView):
         except Exception as e:
             return Response(status= status.HTTP_400_BAD_REQUEST)
 
-# class UserInfoAPIView(RetrieveAPIView):
-#     permission_classes = (IsAuthenticated,)
-#     serializer_class = CustomUserSerializer
+class UserInfoAPIView(RetrieveAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomUserSerializer
     
-#     def get_object(self):
-#         return self.request.user
+    def get_object(self):
+       return self.request.user

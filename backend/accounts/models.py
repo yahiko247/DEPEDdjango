@@ -47,7 +47,7 @@ class AppUserManager(BaseUserManager):
             return user
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    UID = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False, null=False)
+    UID = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, null=False)
     first_name = models.CharField(max_length=50)
     middle_initial = models.CharField(max_length=1, null=True, blank=True)
     last_name = models.CharField(max_length=50)
@@ -58,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
     USERNAME_FIELD="email"
-    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level']
+    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
 
     is_staff=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -72,7 +72,7 @@ class LessonPlan(models.Model):
     #     ("PENDING", "Pending"),
     #     ("APPROVED", "Approved"),
     #     ("REJECTED", "Rejected")]
-     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
@@ -86,7 +86,7 @@ class LessonPlan(models.Model):
           return f" {self.teacher.first_name} {self.teacher.last_name}  review_id: {self.plan_id}"
      
 class ReviewedLessonPlan(models.Model):
-     review_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
      reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lessonPlan_reviewedBy")
      lesson_plan = models.ForeignKey(LessonPlan, on_delete=models.CASCADE, related_name="lessonPlan")
      reviewed_at = models.DateTimeField(auto_now_add=True)
