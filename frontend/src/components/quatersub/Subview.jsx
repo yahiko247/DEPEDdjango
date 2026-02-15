@@ -1,34 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { Background, LessonPlan } from "../../assets";
 import Cards from "../cards/Cards";
+import Submit from "../modal/SubmitModal";
 
 const SubView = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedQuarter, setSelectedQuarter] = useState(null);
+
   const cardData = [
-    {
-      index: 1,
-      title: "Quarter 1",
-      subtitle: "View Teacher Lesson Plan for the 1st Quarter",
-      image: LessonPlan,
-    },
-    {
-      index: 2,
-      title: "Quarter 2",
-      subtitle: "View Teacher Lesson Plan for the 2nd Quarter",
-      image: LessonPlan,
-    },
-    {
-      index: 3,
-      title: "Quarter 3",
-      subtitle: "View Teacher Lesson Plan for the 3rd Quarter",
-      image: LessonPlan,
-    },
-    {
-      index: 4,
-      title: "Quarter 4",
-      subtitle: "View Teacher Lesson Plan for the 4th Quarter",
-      image: LessonPlan,
-    },
+    { index: 1, title: "Quarter 1", subtitle: "Submit Teacher Lesson Plan for the 1st Quarter", image: LessonPlan },
+    { index: 2, title: "Quarter 2", subtitle: "Submit Teacher Lesson Plan for the 2nd Quarter", image: LessonPlan },
+    { index: 3, title: "Quarter 3", subtitle: "Submit Teacher Lesson Plan for the 3rd Quarter", image: LessonPlan },
+    { index: 4, title: "Quarter 4", subtitle: "Submit Teacher Lesson Plan for the 4th Quarter", image: LessonPlan },
   ];
+
+  const handleOpenModal = (quarter) => {
+    setSelectedQuarter(quarter);
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedQuarter(null); // ✅ reset selected quarter
+    setIsOpen(false);         // ✅ close modal
+  };
 
   return (
     <div
@@ -38,13 +32,23 @@ const SubView = () => {
       <div className="grid grid-cols-2 gap-4">
         {cardData.map((card) => (
           <Cards
+            key={card.index}
             title={card.title}
             subtitle={card.subtitle}
-            onClick={() => navigate(`/quarter/${card.index}`)}
             image={card.image}
-          ></Cards>
+            onClick={() => handleOpenModal(card.index)}
+          />
         ))}
       </div>
+
+      {/* Modal */}
+      {isOpen && (
+        <Submit
+          isOpen={isOpen}
+          onClose={handleCloseModal}
+          quarter={selectedQuarter}
+        />
+      )}
     </div>
   );
 };
