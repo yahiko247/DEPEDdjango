@@ -1,5 +1,4 @@
 import React from "react";
-import { Background, LessonPlan } from "../../assets";
 import Cards from "../../components/cards/Cards";
 import StatusCards from "../../components/cards/StatusCards";
 import {
@@ -71,6 +70,8 @@ const ViewLessonPlan = () => {
     },
   ];
 
+  const pdf = "/mock.pdf";
+
   const mockData = [
     {
       index: 1,
@@ -80,6 +81,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "Late",
       quarter: 1,
+      lessonPlan: pdf,
     },
     {
       index: 2,
@@ -89,6 +91,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 1,
+      lessonPlan: pdf,
     },
     {
       index: 3,
@@ -98,6 +101,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 1,
+      lessonPlan: pdf,
     },
     {
       index: 4,
@@ -107,6 +111,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 2,
+      lessonPlan: pdf,
     },
     {
       index: 5,
@@ -116,6 +121,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 2,
+      lessonPlan: pdf,
     },
     {
       index: 6,
@@ -125,6 +131,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 2,
+      lessonPlan: pdf,
     },
     {
       index: 7,
@@ -134,6 +141,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 3,
+      lessonPlan: pdf,
     },
     {
       index: 8,
@@ -143,6 +151,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 3,
+      lessonPlan: pdf,
     },
     {
       index: 9,
@@ -152,6 +161,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 3,
+      lessonPlan: pdf,
     },
     {
       index: 10,
@@ -161,6 +171,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 4,
+      lessonPlan: pdf,
     },
     {
       index: 11,
@@ -170,6 +181,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 4,
+      lessonPlan: pdf,
     },
     {
       index: 12,
@@ -179,6 +191,7 @@ const ViewLessonPlan = () => {
       dateSubmitted: "January 31, 2026",
       submissionStatus: "On Time",
       quarter: 4,
+      lessonPlan: pdf,
     },
   ];
 
