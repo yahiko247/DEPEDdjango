@@ -37,10 +37,9 @@ export default function AdminDashboard() {
   };
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <div className="flex flex-col w-full h-full">
       <CssBaseline />
-
-      <AppBar position="fixed">
+      <span className="bg-blue-400">
         <Toolbar>
           <Box
             component="img"
@@ -70,16 +69,17 @@ export default function AdminDashboard() {
             <MenuItem>Log out</MenuItem>
           </Menu>
         </Toolbar>
-      </AppBar>
+      </span>
+
       {/*Background*/}
       <div
-        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
+        className="relative flex flex-1 items-center justify-center bg-cover bg-center bg-fixed flex-col sm:flex-row gap-6 p-2"
         style={{ backgroundImage: `url(${Background})` }}
       >
         <Outlet />
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} />
-    </Box>
+    </div>
   );
 }
