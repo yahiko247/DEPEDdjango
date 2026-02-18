@@ -61,7 +61,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD="email"
     REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
-    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
 
     is_staff=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -93,7 +92,7 @@ class LessonPlan(models.Model):
     #     ("PENDING", "Pending"),
     #     ("APPROVED", "Approved"),
     #     ("REJECTED", "Rejected")]
-     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
@@ -111,7 +110,7 @@ class LessonPlan(models.Model):
      
      
 class ReviewedLessonPlan(models.Model):
-     review_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+     review_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
      reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lessonPlan_reviewedBy")
      lesson_plan = models.ForeignKey(LessonPlan, on_delete=models.CASCADE, related_name="lessonPlan")
      reviewed_at = models.DateTimeField(auto_now_add=True)
