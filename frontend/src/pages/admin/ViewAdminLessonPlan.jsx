@@ -202,7 +202,7 @@ const ViewLessonPlan = () => {
   }, [activeTab]);
 
   return (
-    <div className="border border-black w-full h-screen flex flex-col items-center gap-6 p-4 lg:w-3/4">
+    <div className="w-full min-h-full flex flex-col border border-black items-center gap-6 p-4 lg:w-3/4">
       {/*Status Cards*/}
       <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
         {cardData.map((card) => (

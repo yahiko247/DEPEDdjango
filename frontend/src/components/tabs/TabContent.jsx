@@ -3,7 +3,7 @@ import { Profile } from "../../assets";
 import PDFDialog from "../dialog/PDFDialog";
 
 const TabContent = ({ data }) => {
-  const [selectedPDF, setSelectedPDF] = useState();
+  const [selectedItem, setSelectedItem] = useState();
 
   const reviewStatusStyles = {
     Pending: "text-yellow-500",
@@ -23,9 +23,9 @@ const TabContent = ({ data }) => {
       <div className="grid grid-cols-4 md:grid-cols-6 text-xs border border-amber-500 text-center justify-items-center">
         <div className="hidden md:block">Profile</div>
         <div>Name</div>
-        <div>Review Status</div>
         <div className="hidden md:block">Date Submitted</div>
         <div>Submitted</div>
+        <div>Review Status</div>
         <div>Lesson Plan</div>
       </div>
 
@@ -40,23 +40,23 @@ const TabContent = ({ data }) => {
               className="rounded-full size-8 bg-cover border border-blue-500 hidden md:block"
             />
             <div className="font-bold">{item.teacherName}</div>
-            <div className={`font-semibold ${reviewClass}`}>
-              {item.reviewStatus}
-            </div>
+
             <div className="hidden md:block">{item.dateSubmitted}</div>
+
             <span className={`${isLate ? "text-red-500" : "text-green-500"}`}>
               {item.submissionStatus}
             </span>
+            <div className={`font-semibold ${reviewClass}`}>
+              {item.reviewStatus}
+            </div>
 
-            <button onClick={() => setSelectedPDF(item.lessonPlan)}>
-              Open
-            </button>
+            <button onClick={() => setSelectedItem(item)}>Open</button>
           </div>
         );
       })}
 
-      {selectedPDF && (
-        <PDFDialog file={selectedPDF} onClose={() => setSelectedPDF(null)} />
+      {selectedItem && (
+        <PDFDialog data={selectedItem} onClose={() => setSelectedItem(null)} />
       )}
     </div>
   );
