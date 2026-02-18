@@ -6,5 +6,10 @@ const api = axios.create({
 });
 
 export const getLessonPlan = (params) => {
-  axios.get("/lessonplan", { params });
+  api.get("/lessonplan", {
+    params,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+    },
+  });
 };

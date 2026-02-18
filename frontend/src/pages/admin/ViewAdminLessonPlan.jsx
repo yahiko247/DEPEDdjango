@@ -10,6 +10,8 @@ import {
 import TabContent from "../../components/tabs/TabContent.jsx";
 import { useState, useMemo } from "react";
 import { Profile } from "../../assets";
+import { getLessonPlan } from "../../api/lessonPlanApi.js";
+import { useEffect } from "react";
 
 const ViewLessonPlan = () => {
   const cardData = [
@@ -200,6 +202,10 @@ const ViewLessonPlan = () => {
   const filteredData = useMemo(() => {
     return mockData.filter((item) => item.quarter === activeTab);
   }, [activeTab]);
+
+  useEffect(() => {
+    getLessonPlan();
+  });
 
   return (
     <div className="w-full min-h-full flex flex-col border border-black items-center gap-6 p-4 lg:w-3/4">
