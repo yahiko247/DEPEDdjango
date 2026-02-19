@@ -198,14 +198,26 @@ const ViewLessonPlan = () => {
   ];
 
   const [activeTab, setActiveTab] = useState(1);
-
-  const filteredData = useMemo(() => {
-    return mockData.filter((item) => item.quarter === activeTab);
-  }, [activeTab]);
+  const [lessonPlans, setLessonPlans] = useState([]);
 
   useEffect(() => {
-    getLessonPlan();
-  });
+    const fetchLessonPlans = async () => {
+      try {
+        console.log("loading true");
+        const data = await getLessonPlan();
+        setLessonPlans(data);
+      } catch (e) {
+        console.log("Error boss:", e);
+      } finally {
+        console.log("loading false");
+      }
+    };
+    fetchLessonPlans();
+  }, []);
+
+  const filteredData = useMemo(() => {
+    return lessonPlans.filter((item) => item.quarter === activeTab);
+  }, [lessonPlans, activeTab]);
 
   return (
     <div className="w-full min-h-full flex flex-col border border-black items-center gap-6 p-4 lg:w-3/4">

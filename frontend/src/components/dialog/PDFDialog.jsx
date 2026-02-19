@@ -15,7 +15,10 @@ const PDFDialog = ({ data, onClose }) => {
 
         {/* PDF Viewer */}
         <div className="flex flex-row flex-1">
-          <iframe src={data.lessonPlan} className="w-full h-full" />
+          <iframe
+            src={`http://127.0.0.1:8000/${data.lesson_plan}`}
+            className="w-full h-full"
+          />
         </div>
 
         <button

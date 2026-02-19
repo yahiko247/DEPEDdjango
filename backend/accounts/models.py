@@ -94,6 +94,7 @@ class LessonPlan(models.Model):
     #     ("REJECTED", "Rejected")]
      plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
+     quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE, blank=False, null=False, related_name="quarters")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
      feedback = models.TextField(blank=True, null=False)

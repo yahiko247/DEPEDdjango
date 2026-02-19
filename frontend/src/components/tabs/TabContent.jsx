@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Profile } from "../../assets";
-import PDFDialog from "../dialog/PDFDialog";
+import PDFDialog from "../dialog/pdfDialog";
 
 const TabContent = ({ data }) => {
   const [selectedItem, setSelectedItem] = useState();
@@ -30,25 +30,39 @@ const TabContent = ({ data }) => {
       </div>
 
       {data.map((item) => {
-        const isLate = item.submissionStatus === "Late";
-        const reviewClass =
-          reviewStatusStyles[item.reviewStatus] || "text-gray-500";
+        const isLate = item.is_late;
+        const lateLabel = isLate ? "Late" : "On Time";
+        const reviewClass = reviewStatusStyles[item.status] || "text-gray-500";
+        const formattedDate = new Date(item.created_at).toLocaleString(
+          "en-US",
+          {
+            year: "numeric",
+            month: "long",
+            day: "2-digit",
+            // hour: "2-digit",
+            // minute: "2-digit",
+          },
+        );
         return (
-          <div className="grid grid-cols-4 text-xxs md:text-sm md:grid-cols-6 text-center items-center justify-items-center h-20 border border-gray-300 rounded-md">
+          <div
+            key={item.plan_id}
+            className="grid grid-cols-4 text-xxs md:text-sm md:grid-cols-6 text-center items-center justify-items-center h-20 border border-gray-300 rounded-md"
+          >
             <img
-              src={item.profile}
+              src={item.teacher.profilepic}
               className="rounded-full size-8 bg-cover border border-blue-500 hidden md:block"
             />
-            <div className="font-bold">{item.teacherName}</div>
+            <div className="font-bold">
+              {item.teacher.first_name} {item.teacher.middle_initial}{" "}
+              {item.teacher.last_name}
+            </div>
 
-            <div className="hidden md:block">{item.dateSubmitted}</div>
+            <div className="hidden md:block">{formattedDate}</div>
 
             <span className={`${isLate ? "text-red-500" : "text-green-500"}`}>
-              {item.submissionStatus}
+              {lateLabel}
             </span>
-            <div className={`font-semibold ${reviewClass}`}>
-              {item.reviewStatus}
-            </div>
+            <div className={`font-semibold ${reviewClass}`}>{item.status}</div>
 
             <button onClick={() => setSelectedItem(item)}>Open</button>
           </div>

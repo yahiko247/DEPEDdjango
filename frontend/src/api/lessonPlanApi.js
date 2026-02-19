@@ -5,11 +5,16 @@ const api = axios.create({
   withCredentials: true,
 });
 
-export const getLessonPlan = (params) => {
-  api.get("/lessonplan", {
-    params,
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-    },
-  });
+export const getLessonPlan = async (params) => {
+  try {
+    const response = await api.get("/lessonplan", {
+      params,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
 };
