@@ -1,20 +1,33 @@
 import React, { useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
 import ReviewDialog from "./ReviewDialog";
+
+pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFDialog = ({ data, onClose }) => {
   const [openReview, setOpenReview] = useState(false);
+  const [numPages, setNumPages] = useState(null);
+
+  function onDocumentLoadSuccess({ numPages }) {
+    setNumPages(numPages);
+  }
 
   if (!data) return null;
 
   return (
     <div className="modal modal-open">
       <div className="modal-box">
-        <div className="w-full - h-full">
-          <iframe
-            src={`http://127.0.0.1:8000/${data.lesson_plan}`}
-            className="w-full h-full"
-          />
+        <div className="flex flex-1 w-1/2 h-1/2">
+          <Document
+            className="w-1/2 h-1/2"
+            file={`http://127.0.0.1:8000/${data.lesson_plan}`}
+            onLoadSuccess={onDocumentLoadSuccess}>
+            {Array.from(new Array(numPages), (el, index) => (
+              <Page key={index} pageNumber={index + 1} />
+            ))}
+          </Document>
         </div>
+
         <h3 className="font-bold text-lg">Hello!</h3>
         <p className="py-4">Press ESC key or click outside to close</p>
       </div>

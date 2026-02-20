@@ -70,7 +70,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return f" {self.email}  UID: {self.UID}"
     
 class SchoolYear(models.Model):
-     year_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     year_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      name = models.CharField(max_length=9)
 
      def __str__(self) -> str:
@@ -78,7 +78,7 @@ class SchoolYear(models.Model):
     
 
 class Quarter(models.Model):
-     quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
      quarter_number = models.PositiveSmallIntegerField()
      deadline = models.DateTimeField()
@@ -92,7 +92,7 @@ class LessonPlan(models.Model):
     #     ("PENDING", "Pending"),
     #     ("APPROVED", "Approved"),
     #     ("REJECTED", "Rejected")]
-     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     plan_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE, blank=False, null=False, related_name="quarters")
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
@@ -111,7 +111,7 @@ class LessonPlan(models.Model):
      
      
 class ReviewedLessonPlan(models.Model):
-     review_id = models.UUIDField(primary_key=True, default=uuid.uuid8, editable=False)
+     review_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lessonPlan_reviewedBy")
      lesson_plan = models.ForeignKey(LessonPlan, on_delete=models.CASCADE, related_name="lessonPlan")
      reviewed_at = models.DateTimeField(auto_now_add=True)
