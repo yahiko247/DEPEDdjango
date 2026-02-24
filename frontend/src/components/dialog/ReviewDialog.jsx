@@ -3,9 +3,13 @@ import React from "react";
 const ReviewDialog = ({ onClose }) => {
   return (
     <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose}>
-      <div className="bg-white w-1/2 max-w-5xl h-[50vh] rounded-lg flex flex-col gap-y-2 p-2">
+      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white w-full max-w-5xl h-[50vh] rounded-lg flex flex-col gap-y-2 p-2"
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Header */}
         <div className="p-4 border-b flex justify-between">
           <h2 className="font-semibold">Review Lesson Plan</h2>
