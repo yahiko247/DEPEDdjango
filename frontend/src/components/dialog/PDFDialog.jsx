@@ -1,44 +1,19 @@
 import React, { useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import ReviewDialog from "./ReviewDialog";
+import { reviewLessonPlan } from "../../api/lessonPlanApi";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PDFDialog = ({ data, onClose }) => {
   const [openReview, setOpenReview] = useState(false);
-  const [numPages, setNumPages] = useState(null);
-
-  function onDocumentLoadSuccess({ numPages }) {
-    setNumPages(numPages);
-  }
+  const [status, setStatus] = useState(data.status ?? "");
+  const [feedBack, setFeedBack] = useState(data.feedback ?? "");
+  const [lessonPlanID, setLessonPlanID] = useState(data.plan_id ?? "");
 
   if (!data) return null;
 
   return (
-    // <dialog className="modal modal-open">
-    //   <div className="modal-box w-11/12 max-w-5xl h-[90vh] gap-y-2 flex flex-col">
-    //     <div className="p-4 border-b flex justify-between">
-    //       <h2 className="font-semibold">Lesson Plan Preview</h2>
-    //       <button onClick={onClose}>✕</button>
-    //     </div>
-    //     <div className="flex flex-1">
-    //       <iframe src={`${data.lesson_plan}`} className="w-full h-full" />
-    //     </div>
-    //     <div className="w-full border border-black flex justify-center md:justify-evenly items-center">
-    //       <button
-    //         className="flex md:hidden border border-yellow-500 justify-center items-center w-3/4"
-    //         onClick={() => setOpenReview(true)}>
-    //         Review Lesson Plan
-    //       </button>
-    //       <button className="btn rounded-full w-40 h-10 btn-outline btn-success">
-    //         SAVE
-    //       </button>
-    //     </div>
-    //   </div>
-
-    //   <div className="modal-backdrop" onClick={onClose}></div>
-    //   {openReview && <ReviewDialog onClose={() => setOpenReview(false)} />}
-    // </dialog>
     <>
       <div
         className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
@@ -58,22 +33,37 @@ const PDFDialog = ({ data, onClose }) => {
           <div className="flex flex-row flex-1 items-center">
             <iframe src={`${data.lesson_plan}`} className="w-full h-full" />
           </div>
+          <span>
+            Status:
+            <select
+              className="w-30 bg-gray-200 h-7 rounded-md"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </span>
 
-          <div className="w-full border border-yellow-500 hidden md:block">
-            {data.status}
-          </div>
-          <div className="border border-black w-full h-20 hidden md:block">
-            Feedback
-          </div>
+          <textarea
+            className="rounded-md bg-gray-100 p-2 resize-none h-20 w-full"
+            value={feedBack}
+            placeholder="Feedback (Optional)"
+            onChange={(e) => setFeedBack(e.target.value)}
+          ></textarea>
 
-          <div className="w-full border border-green-500 flex  items-center justify-evenly">
+          <div className="w-full flex items-center justify-evenly">
             <button
               className="md:hidden btn rounded-full btn-neutral w-3/4"
               onClick={() => setOpenReview(true)}
             >
               Review Lesson Plan
             </button>
-            <button className="hidden w-40 md:block btn btn-success rounded-full text-white">
+            <button
+              className="hidden w-40 md:block btn btn-success rounded-full text-white"
+              onClick={() => reviewLessonPlan(lessonPlanID, status, feedBack)}
+            >
               SAVE
             </button>
             <button className="hidden w-40 md:block btn btn-error rounded-full text-white">
