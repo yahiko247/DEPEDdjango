@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
 import ReviewDialog from "./ReviewDialog";
 import { reviewLessonPlan } from "../../api/lessonPlanApi";
-
-pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+import ConfirmDialog from "./ConfirmDialog";
+import { CiCircleCheck, CiWarning } from "../../icons/index.js";
 
 const PDFDialog = ({ data, onClose }) => {
   const [openReview, setOpenReview] = useState(false);
+  const [successfulSaveDialog, setSuccessfulSaveDialog] = useState(false);
   const [status, setStatus] = useState(data.status ?? "");
   const [feedBack, setFeedBack] = useState(data.feedback ?? "");
   const [lessonPlanID, setLessonPlanID] = useState(data.plan_id ?? "");
@@ -62,17 +62,38 @@ const PDFDialog = ({ data, onClose }) => {
             </button>
             <button
               className="hidden w-40 md:block btn btn-success rounded-full text-white"
-              onClick={() => reviewLessonPlan(lessonPlanID, status, feedBack)}
+              onClick={() => {
+                reviewLessonPlan(lessonPlanID, status, feedBack);
+                setSuccessfulSaveDialog(true);
+              }}
             >
               SAVE
             </button>
-            <button className="hidden w-40 md:block btn btn-error rounded-full text-white">
-              CANCEL
+            <button
+              className="hidden w-40 md:block btn btn-error rounded-full text-white"
+              onClick={onClose}
+            >
+              CLOSE
             </button>
           </div>
         </div>
       </div>
-      {openReview && <ReviewDialog onClose={() => setOpenReview(false)} />}
+      {successfulSaveDialog && (
+        <ConfirmDialog
+          headerText={"Success!"}
+          message={"Successfully Reviewed Lesson Plan!"}
+          onClose={() => setSuccessfulSaveDialog(false)}
+          logo={<CiCircleCheck className="size-30" />}
+        />
+      )}
+      {openReview && (
+        <ReviewDialog
+          lessonPlanID={lessonPlanID}
+          status={status}
+          feedBack={feedBack}
+          onClose={() => setOpenReview(false)}
+        />
+      )}
     </>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Profile } from "../../assets";
-import PDFDialog from "../dialog/pdfDialog";
+import PDFDialog from "../dialog/PDFDialog";
 
 const TabContent = ({ data }) => {
   const [selectedItem, setSelectedItem] = useState();

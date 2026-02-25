@@ -18,10 +18,21 @@ const ReviewDialog = ({ onClose }) => {
         <div className="">Pending</div>
         <div className="flex-1 border border-black rounded-md"></div>
 
-        <span className="flex justify-evenly">
-          <button>Save</button>
-          <button>Cancel</button>
-        </span>
+        <button
+          className="hidden w-40 md:block btn btn-success rounded-full text-white"
+          onClick={() => {
+            reviewLessonPlan(lessonPlanID, status, feedBack);
+            setSuccessfulSaveDialog(true);
+          }}
+        >
+          SAVE
+        </button>
+        <button
+          className="hidden w-40 md:block btn btn-error rounded-full text-white"
+          onClick={onClose}
+        >
+          CLOSE
+        </button>
       </div>
     </div>
   );
