@@ -66,12 +66,13 @@ class LessonPlanView(APIView):
         data = request.data
         teacher_id = request.user.UID
         role = request.user.role
+        print(role)
         serializer = PostLessonPlanSerializer(data=data)
 
         if not teacher_id:
             return Response({'error':'Teacher ID is required'}, status=status.HTTP_400_BAD_REQUEST)
         
-        if role != "Teacher" or role != "TEACHER":
+        if role != "Teacher" and role != "TEACHER":
             return Response({'error':'Only a Teacher can create a lesson plan'}, status=status.HTTP_403_FORBIDDEN)
         
         if serializer.is_valid():
