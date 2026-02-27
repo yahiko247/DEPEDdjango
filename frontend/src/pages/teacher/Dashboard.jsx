@@ -16,19 +16,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Gridbox from "../../components/GridBoxs/Gridbox";
 
-
 import { Background, DEPED } from "../../assets";
 
 //teacher ni na dashboard
-
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
 }));
 
 export default function Dashboard() {
- const [isLoggedIn, setIsLoggedIn] = useState(false);
-const [firstName, setFirstName] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [firstName, setFirstName] = useState("");
   const navigate = useNavigate();
 
   // Menu for account icon
@@ -42,8 +40,6 @@ const [firstName, setFirstName] = useState("");
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  
 
   const handleLogout = async () => {
     try {
@@ -73,37 +69,39 @@ const [firstName, setFirstName] = useState("");
 
   // Check login status
   useEffect(() => {
-  const checkLoggedInUser = async () => {
-    const token = localStorage.getItem("accessToken");
+    const checkLoggedInUser = async () => {
+      const token = localStorage.getItem("accessToken");
 
-    if (!token) {
-      setIsLoggedIn(false);
-      setFirstName("");
-      return;
-    }
+      if (!token) {
+        setIsLoggedIn(false);
+        setFirstName("");
+        return;
+      }
 
-    try {
-      const response = await axios.get(
-        "http://192.168.1.106:8000/api/user/",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      try {
+        const response = await axios.get(
+          "http://192.168.1.106:8000/api/user/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        }
-      );
+        );
 
-      setIsLoggedIn(true);
-      setFirstName(response.data.first_name);
-    } catch (error) {
-      console.error("Invalid token", error);
-      setIsLoggedIn(false);
-      setFirstName("");
-      localStorage.removeItem("accessToken"); // optional but recommended
-    }
-  };
+        setIsLoggedIn(true);
+        setFirstName(response.data.first_name);
+      } catch (error) {
+        console.error("Invalid token", error);
+        setIsLoggedIn(false);
+        setFirstName("");
+        //remove for the meantime for testing
+        // optional but recommended
+        // localStorage.removeItem("accessToken");
+      }
+    };
 
-  checkLoggedInUser();
-}, []);
+    checkLoggedInUser();
+  }, []);
 
   return (
     <Box sx={{ display: "flex" }}>

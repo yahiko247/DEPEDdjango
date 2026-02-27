@@ -47,7 +47,7 @@ const PDFDialog = ({ data, onClose }) => {
           </span>
 
           <textarea
-            className="rounded-md bg-gray-100 p-2 resize-none h-20 w-full"
+            className="border border-gray-300 rounded-lg bg-gray-100 p-2 resize-none h-20 w-full"
             value={feedBack}
             placeholder="Feedback (Optional)"
             onChange={(e) => setFeedBack(e.target.value)}

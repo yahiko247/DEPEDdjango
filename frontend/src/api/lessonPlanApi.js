@@ -22,6 +22,24 @@ export const getLessonPlan = async (params) => {
   }
 };
 
+export const submitLessonPlan = async (lessonPlan, quarter) => {
+  const formData = new FormData();
+  formData.append("lesson_plan", lessonPlan);
+  formData.append("quarter", quarter);
+  try {
+    const response = await api.post("/lessonplan/", formData, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    });
+    console.log("Access Token:", accessToken);
+    return response.data;
+  } catch (e) {
+    console.log("Access Token:", accessToken);
+    throw e;
+  }
+};
+
 export const reviewLessonPlan = async (lessonplanID, status, feedBack) => {
   try {
     const response = await api.patch(

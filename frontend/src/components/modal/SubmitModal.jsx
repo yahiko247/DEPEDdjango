@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
+import { submitLessonPlan } from "../../api/lessonPlanApi";
 
 const LessonPlanModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
+
+  const [lessonPlan, setLessonPlan] = useState();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  //real uid of quarter 1 will have to get data from previous component, principal will have to set the year somehow
+  const quarter_1 = "9828df8c-7bc4-8ceb-a311-9640b6a11d40";
+
+  const handleSubmit = async (lessonPlan, quarter) => {
+    try {
+      setLoading(true);
+      await submitLessonPlan(lessonPlan, quarter);
+    } catch (e) {
+      const message = response?.error;
+      setErrorMessage(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -29,6 +49,7 @@ const LessonPlanModal = ({ isOpen, onClose }) => {
         <div className="mb-4">
           <label className="block text-sm mb-1">Select File</label>
           <input
+            onChange={(e) => setLessonPlan(e.target.files[0])}
             type="file"
             className="w-full text-sm border border-gray-300 rounded-lg p-2 file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:bg-gray-100 hover:file:bg-gray-200"
           />
@@ -36,9 +57,7 @@ const LessonPlanModal = ({ isOpen, onClose }) => {
 
         {/* Description */}
         <div className="mb-4">
-          <label className="block text-sm mb-1">
-            Description (Optional)
-          </label>
+          <label className="block text-sm mb-1">Description (Optional)</label>
           <textarea
             placeholder="Add notes about this lesson plan..."
             className="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-gray-400 resize-none h-24"
@@ -46,7 +65,10 @@ const LessonPlanModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Submit Button */}
-        <button className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition">
+        <button
+          onClick={() => handleSubmit(lessonPlan, quarter_1)}
+          className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 rounded-lg transition"
+        >
           ⬆ Submit Lesson Plan
         </button>
       </div>
