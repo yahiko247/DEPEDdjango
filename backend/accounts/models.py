@@ -4,7 +4,7 @@ from django.contrib.auth.base_user import BaseUserManager
 import uuid
 
 class AppUserManager(BaseUserManager):
-    def create_user(self, first_name, middle_initial, last_name, subject, grade_level, email, role, password=None):
+    def create_user(self, first_name, middle_initial, last_name, subject, grade_level, email, password=None):
             if not email:
                 raise ValueError('An Email is Required')
             if not password:
@@ -17,14 +17,13 @@ class AppUserManager(BaseUserManager):
                  last_name=last_name,
                  subject=subject, 
                  grade_level=grade_level, 
-                 email=email,
-                 role=role)
+                 email=email)
 
             user.set_password(password)
             user.save()
 
             return user
-    def create_superuser(self, first_name, middle_initial, last_name, subject, grade_level, email, role, password=None):
+    def create_superuser(self, first_name, middle_initial, last_name, subject, grade_level, email, password=None):
             if not email:
                 raise ValueError('An email is required.')
             if not password:
@@ -37,8 +36,7 @@ class AppUserManager(BaseUserManager):
                  subject=subject, 
                  grade_level=grade_level, 
                  email=email,
-                 password=password,
-                 role=role)
+                 password=password)
 
             user.is_superuser = True
             user.is_staff = True
@@ -60,7 +58,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     profilepic = models.ImageField(upload_to="profile_pictures", default="default.png", null=True, blank=True)
 
     USERNAME_FIELD="email"
-    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level','role']
+    REQUIRED_FIELDS=['first_name','middle_initial','last_name','subject','grade_level']
 
     is_staff=models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)

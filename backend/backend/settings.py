@@ -146,7 +146,7 @@ REST_FRAMEWORK={
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authentication.CookieJWTAuthentication',
     ),
 }
 
@@ -189,6 +189,11 @@ SIMPLE_JWT = {
     "LEEWAY": 0,
 
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_COOKIE": "access",          
+    "AUTH_COOKIE_REFRESH": "refresh",
+    "AUTH_COOKIE_SECURE": False,       # True in production (HTTPS)
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "Lax",
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
     "USER_ID_FIELD": "UID",
     "USER_ID_CLAIM": "user_id",

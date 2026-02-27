@@ -15,7 +15,7 @@ class CustomUserSerializer(UserSerializer):
 class UserCreateSerializer(UserCreateSerializer):
     class Meta:
         model = UserModel
-        fields = ["UID", "first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "role", "password"]
+        fields = ["UID", "first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "password"]
 
 class UpdateUserSerializer(serializers.ModelSerializer):
     class Meta:

@@ -16,7 +16,7 @@ const LessonPlanModal = ({ isOpen, onClose }) => {
       setLoading(true);
       await submitLessonPlan(lessonPlan, quarter);
     } catch (e) {
-      const message = response?.error;
+      const message = response?.data?.error;
       setErrorMessage(message);
     } finally {
       setLoading(false);

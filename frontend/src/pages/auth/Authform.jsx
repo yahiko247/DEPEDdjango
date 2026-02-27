@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Background } from "../../assets";
+import { loginUser, registerUser } from "../../api/authApi";
 
 export default function AuthForm() {
   //Login Form Data
@@ -15,30 +16,23 @@ export default function AuthForm() {
   //Register Form Data
   const [registerFormData, setRegisterFormData] = useState({
     first_name: "",
-    last_name: "",
     middle_initial: "",
+    last_name: "",
     subject: "",
     grade_level: "",
     email: "",
+    role: "Teacher",
     password: "",
     re_password: "",
   });
 
   const [isLogin, setIsLogin] = useState(true);
-
-  //Login Variables
   const [isLoading, setIsLoading] = useState(false);
-  const [successMessage, setSuccesMessage] = useState(null);
-  const [error, setError] = useState(null);
-
-  //Register Variables
-  const [isLoading2, setIsLoading2] = useState(false);
-  const [successMessage2, setSuccesMessage2] = useState(null);
-  const [error2, setError2] = useState(null);
+  const [loginLoading, setIsLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
 
   //Navigate and BASE_URL from env variables
   const navigate = useNavigate();
-  const BASE_URL = import.meta.env.VITE_BASE_URL;
 
   //Validate Register Form Error
   const validateRegisterForm = () => {
@@ -64,6 +58,13 @@ export default function AuthForm() {
       return "Password and confirm password do not match";
 
     return null;
+  };
+  //Validate Login Form Error
+  const validateLoginForm = () => {
+    const { email, password } = loginFormData;
+
+    if (!email.trim()) return "Please enter your email";
+    if (!password) return "Please enter your password";
   };
 
   //Handle Login Change Function
@@ -91,33 +92,24 @@ export default function AuthForm() {
       return;
     }
 
+    const validationError = validateLoginForm();
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/auth/jwt/create/`,
-        loginFormData,
-        { withCredentials: true },
-      );
-
-      console.log("Success!", response.data);
-      console.log("Access:", response.data.access);
-      setSuccesMessage("Login Successfull!");
-      localStorage.setItem("accessToken", response.data.access);
-      localStorage.setItem("refreshToken", response.data.refresh);
-      toast.success("Login successful ", {
-        onClose: () => navigate("/dashboard"),
-      });
-    } catch (error) {
-      toast.error(" Invalid email or password");
-      console.log("Error during Login!", error.response?.data);
-      if (error.response && error.response.data) {
-        Object.keys(error.response.data).forEach((field) => {
-          const errorMessages = error.response.data[field];
-          if (errorMessages && errorMessages.length > 0) {
-            setError(errorMessages[0]);
-          }
-        });
+      const user = await loginUser(loginFormData);
+      console.log("Waaa", user);
+      toast.success("Login Successful", navigate("/dashboard"));
+    } catch (e) {
+      const message = e?.response?.data;
+      if (message.detail) {
+        toast.error("Email and Password do not match!");
+      } else {
+        toast.error("Server Error");
       }
     } finally {
       setIsLoading(false);
@@ -137,31 +129,21 @@ export default function AuthForm() {
       return;
     }
 
-    setIsLoading2(true);
-
+    setRegisterLoading(true);
     try {
-      const response = await axios.post(
-        `${BASE_URL}/djoser/users/`,
-        registerFormData,
-      );
-      toast.success("Successfully Registered ", {
-        onClose: () => navigate("/dashboard"),
+      await registerUser(registerFormData);
+      toast.success("Register Successful", {
+        onClose: () => setIsLogin(true),
       });
-      console.log("Success!", response.data);
-      setSuccesMessage2("Registration Successfull!");
-    } catch (error) {
-      toast.error("Invalid email or password");
-      console.log("Error during registration!", error.response?.data);
-      if (error.response && error.response.data) {
-        Object.keys(error.response.data).forEach((field) => {
-          const errorMessages = error.response.data[field];
-          if (errorMessages && errorMessages.length > 0) {
-            setError(errorMessages[0]);
-          }
-        });
+    } catch (e) {
+      const message = e?.response?.data;
+      if (message.email) {
+        toast.error("Email already in use.");
+      } else {
+        toast.error("Server Error");
       }
     } finally {
-      setIsLoading2(false);
+      setRegisterLoading(false);
     }
   };
 
@@ -208,7 +190,7 @@ export default function AuthForm() {
               </a>
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={loginLoading}
                 onClick={handleLoginSubmit}
               >
                 Login
@@ -280,7 +262,7 @@ export default function AuthForm() {
 
               <input
                 type="password"
-                name="confirm_password"
+                name="re_password"
                 value={registerFormData.re_password}
                 onChange={handleRegisterChange}
                 placeholder="Confirm Password"
@@ -288,7 +270,7 @@ export default function AuthForm() {
 
               <button
                 type="submit"
-                disabled={isLoading2}
+                disabled={registerLoading}
                 onClick={handleRegisterSubmit}
               >
                 Sign Up
@@ -301,3 +283,82 @@ export default function AuthForm() {
     </div>
   );
 }
+
+// const handleRegisterSubmit = async (e) => {
+//   e.preventDefault();
+//   if (isLoading) {
+//     return;
+//   }
+
+//   const validationError = validateRegisterForm();
+//   if (validationError) {
+//     toast.error(validationError);
+//     return;
+//   }
+
+//   setIsLoading2(true);
+
+//   try {
+//     const response = await axios.post(
+//       `${BASE_URL}/djoser/users/`,
+//       registerFormData,
+//     );
+//     toast.success("Successfully Registered ", {
+//       onClose: () => navigate("/dashboard"),
+//     });
+//     console.log("Success!", response.data);
+//     setSuccesMessage2("Registration Successfull!");
+//   } catch (error) {
+//     toast.error("Invalid email or password");
+//     console.log("Error during registration!", error.response?.data);
+//     if (error.response && error.response.data) {
+//       Object.keys(error.response.data).forEach((field) => {
+//         const errorMessages = error.response.data[field];
+//         if (errorMessages && errorMessages.length > 0) {
+//           setError(errorMessages[0]);
+//         }
+//       });
+//     }
+//   } finally {
+//     setIsLoading2(false);
+//   }
+// };
+
+// const handleLoginSubmit = async (e) => {
+//   e.preventDefault();
+//   if (isLoading) {
+//     return;
+//   }
+
+//   setIsLoading(true);
+
+//   try {
+//     const response = await axios.post(
+//       `${BASE_URL}/auth/jwt/create/`,
+//       loginFormData,
+//       { withCredentials: true },
+//     );
+
+//     console.log("Success!", response.data);
+//     console.log("Access:", response.data.access);
+//     setSuccesMessage("Login Successfull!");
+//     localStorage.setItem("accessToken", response.data.access);
+//     localStorage.setItem("refreshToken", response.data.refresh);
+//     toast.success("Login successful ", {
+//       onClose: () => navigate("/dashboard"),
+//     });
+//   } catch (error) {
+//     toast.error(" Invalid email or password");
+//     console.log("Error during Login!", error.response?.data);
+//     if (error.response && error.response.data) {
+//       Object.keys(error.response.data).forEach((field) => {
+//         const errorMessages = error.response.data[field];
+//         if (errorMessages && errorMessages.length > 0) {
+//           setError(errorMessages[0]);
+//         }
+//       });
+//     }
+//   } finally {
+//     setIsLoading(false);
+//   }
+// };

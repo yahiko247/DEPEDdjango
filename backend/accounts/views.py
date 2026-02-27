@@ -11,8 +11,6 @@ from typing import Any
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework_simplejwt.views import TokenObtainPairView
-from django.views.decorators.clickjacking import xframe_options_exempt
-from django.utils.decorators import method_decorator
 
 
 class CreateTokenAPIView(TokenObtainPairView):
@@ -58,7 +56,6 @@ class UserLogoutAPIView(APIView):
         
 #Lesson Plan Views
 
-@method_decorator(xframe_options_exempt, name="dispatch")
 class LessonPlanView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
