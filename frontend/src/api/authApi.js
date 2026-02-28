@@ -16,7 +16,10 @@ export const getLoginUserdata = async () => {
 
 export const loginUser = async (loginCredentials) => {
   try {
-    await api.post("/auth/jwt/create/", loginCredentials);
+    //this is for temporary only as we are now using cookies for tokens, this is just so that it doesn't break dashboard
+    const token = await api.post("/auth/jwt/create/", loginCredentials);
+    localStorage.setItem("accessToken", token.data.accessToken);
+    localStorage.setItem("refreshToken", token.data.refreshToken);
     const user = await getLoginUserdata();
     return user;
   } catch (e) {

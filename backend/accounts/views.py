@@ -23,7 +23,7 @@ class CreateTokenAPIView(TokenObtainPairView):
         refresh = response.data.get("refresh")
 
         # Create new clean response
-        new_response = Response({"message": "Login successful"})
+        new_response = Response({"accessToken": access, "refreshToken":refresh})
 
         new_response.set_cookie(
             key="access",
