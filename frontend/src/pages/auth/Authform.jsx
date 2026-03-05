@@ -1,12 +1,19 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Background } from "../../assets";
 import { loginUser, registerUser } from "../../api/authApi";
+import { useAuth } from "../../context/AuthContext";
 
 export default function AuthForm() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loginLoading, setIsLoginLoading] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
+  const navigate = useNavigate();
+  const { login, logout, user } = useAuth();
   //Login Form Data
   const [loginFormData, setLoginFormData] = useState({
     email: "",
@@ -25,14 +32,6 @@ export default function AuthForm() {
     password: "",
     re_password: "",
   });
-
-  const [isLogin, setIsLogin] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
-  const [loginLoading, setIsLoginLoading] = useState(false);
-  const [registerLoading, setRegisterLoading] = useState(false);
-
-  //Navigate and BASE_URL from env variables
-  const navigate = useNavigate();
 
   //Validate Register Form Error
   const validateRegisterForm = () => {
@@ -101,9 +100,14 @@ export default function AuthForm() {
     setIsLoading(true);
 
     try {
-      const user = await loginUser(loginFormData);
-      console.log("Waaa", user);
-      toast.success("Login Successful", navigate("/dashboard"));
+      await login(loginFormData);
+      toast.success("Login Successful");
+      console.log("user:", user.role);
+      if (user.role == "Principal") {
+        navigate("/layout/view");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (e) {
       const message = e?.response?.data;
       if (message.detail) {
