@@ -100,16 +100,21 @@ export default function AuthForm() {
     setIsLoading(true);
 
     try {
-      await login(loginFormData);
+      const userData = await login(loginFormData);
       toast.success("Login Successful");
-      console.log("user:", user.role);
-      if (user.role == "Principal") {
+
+      const role = await userData.role;
+      console.log("AuthForm User:", userData);
+      console.log("user:", role);
+      if (role === "Principal") {
         navigate("/layout/view");
       } else {
         navigate("/dashboard");
       }
     } catch (e) {
+      console.log("AuthForm User:", user);
       const message = e?.response?.data;
+      console.log("error", e);
       if (message.detail) {
         toast.error("Email and Password do not match!");
       } else {

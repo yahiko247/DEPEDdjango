@@ -11,6 +11,7 @@ export const AuthProvider = ({ children }) => {
   const getUser = async () => {
     try {
       const user = await getLoginUserdata();
+      console.log("Provider:", user);
       setUser(user);
     } catch {
       setUser(null);
@@ -20,8 +21,17 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
-    const userData = await loginUser(credentials);
-    setUser(userData);
+    try {
+      const userData = await loginUser(credentials);
+      console.log("Provider:", userData);
+      setUser(userData);
+      return userData;
+    } catch (e) {
+      setUser(null);
+      throw e;
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = async () => {

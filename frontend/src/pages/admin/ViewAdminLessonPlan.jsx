@@ -12,8 +12,10 @@ import { useState, useMemo } from "react";
 import { Profile } from "../../assets";
 import { getLessonPlan } from "../../api/lessonPlanApi.js";
 import { useEffect } from "react";
+import { useAuth } from "../../context/AuthContext.jsx";
 
 const ViewLessonPlan = () => {
+  const { user, loading } = useAuth();
   const cardData = [
     {
       index: 1,
@@ -74,133 +76,13 @@ const ViewLessonPlan = () => {
 
   const pdf = "/mock.pdf";
 
-  const mockData = [
-    {
-      index: 1,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz1",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "Late",
-      quarter: 1,
-      lessonPlan: pdf,
-    },
-    {
-      index: 2,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz1",
-      reviewStatus: "Approved",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 1,
-      lessonPlan: pdf,
-    },
-    {
-      index: 3,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz1",
-      reviewStatus: "Rejected",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 1,
-      lessonPlan: pdf,
-    },
-    {
-      index: 4,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz2",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 2,
-      lessonPlan: pdf,
-    },
-    {
-      index: 5,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz2",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 2,
-      lessonPlan: pdf,
-    },
-    {
-      index: 6,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz2",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 2,
-      lessonPlan: pdf,
-    },
-    {
-      index: 7,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz3",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 3,
-      lessonPlan: pdf,
-    },
-    {
-      index: 8,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz3",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 3,
-      lessonPlan: pdf,
-    },
-    {
-      index: 9,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz3",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 3,
-      lessonPlan: pdf,
-    },
-    {
-      index: 10,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz4",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 4,
-      lessonPlan: pdf,
-    },
-    {
-      index: 11,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz4",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 4,
-      lessonPlan: pdf,
-    },
-    {
-      index: 12,
-      profile: Profile,
-      teacherName: "Juan Dela Cruz4",
-      reviewStatus: "Pending",
-      dateSubmitted: "January 31, 2026",
-      submissionStatus: "On Time",
-      quarter: 4,
-      lessonPlan: pdf,
-    },
-  ];
-
+  //
   const [activeTab, setActiveTab] = useState(1);
   const [lessonPlans, setLessonPlans] = useState([]);
 
   useEffect(() => {
+    if (loading) return;
+
     const fetchLessonPlans = async () => {
       try {
         console.log("loading true");
@@ -213,7 +95,7 @@ const ViewLessonPlan = () => {
       }
     };
     fetchLessonPlans();
-  }, []);
+  }, [loading]);
 
   const filteredData = useMemo(() => {
     return lessonPlans.filter((item) => item.quarter === activeTab);
@@ -265,3 +147,126 @@ const ViewLessonPlan = () => {
 };
 
 export default ViewLessonPlan;
+
+// const mockData = [
+//   {
+//     index: 1,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz1",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "Late",
+//     quarter: 1,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 2,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz1",
+//     reviewStatus: "Approved",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 1,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 3,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz1",
+//     reviewStatus: "Rejected",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 1,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 4,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz2",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 2,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 5,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz2",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 2,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 6,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz2",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 2,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 7,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz3",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 3,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 8,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz3",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 3,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 9,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz3",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 3,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 10,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz4",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 4,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 11,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz4",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 4,
+//     lessonPlan: pdf,
+//   },
+//   {
+//     index: 12,
+//     profile: Profile,
+//     teacherName: "Juan Dela Cruz4",
+//     reviewStatus: "Pending",
+//     dateSubmitted: "January 31, 2026",
+//     submissionStatus: "On Time",
+//     quarter: 4,
+//     lessonPlan: pdf,
+//   },
+// ];
