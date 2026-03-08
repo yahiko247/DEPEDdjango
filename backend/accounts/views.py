@@ -53,6 +53,21 @@ class UserLogoutAPIView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
             return Response(status= status.HTTP_400_BAD_REQUEST)
+
+class CountView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        role = request.user.role
+        
+        if role == "Principal" or role == "PRINCIPAL":
+            teacher_query = get_user_model().objects.filter(role = "Teacher").count()
+            lesson_plan_query = LessonPlan.objects.count()
+            
+            return Response({"teacher_count":teacher_query, "lesson_plan_count":lesson_plan_query}, status=status.HTTP_200_OK)
+        else:
+            return Response({"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
+
         
 #Lesson Plan Views
 
@@ -83,6 +98,7 @@ class LessonPlanView(APIView):
         user = request.user
         role = request.user.role
         if role == "PRINCIPAL" or role == "Principal":
+           
            queryset = LessonPlan.objects.select_related(
                 "teacher",
                 "quarter",

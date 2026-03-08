@@ -55,13 +55,7 @@ const PDFDialog = ({ data, onClose }) => {
 
           <div className="w-full flex items-center justify-evenly">
             <button
-              className="md:hidden btn rounded-full btn-neutral w-3/4"
-              onClick={() => setOpenReview(true)}
-            >
-              Review Lesson Plan
-            </button>
-            <button
-              className="hidden w-40 md:block btn btn-success rounded-full text-white"
+              className="w-30  xs:w-40 btn btn-success rounded-full text-white"
               onClick={() => {
                 reviewLessonPlan(lessonPlanID, status, feedBack);
                 setSuccessfulSaveDialog(true);
@@ -70,7 +64,7 @@ const PDFDialog = ({ data, onClose }) => {
               SAVE
             </button>
             <button
-              className="hidden w-40 md:block btn btn-error rounded-full text-white"
+              className="w-30 xs:w-40 btn btn-error rounded-full text-white"
               onClick={onClose}
             >
               CLOSE

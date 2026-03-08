@@ -16,11 +16,25 @@ const TabContent = ({ data }) => {
   });
 
   if (data.length === 0) {
-    return <div className="p-6 text-gray-500">No submissions found.</div>;
+    return (
+      <div className="flex flex-col w-full gap-y-2 p-2">
+        <div className="grid grid-cols-4 md:grid-cols-6 text-xs text-center justify-items-center">
+          <div className="hidden md:block">Profile</div>
+          <div>Name</div>
+          <div className="hidden md:block">Date Submitted</div>
+          <div>Submitted</div>
+          <div>Review Status</div>
+          <div>Lesson Plan</div>
+        </div>
+        <div className="w-full h-full flex items-center justify-center ">
+          No Submissions Found
+        </div>
+      </div>
+    );
   }
   return (
     <div className="flex flex-col w-full gap-y-2 p-2">
-      <div className="grid grid-cols-4 md:grid-cols-6 text-xs border border-amber-500 text-center justify-items-center">
+      <div className="grid grid-cols-4 md:grid-cols-6 text-xs text-center justify-items-center">
         <div className="hidden md:block">Profile</div>
         <div>Name</div>
         <div className="hidden md:block">Date Submitted</div>

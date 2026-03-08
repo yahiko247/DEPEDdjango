@@ -102,7 +102,7 @@ const ViewLessonPlan = () => {
   }, [lessonPlans, activeTab]);
 
   return (
-    <div className="w-full min-h-full flex flex-col border border-black items-center gap-6 p-4 lg:w-3/4">
+    <div className="w-full min-h-full flex flex-col items-center gap-6 p-4 lg:w-3/4">
       {/*Status Cards*/}
       <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
         {cardData.map((card) => (
@@ -115,7 +115,7 @@ const ViewLessonPlan = () => {
         ))}
       </div>
       {/*Quarter View Lesson Plan Section*/}
-      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full overflow-y-auto px-4 py-4">
+      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full min-h-0 px-4 py-4">
         {/*All Lesson Plan Submissions Text*/}
         <div className="h-15 flex flex-row justify-between items-center">
           <div className="text-xxs sm:text-sm md:text-base">
@@ -138,7 +138,7 @@ const ViewLessonPlan = () => {
           ))}
         </div>
 
-        <div className="bg-white rounded-md border flex flex-1">
+        <div className="bg-white rounded-md flex flex-1 min-h-0 overflow-y-auto">
           <TabContent data={filteredData} />
         </div>
       </div>

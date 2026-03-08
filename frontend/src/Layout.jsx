@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full h-screen">
       <CssBaseline />
       <span className="bg-blue-400">
         <Toolbar>

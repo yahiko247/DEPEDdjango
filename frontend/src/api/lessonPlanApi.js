@@ -12,9 +12,6 @@ export const getLessonPlan = async (params) => {
   try {
     const response = await api.get("/lessonplan", {
       params,
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
     });
     return response.data;
   } catch (e) {
@@ -27,11 +24,7 @@ export const submitLessonPlan = async (lessonPlan, quarter) => {
   formData.append("lesson_plan", lessonPlan);
   formData.append("quarter", quarter);
   try {
-    const response = await api.post("/lessonplan/", formData, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-    });
+    const response = await api.post("/lessonplan/", formData);
     console.log("Access Token:", accessToken);
     return response.data;
   } catch (e) {
@@ -42,18 +35,10 @@ export const submitLessonPlan = async (lessonPlan, quarter) => {
 
 export const reviewLessonPlan = async (lessonplanID, status, feedBack) => {
   try {
-    const response = await api.patch(
-      `/reviewlessonplan/${lessonplanID}/`,
-      {
-        status: status,
-        feedback: feedBack,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
+    const response = await api.patch(`/reviewlessonplan/${lessonplanID}/`, {
+      status: status,
+      feedback: feedBack,
+    });
     console.log("Response Data:", response.data);
     return response.data;
   } catch (e) {
