@@ -15,6 +15,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Background, DEPED, LessonPlan } from "./assets/index.js";
 import { Outlet } from "react-router-dom";
+import ActiveSchoolYearDialog from "./components/dialog/ActiveSchoolYearDialog.jsx";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
@@ -26,6 +27,7 @@ export default function AdminDashboard() {
 
   // Menu for account icon
   const [anchorEl, setAnchorEl] = useState(null);
+  const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
   const menuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -37,7 +39,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="flex flex-col w-full h-screen">
+    <div className="flex flex-col w-screen h-screen">
       <CssBaseline />
       <span className="bg-blue-400">
         <Toolbar>
@@ -48,6 +50,13 @@ export default function AdminDashboard() {
           />
           <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
 
+          <div
+            className="btn btn-outline text-xs w-30"
+            onClick={() => setActiveSchoolYearDialog(true)}
+          >
+            Set Active School Year
+          </div>
+
           <IconButton
             color="inherit"
             onClick={handleMenuOpen}
@@ -57,6 +66,7 @@ export default function AdminDashboard() {
           >
             <AccountCircle />
           </IconButton>
+
           <Menu
             id="account-menu"
             anchorEl={anchorEl}
@@ -80,6 +90,12 @@ export default function AdminDashboard() {
       </div>
 
       <ToastContainer position="top-right" autoClose={3000} />
+
+      {activeSchoolYearDialog && (
+        <ActiveSchoolYearDialog
+          onClose={() => setActiveSchoolYearDialog(false)}
+        />
+      )}
     </div>
   );
 }
