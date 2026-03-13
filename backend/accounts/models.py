@@ -69,7 +69,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
 class SchoolYear(models.Model):
      year_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
+     #school year start
+     #school year end
      name = models.CharField(max_length=9)
+     #is_active
 
      def __str__(self) -> str:
         return f" {self.name}  UID: {self.year_id}"
