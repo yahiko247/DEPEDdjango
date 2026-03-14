@@ -68,9 +68,62 @@ class CountView(APIView):
         else:
             return Response({"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        
-#Lesson Plan Views
 
+class SchoolYearView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        data = request.data
+        role = request.user.role
+
+        if role == "Principal" or role == "PRINCIPAL":
+            serializer = SchoolYearSerializer(data=data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"error":"Only a Principal can create a school year"}, status=status.HTTP_403_FORBIDDEN)
+        
+    def get(self, request):
+        role = request.user.role
+
+        if role == "Principal" or role == "PRINCIPAL":
+            school_year_list = SchoolYear.objects.all()
+            serializer = SchoolYearSerializer(school_year_list, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response({"Unauthorized":"Only the Principal is allowed to view this"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+    def patch(self, request, year_id):
+        role = request.user.role
+        
+        if not year_id:
+            return Response({'error':'Year ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        
+        if role == "Principal" or role == "PRINCIPAL":
+            instance = SchoolYear.objects.get(year_id = year_id)
+            serializer = UpdateSchoolYearSerializer(instance, request.data, partial=True)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        
+        else:
+            return Response({"Unauthorized":"Only the Principal is allowed to update this"}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+
+
+            
+
+
+#Lesson Plan Views
 class LessonPlanView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 

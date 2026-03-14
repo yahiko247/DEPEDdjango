@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
+from django.core.exceptions import ValidationError
 import uuid
 
 class AppUserManager(BaseUserManager):
@@ -69,13 +70,18 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     
 class SchoolYear(models.Model):
      year_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-     #school year start
-     #school year end
-     name = models.CharField(max_length=9)
-     #is_active
+     year_start = models.DateField(blank=False, null=False)
+     year_end = models.DateField(blank=False, null=False)
+     is_active = models.BooleanField(default=False)
 
+     def save(self, *args, **kwargs):
+        if self.is_active:
+            # When saving an active year, set all others to False
+            SchoolYear.objects.filter(is_active=True).exclude(pk=self.pk).update(is_active=False)
+        super().save(*args, **kwargs)
+        
      def __str__(self) -> str:
-        return f" {self.name}  UID: {self.year_id}"
+        return f" {self.year_start} -  {self.year_end} UID: {self.year_id}"
     
 
 class Quarter(models.Model):

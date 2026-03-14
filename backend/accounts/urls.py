@@ -8,6 +8,8 @@ urlpatterns = [
     # path('auth/',include('djoser.urls.jwt')),
     path("logout/", views.UserLogoutAPIView.as_view(), name="logout-user"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token-refresh"),
+    path("schoolyear/", views.SchoolYearView.as_view(), name="school-year"),
+    path("setschoolyear/<uuid:year_id>/", views.SchoolYearView.as_view(), name="school-year-update"),
     path("count/", views.CountView.as_view(), name="teacher-count"),
     path("lessonplan/",views.LessonPlanView.as_view(), name="lesson-plan"),
     path("reviewlessonplan/<uuid:plan_id>/",views.LessonPlanView.as_view(),name="review-lesson-plan"),

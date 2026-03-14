@@ -27,13 +27,29 @@ class GetTeacherSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ["UID", "first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "role", "profilepic"]
 
+class SchoolYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolYear
+        fields = ["year_id", "year_start", "year_end", "is_active"]
+        
+    def validate(self, data):
+        if data["year_end"] < data["year_start"]:
+            raise serializers.ValidationError(
+                "End date cannot be earlier than start date"
+            )
+        return data
+    
+class UpdateSchoolYearSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolYear
+        fields = ["year_start", "year_end", "is_active"]
+
 class PostLessonPlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = LessonPlan
         fields = ["plan_id", "lesson_plan", "status", "feedback", "created_at", "quarter"]
 
 class LessonPlanSerializer(serializers.ModelSerializer):
-
     teacher = GetTeacherSerializer(read_only=True)
     year_id = serializers.UUIDField(source="quarter.school_year.year_id", read_only=True)
     school_year = serializers.CharField(source="quarter.school_year.name", read_only=True)
