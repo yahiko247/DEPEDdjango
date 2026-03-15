@@ -8,7 +8,6 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ViewAdminLessonPlan from "./pages/admin/ViewAdminLessonPlan";
 import SubView from "./components/quatersub/subview";
 import QuarterView from "./components/quaterview/quaterview";
-import Layout from "./layout";
 import QuarterlyView from "./pages/admin/QuarterlyView";
 
 function App() {
@@ -31,12 +30,9 @@ function App() {
         </Route>
 
         {/*public route paning duha eh sulod lang nis protected inig ma human nkas role*/}
-
-        <Route path="/layout" element={<Layout />}>
-          <Route path="admin" element={<AdminDashboard />}></Route>
-          <Route path="view" element={<ViewAdminLessonPlan />}></Route>
-          <Route path="quarter/:quarter" element={<QuarterlyView />} />
-        </Route>
+        <Route path="/view" element={<ViewAdminLessonPlan />} />
+        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/quarter" element={<QuarterlyView />} />
       </Routes>
     </BrowserRouter>
   );

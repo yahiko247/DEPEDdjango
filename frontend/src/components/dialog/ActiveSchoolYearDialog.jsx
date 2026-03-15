@@ -1,12 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getSchoolYears } from "../../api/principalApi";
 
 const TextComponent = ({ text }) => {
   return <div className="text-xs md:text-base">{text}</div>;
 };
 
 const ActiveSchoolYearDialog = ({ onClose }) => {
-  const [schoolYear, setActiveSchoolYear] = useState();
   const [deadline, setDeadline] = useState();
+  const [schoolYears, setSchoolYears] = useState([]);
+  const [selectedYear, setSelectedYear] = useState();
+
+  useEffect(() => {
+    const fetchSchoolYear = async () => {
+      const data = await getSchoolYears();
+      console.log(data);
+      setSchoolYears(data);
+
+      const activeYear = data.find((year) => year.is_active);
+      console.log("Active year:", activeYear);
+      if (activeYear) {
+        setSelectedYear(activeYear.year_id);
+      }
+    };
+
+    fetchSchoolYear();
+  }, []);
+
   return (
     <div
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2"
@@ -24,9 +43,23 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="flex w-full flex-col">
-          <TextComponent text={"Active School Year"} />
-          <option>2025-2026</option>
+        <div className="flex w-full flex-col gap-y-5">
+          <div className="flex flex-row items-center">
+            <TextComponent text={"Active School Year:"} />
+            <select
+              value={selectedYear}
+              onChange={(e) => setSelectedYear(e.target.value)}
+              className="select select-bordered"
+            >
+              <option value=""> Select School Year</option>
+              {schoolYears.map((year) => (
+                <option key={year.year_id} value={year.year_id}>
+                  {year.school_year}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <TextComponent text={"1st Quarter Deadline"} />
           <TextComponent text={"2nd Quarter Deadline"} />
           <TextComponent text={"3rd Quarter Deadline"} />

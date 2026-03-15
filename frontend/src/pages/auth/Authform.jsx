@@ -107,7 +107,7 @@ export default function AuthForm() {
       console.log("AuthForm User:", userData);
       console.log("user:", role);
       if (role === "Principal") {
-        navigate("/layout/view");
+        navigate("/view");
       } else {
         navigate("/dashboard");
       }

@@ -28,10 +28,15 @@ class GetTeacherSerializer(serializers.ModelSerializer):
         fields = ["UID", "first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "role", "profilepic"]
 
 class SchoolYearSerializer(serializers.ModelSerializer):
+    school_year = serializers.SerializerMethodField()
+    
     class Meta:
         model = SchoolYear
-        fields = ["year_id", "year_start", "year_end", "is_active"]
-        
+        fields = ["year_id", "year_start", "year_end", "school_year", "is_active"]
+
+    def get_school_year(self,obj):
+        return f"{obj.year_start.year}-{obj.year_end.year}"
+    
     def validate(self, data):
         if data["year_end"] < data["year_start"]:
             raise serializers.ValidationError(

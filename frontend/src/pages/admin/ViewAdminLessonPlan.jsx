@@ -1,3 +1,20 @@
+import { styled } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import CssBaseline from "@mui/material/CssBaseline";
+import MuiAppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { Background, DEPED, LessonPlan } from "../../assets/index.js";
+import { Outlet } from "react-router-dom";
+import ActiveSchoolYearDialog from "../../components/dialog/ActiveSchoolYearDialog.jsx";
+
 import React from "react";
 import Cards from "../../components/cards/Cards";
 import StatusCards from "../../components/cards/StatusCards";
@@ -13,6 +30,10 @@ import { Profile } from "../../assets";
 import { getLessonPlan } from "../../api/lessonPlanApi.js";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
+
+const AppBar = styled(MuiAppBar)(({ theme }) => ({
+  backgroundColor: "#2c8aad98",
+}));
 
 const ViewLessonPlan = () => {
   const { user, loading } = useAuth();
@@ -74,6 +95,19 @@ const ViewLessonPlan = () => {
     },
   ];
 
+  // Menu for account icon
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   const pdf = "/mock.pdf";
 
   //
@@ -102,46 +136,107 @@ const ViewLessonPlan = () => {
   }, [lessonPlans, activeTab]);
 
   return (
-    <div className="w-full min-h-full flex flex-col items-center gap-6 p-4 lg:w-3/4">
-      {/*Status Cards*/}
-      <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
-        {cardData.map((card) => (
-          <StatusCards
-            title={card.title}
-            icon={card.icon}
-            data={card.amount}
-            colorClass={card.colorClass}
+    <div className="flex flex-col w-screen h-screen">
+      <CssBaseline />
+      <span className="bg-blue-400">
+        <Toolbar>
+          <Box
+            component="img"
+            src={DEPED}
+            sx={{ height: 40, width: "auto", mr: 2 }}
           />
-        ))}
-      </div>
-      {/*Quarter View Lesson Plan Section*/}
-      <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full min-h-0 px-4 py-4">
-        {/*All Lesson Plan Submissions Text*/}
-        <div className="h-15 flex flex-row justify-between items-center">
-          <div className="text-xxs sm:text-sm md:text-base">
-            <h1 className="font-bold">All Lesson Plan Submissions</h1>
-            <div>Review and manage teacher submissions organized by week</div>
-          </div>
-          <div className="text-xs sm:text-sm md:text-base">All Teachers</div>
-        </div>
-        <div className="flex flex-row tabs tabs-box tabs-xs  bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
-          {tabsMock.map((tab) => (
-            <button
-              key={tab.id}
-              className={`flex flex-1 font-bold text-xxs sm:text-xs md:text-sm rounded-full tab transition-all ${
-                activeTab === tab.id ? "tab-active bg-white" : ""
-              }`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+          <Typography variant="h6" sx={{ flexGrow: 1 }}></Typography>
 
-        <div className="bg-white rounded-md flex flex-1 min-h-0 overflow-y-auto">
-          <TabContent data={filteredData} />
+          <div
+            className="btn btn-outline text-xs w-30"
+            onClick={() => setActiveSchoolYearDialog(true)}
+          >
+            Set Active School Year
+          </div>
+
+          <IconButton
+            color="inherit"
+            onClick={handleMenuOpen}
+            aria-controls={menuOpen ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={menuOpen ? "true" : undefined}
+          >
+            <AccountCircle />
+          </IconButton>
+
+          <Menu
+            id="account-menu"
+            anchorEl={anchorEl}
+            open={menuOpen}
+            onClose={handleMenuClose}
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            transformOrigin={{ vertical: "top", horizontal: "right" }}
+          >
+            <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+            <MenuItem>Log out</MenuItem>
+          </Menu>
+        </Toolbar>
+      </span>
+
+      {/*Background*/}
+      <div
+        className="relative flex flex-1 items-center justify-center bg-cover bg-center bg-fixed flex-col sm:flex-row gap-6 p-2"
+        style={{ backgroundImage: `url(${Background})` }}
+      >
+        <div className="w-full min-h-full flex flex-col items-center gap-6 p-4 lg:w-3/4">
+          {/*Status Cards*/}
+          <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
+            {cardData.map((card) => (
+              <StatusCards
+                title={card.title}
+                icon={card.icon}
+                data={card.amount}
+                colorClass={card.colorClass}
+              />
+            ))}
+          </div>
+          {/*Quarter View Lesson Plan Section*/}
+          <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full min-h-0 px-4 py-4">
+            {/*All Lesson Plan Submissions Text*/}
+            <div className="h-15 flex flex-row justify-between items-center">
+              <div className="text-xxs sm:text-sm md:text-base">
+                <h1 className="font-bold">All Lesson Plan Submissions</h1>
+                <div>
+                  Review and manage teacher submissions organized by week
+                </div>
+              </div>
+              <div className="text-xs sm:text-sm md:text-base">
+                All Teachers
+              </div>
+            </div>
+            <div className="flex flex-row tabs tabs-box tabs-xs  bg-gray-300 rounded-full justify-between p-1 gap-2 mb-4 w-full">
+              {tabsMock.map((tab) => (
+                <button
+                  key={tab.id}
+                  className={`flex flex-1 font-bold text-xxs sm:text-xs md:text-sm rounded-full tab transition-all ${
+                    activeTab === tab.id ? "tab-active bg-white" : ""
+                  }`}
+                  onClick={() => setActiveTab(tab.id)}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-white rounded-md flex flex-1 min-h-0 overflow-y-auto">
+              <TabContent data={filteredData} />
+            </div>
+          </div>
         </div>
       </div>
+
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {activeSchoolYearDialog && (
+        <ActiveSchoolYearDialog
+          onClose={() => setActiveSchoolYearDialog(false)}
+        />
+      )}
     </div>
   );
 };
