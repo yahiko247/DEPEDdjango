@@ -1,4 +1,3 @@
-import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import MuiAppBar from "@mui/material/AppBar";
@@ -8,16 +7,11 @@ import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Background, DEPED, LessonPlan } from "../../assets/index.js";
-import { Outlet } from "react-router-dom";
 import ActiveSchoolYearDialog from "../../components/dialog/ActiveSchoolYearDialog.jsx";
-
-import React from "react";
-import Cards from "../../components/cards/Cards";
 import StatusCards from "../../components/cards/StatusCards";
+import { styled } from "@mui/material/styles";
+import { ToastContainer } from "react-toastify";
+import { Background, DEPED } from "../../assets/index.js";
 import {
   TfiWrite,
   MdPerson,
@@ -30,6 +24,8 @@ import { Profile } from "../../assets";
 import { getLessonPlan } from "../../api/lessonPlanApi.js";
 import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
+
+import "react-toastify/dist/ReactToastify.css";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",

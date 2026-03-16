@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { getSchoolYears } from "../../api/principalApi";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const TextComponent = ({ text }) => {
   return <div className="text-xs md:text-base">{text}</div>;
 };
 
 const ActiveSchoolYearDialog = ({ onClose }) => {
-  const [deadline, setDeadline] = useState();
+  const [deadline, setDeadline] = useState(new Date());
   const [schoolYears, setSchoolYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState();
 
@@ -59,8 +61,12 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
               ))}
             </select>
           </div>
-
           <TextComponent text={"1st Quarter Deadline"} />
+          <DatePicker
+            selected={deadline}
+            onChange={(date) => setDeadline(date)}
+          />
+
           <TextComponent text={"2nd Quarter Deadline"} />
           <TextComponent text={"3rd Quarter Deadline"} />
           <TextComponent text={"4th Quarter Deadline"} />
