@@ -79,6 +79,12 @@ class ReviewedLessonPlanSerializer(serializers.ModelSerializer):
         fields = ["reviewed_by","lesson_plan"]
 
 
+class QuarterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quarter
+        fields = ["quarter_id", "school_year", "quarter_number", "deadline"]
+
+
 # class UserRegistrationSerializer(serializers.ModelSerializer):
 #     password1 = serializers.CharField(write_only=True)
 #     password2 = serializers.CharField(write_only=True)

@@ -88,7 +88,7 @@ class Quarter(models.Model):
      quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
      quarter_number = models.PositiveSmallIntegerField()
-     deadline = models.DateTimeField()
+     deadline = models.DateField()
 
      def __str__(self) -> str:
         return f" {self.school_year}, Quarter: {self.quarter_number}  UID: {self.quarter_id}"
@@ -105,8 +105,8 @@ class LessonPlan(models.Model):
      lesson_plan = models.FileField(upload_to='pdfs', blank=False, null=False)
      status = models.CharField(max_length=10, default="Pending", blank=False, null=False)
      feedback = models.TextField(blank=True, null=False)
-     created_at = models.DateTimeField(auto_now_add=True)
-     reviewed_at = models.DateTimeField(blank=True, null=True)
+     created_at = models.DateField(auto_now_add=True)
+     reviewed_at = models.DateField(blank=True, null=True)
      
     #  certificate = models.FileField(upload)
      @property
@@ -121,7 +121,7 @@ class ReviewedLessonPlan(models.Model):
      review_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      reviewed_by = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="lessonPlan_reviewedBy")
      lesson_plan = models.ForeignKey(LessonPlan, on_delete=models.CASCADE, related_name="lessonPlan")
-     reviewed_at = models.DateTimeField(auto_now_add=True)
+     reviewed_at = models.DateField(auto_now_add=True)
 
      def __str__(self):
           return f" Reviewer: {self.reviewed_by.first_name} {self.reviewed_by.last_name} Reviewee: {self.lesson_plan.teacher.first_name} {self.lesson_plan.teacher.last_name} Reviewed at: {self.reviewed_at}"

@@ -117,9 +117,24 @@ class SchoolYearView(APIView):
         else:
             return Response({"Unauthorized":"Only the Principal is allowed to update this"}, status=status.HTTP_401_UNAUTHORIZED)
 
+#Quarter Views
+class QuarterView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get(self,request, year_id):
+        role = request.user.role
+         
+        if not year_id:
+            return Response({'error':'Year ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if role == "Principal" or role == "PRINCIPAL":
+            year = get_object_or_404(SchoolYear, year_id=year_id)
+            quarters = Quarter.objects.filter(school_year = year)
+            serializer = QuarterSerializer(quarters, many=True)
 
-
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response ({'Unauthorized':"Principal is the only one that can access this"}, status=status.HTTP_401_UNAUTHORIZED) 
             
 
 
@@ -230,9 +245,6 @@ class LessonPlanView(APIView):
             return Response({serializer.errors},status=status.HTTP_400_BAD_REQUEST)
 
     
-
-
-
 class ReviewedByLessonPlan(APIView):
     def post(self, request):
         data = request.data
@@ -250,7 +262,12 @@ class ReviewedByLessonPlan(APIView):
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
-    
+
+
+
+
+
+
 # class UserRegistrationAPIView(GenericAPIView):
 #     permission_classes = (permissions.AllowAny,)
 #     serializer_class = UserRegistrationSerializer
