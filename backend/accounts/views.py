@@ -80,7 +80,9 @@ class SchoolYearView(APIView):
             serializer = SchoolYearSerializer(data=data)
 
             if serializer.is_valid():
-                serializer.save()
+                year = serializer.save()
+                for i in range(1,5):
+                    Quarter.objects.create(school_year = year, quarter_number=i)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

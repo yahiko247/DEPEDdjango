@@ -47,3 +47,14 @@ export const updateSchoolYear = async ({
     throw e;
   }
 };
+
+export const getQuarterDeadlines = async (year_id) => {
+  console.log("yearID", year_id);
+  try {
+    const response = await api.get(`quarter/${year_id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};

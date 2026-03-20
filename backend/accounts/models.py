@@ -85,10 +85,13 @@ class SchoolYear(models.Model):
     
 
 class Quarter(models.Model):
+     class Meta:
+          unique_together = ('school_year','quarter_number')
+
      quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
      quarter_number = models.PositiveSmallIntegerField()
-     deadline = models.DateField()
+     deadline = models.DateField(blank=True, null=True)
 
      def __str__(self) -> str:
         return f" {self.school_year}, Quarter: {self.quarter_number}  UID: {self.quarter_id}"
