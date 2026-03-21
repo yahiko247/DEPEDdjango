@@ -83,7 +83,6 @@ class SchoolYear(models.Model):
      def __str__(self) -> str:
         return f" {self.year_start} -  {self.year_end} UID: {self.year_id}"
     
-
 class Quarter(models.Model):
      class Meta:
           unique_together = ('school_year','quarter_number')

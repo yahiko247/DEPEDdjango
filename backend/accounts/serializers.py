@@ -84,6 +84,11 @@ class QuarterSerializer(serializers.ModelSerializer):
         model = Quarter
         fields = ["quarter_id", "school_year", "quarter_number", "deadline"]
 
+class UpdateQuarterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quarter
+        fields = ["quarter_id", "deadline"]
+
 
 # class UserRegistrationSerializer(serializers.ModelSerializer):
 #     password1 = serializers.CharField(write_only=True)

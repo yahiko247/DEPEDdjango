@@ -136,7 +136,41 @@ class QuarterView(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
-            return Response ({'Unauthorized':"Principal is the only one that can access this"}, status=status.HTTP_401_UNAUTHORIZED) 
+            return Response ({'Unauthorized':"Principal is the only one that can access this"}, status=status.HTTP_401_UNAUTHORIZED)
+
+    def patch(self, request):
+        data = request.data
+        role = request.user.role
+        updated_quarters = []
+
+        for item in data:
+            quarter_id = item.get("quarter_id")
+            deadline = item.get("deadline")
+            try:
+                quarter = Quarter.objects.get(
+                    quarter_id=quarter_id
+                )
+                quarter.deadline = deadline
+                quarter.save()
+                updated_quarters.append(quarter)
+            except Quarter.DoesNotExist:
+                continue
+
+        if role == "Principal" or role == "PRINCIPAL":
+            serializer = UpdateQuarterSerializer(data = data, many=True)
+            if serializer.is_valid():
+                
+                return Response(UpdateQuarterSerializer(updated_quarters, many=True).data, status=status.HTTP_200_OK)
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response({"Unauthorized":"Principal is the only one that can access this!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+        
+
+
+
             
 
 
@@ -215,12 +249,7 @@ class LessonPlanView(APIView):
             queryset = queryset.filter(
                 quarter__school_year__name=school_year
             )
-
-
-       
-        
-        
-        
+               
         serializer = LessonPlanSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     

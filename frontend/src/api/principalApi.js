@@ -58,3 +58,12 @@ export const getQuarterDeadlines = async (year_id) => {
     throw e;
   }
 };
+
+export const updateQuarterDeadline = async (deadlines) => {
+  try {
+    const response = await api.patch(`quarter/update/`, deadlines);
+    return response.data;
+  } catch (e) {
+    throw e;
+  }
+};

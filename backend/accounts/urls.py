@@ -11,6 +11,7 @@ urlpatterns = [
     path("schoolyear/", views.SchoolYearView.as_view(), name="school-year"),
     path("setschoolyear/<uuid:year_id>/", views.SchoolYearView.as_view(), name="school-year-update"),
     path("quarter/<uuid:year_id>", views.QuarterView.as_view(), name="quarter-view"),
+    path("quarter/update/", views.QuarterView.as_view(), name="quarter-update"),
     path("count/", views.CountView.as_view(), name="teacher-count"),
     path("lessonplan/",views.LessonPlanView.as_view(), name="lesson-plan"),
     path("reviewlessonplan/<uuid:plan_id>/",views.LessonPlanView.as_view(),name="review-lesson-plan"),

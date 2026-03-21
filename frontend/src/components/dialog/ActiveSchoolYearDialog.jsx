@@ -1,30 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { getQuarterDeadlines, getSchoolYears } from "../../api/principalApi";
+import {
+  getQuarterDeadlines,
+  getSchoolYears,
+  updateQuarterDeadline,
+} from "../../api/principalApi";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import DialogSkeleton from "../skeleton/DialogSkeleton";
 
 const TextComponent = ({ text }) => {
   return <div className="text-xs md:text-base">{text}</div>;
 };
 
 const ActiveSchoolYearDialog = ({ onClose }) => {
-  const [firstQuarterDeadline, setFirstQuarterDeadline] = useState(new Date());
-
   const [deadlines, setDeadlines] = useState([]);
-
   const [selectedYear, setSelectedYear] = useState();
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchQuarterDeadlines = async (year_id) => {
-      const data = await getQuarterDeadlines(year_id);
-      console.log("quarters", data);
-      setDeadlines(data);
-    };
+  const fetchQuarterDeadlines = async (year_id) => {
+    const data = await getQuarterDeadlines(year_id);
+    console.log("quarters", data);
+    setDeadlines(data);
+  };
 
-    const fetchSchoolYear = async () => {
+  const fetchSchoolYear = async () => {
+    try {
+      setLoading(true);
       const data = await getSchoolYears();
       console.log(data);
-
       const activeYear = data.find((year) => year.is_active);
       console.log("Active year:", activeYear.school_year);
       if (activeYear) {
@@ -33,10 +36,26 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
 
         fetchQuarterDeadlines(activeYear.year_id);
       }
-    };
+    } catch (e) {
+      throw e;
+    } finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
+    }
+  };
 
+  useEffect(() => {
     fetchSchoolYear();
   }, []);
+
+  const handleDeadlineSave = async () => {
+    try {
+      updateQuarterDeadline(deadlines);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const handleDeadlineChange = (id, newDate) => {
     setDeadlines((prev) =>
@@ -61,42 +80,61 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-y-5 flex-1">
-          <div className="flex flex-row items-center font-bold gap-x-2">
-            <TextComponent text={"Active School Year:"} />
-            <div>{selectedYear?.school_year}</div>
+        <div className="relative h-full">
+          <div
+            className={`absolute inset-0 transition-opacity duration-500  ${
+              loading ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <DialogSkeleton />
           </div>
 
-          {deadlines.map((deadline) => (
-            <div
-              key={deadline.quarter_id}
-              className="flex flex-row items-center gap-x-2 w-full"
-            >
-              <div>Quarter {deadline.quarter_number}:</div>
-              <input
-                type="date"
-                value={deadline.deadline}
-                onChange={(e) =>
-                  handleDeadlineChange(deadline.quarter_id, e.target.value)
-                }
-                className="input input-bordered w-1/2"
-              />
+          <div
+            className={`absolute inset-0 transition-opacity duration-500 delay-100 flex flex-col justify-between  
+              ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
+          >
+            <div className="flex w-full flex-col gap-y-5 flex-1  ">
+              <div className="flex flex-row items-center font-bold gap-x-2">
+                <TextComponent text={"Active School Year:"} />
+                <div>{selectedYear?.school_year}</div>
+              </div>
+
+              {deadlines.map((deadline) => (
+                <div
+                  key={deadline.quarter_id}
+                  className="flex flex-row items-center gap-x-2 w-full"
+                >
+                  <div>Quarter {deadline.quarter_number}:</div>
+                  <input
+                    type="date"
+                    value={deadline.deadline}
+                    onChange={(e) =>
+                      handleDeadlineChange(deadline.quarter_id, e.target.value)
+                    }
+                    className="input input-bordered w-1/2"
+                  />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-        <div className="flex flex-row justify-evenly w-full">
-          <button
-            className="w-30  xs:w-40 btn btn-success rounded-full text-white"
-            onClick={() => {}}
-          >
-            UPDATE
-          </button>
-          <button
-            className="w-30  xs:w-40 btn btn-error rounded-full text-white"
-            onClick={onClose}
-          >
-            CLOSE
-          </button>
+
+            {/* add a success for updating before reset */}
+            <div className="flex flex-row justify-evenly w-full">
+              <button
+                className="w-30  xs:w-40 btn btn-success rounded-full text-white"
+                onClick={() => {
+                  handleDeadlineSave();
+                }}
+              >
+                UPDATE
+              </button>
+              <button
+                className="w-30  xs:w-40 btn btn-error rounded-full text-white"
+                onClick={onClose}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
