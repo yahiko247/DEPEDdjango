@@ -1,17 +1,37 @@
 import React, { useState } from "react";
 import ReviewDialog from "./ReviewDialog";
 import { reviewLessonPlan } from "../../api/lessonPlanApi";
-import ConfirmDialog from "./ConfirmDialog";
+import ConfirmDialog from "./ConfirmDialog.jsx";
 import { CiCircleCheck, CiWarning } from "../../icons/index.js";
+import SuccessDialog from "./SuccessDialog.jsx";
 
 const PDFDialog = ({ data, onClose }) => {
   const [openReview, setOpenReview] = useState(false);
   const [successfulSaveDialog, setSuccessfulSaveDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(data.status ?? "");
   const [feedBack, setFeedBack] = useState(data.feedback ?? "");
   const [lessonPlanID, setLessonPlanID] = useState(data.plan_id ?? "");
+  const [successDialog, setSuccessDialog] = useState(false);
 
   if (!data) return null;
+
+  const handleReviewLessonPlan = async (lessonPlanID, status, feedBack) => {
+    try {
+      setLoading(true);
+      const response = await reviewLessonPlan(lessonPlanID, status, feedBack);
+      if (response.status === 200) {
+        setSuccessDialog(true);
+      } else {
+        console.log("rawr");
+        // setSuccessDialog(true);
+      }
+    } catch (e) {
+      console.log("Internal Server Error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -57,8 +77,7 @@ const PDFDialog = ({ data, onClose }) => {
             <button
               className="w-30  xs:w-40 btn btn-success rounded-full text-white"
               onClick={() => {
-                reviewLessonPlan(lessonPlanID, status, feedBack);
-                setSuccessfulSaveDialog(true);
+                handleReviewLessonPlan(lessonPlanID, status, feedBack);
               }}
             >
               SAVE
@@ -72,6 +91,11 @@ const PDFDialog = ({ data, onClose }) => {
           </div>
         </div>
       </div>
+
+      <SuccessDialog
+        isOpen={successDialog}
+        onClose={() => setSuccessDialog(false)}
+      />
       {successfulSaveDialog && (
         <ConfirmDialog
           headerText={"Success!"}

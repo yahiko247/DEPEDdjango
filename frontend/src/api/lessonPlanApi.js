@@ -40,7 +40,7 @@ export const reviewLessonPlan = async (lessonplanID, status, feedBack) => {
       feedback: feedBack,
     });
     console.log("Response Data:", response.data);
-    return response.data;
+    return response;
   } catch (e) {
     console.log("Error:", e);
     throw e;

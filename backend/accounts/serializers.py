@@ -60,7 +60,7 @@ class LessonPlanSerializer(serializers.ModelSerializer):
     school_year = serializers.CharField(source="quarter.school_year.name", read_only=True)
     quarter_id = serializers.UUIDField(source="quarter.quarter_id", read_only=True)
     quarter = serializers.IntegerField( source="quarter.quarter_number", read_only=True)
-    deadline = serializers.DateTimeField(source="quarter.deadline",read_only=True)
+    deadline = serializers.DateField(source="quarter.deadline",read_only=True)
     is_late = serializers.ReadOnlyField()
 
 

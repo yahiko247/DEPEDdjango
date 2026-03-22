@@ -201,57 +201,63 @@ class LessonPlanView(APIView):
     def get(self, request):
         user = request.user
         role = request.user.role
-        if role == "PRINCIPAL" or role == "Principal":
+
+        try:
+            if role == "PRINCIPAL" or role == "Principal":
            
-           queryset = LessonPlan.objects.select_related(
-                "teacher",
-                "quarter",
-                "quarter__school_year"
-            )
-
-        elif role == 'Teacher' or role == 'TEACHER':
-           queryset = LessonPlan.objects.select_related(
-                "teacher",
-                "quarter",
-                "quarter__school_year"
-            ).filter(teacher=user)
-           
-        else:
-            return Response({"error":"Unauthorized"},status=status.HTTP_403_FORBIDDEN)
-           
-        quarter_number = request.query_params.get("quarter")
-        status_param = request.query_params.get("status")
-        is_late = request.query_params.get("is_late")
-        school_year = request.query_params.get("school_year")
-
-        if quarter_number:
-            queryset = queryset.filter(
-                quarter__quarter_number=quarter_number
-            )
-
-        if status_param:
-            queryset = queryset.filter(
-                status__iexact=status_param
-            )
-
-        if is_late is not None:
-            is_late_bool = is_late.lower() == "true"
-            if is_late_bool:
-                queryset = queryset.filter(
-                    created_at__gt=F("quarter__deadline")
+                queryset = LessonPlan.objects.select_related(
+                        "teacher",
+                        "quarter",
+                        "quarter__school_year"
                 )
+
+            elif role == 'Teacher' or role == 'TEACHER':
+                queryset = LessonPlan.objects.select_related(
+                        "teacher",
+                        "quarter",
+                        "quarter__school_year"
+                    ).filter(teacher=user)
+            
             else:
+                return Response({"error":"Unauthorized"},status=status.HTTP_403_FORBIDDEN)
+            
+            quarter_number = request.query_params.get("quarter")
+            status_param = request.query_params.get("status")
+            is_late = request.query_params.get("is_late")
+            school_year = request.query_params.get("school_year")
+
+            if quarter_number:
                 queryset = queryset.filter(
-                    created_at__lte=F("quarter__deadline")
+                    quarter__quarter_number=quarter_number
                 )
 
-        if school_year:
-            queryset = queryset.filter(
-                quarter__school_year__name=school_year
-            )
-               
-        serializer = LessonPlanSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            if status_param:
+                queryset = queryset.filter(
+                    status__iexact=status_param
+                )
+
+            if is_late is not None:
+                is_late_bool = is_late.lower() == "true"
+                if is_late_bool:
+                    queryset = queryset.filter(
+                        created_at__gt=F("quarter__deadline")
+                    )
+                else:
+                    queryset = queryset.filter(
+                        created_at__lte=F("quarter__deadline")
+                    )
+
+            if school_year:
+                queryset = queryset.filter(
+                    quarter__school_year__name=school_year
+                )
+                
+            serializer = LessonPlanSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print("ERror",e)
+        
     
     def patch (self,request,plan_id):
         data = request.data
