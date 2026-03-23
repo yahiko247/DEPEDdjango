@@ -63,30 +63,26 @@ const ViewLessonPlan = () => {
       colorClass: "border-green-500/30 bg-green-500/30",
     },
   ];
-
+  //not mock data pls don't delete
   const tabsMock = [
     {
       index: 1,
       id: 1,
-      tcaher: "quarter_tab_1",
       label: "Quarter 1",
     },
     {
       index: 2,
       id: 2,
-      name: "quarter_tab_1",
       label: "Quarter 2",
     },
     {
       index: 3,
       id: 3,
-      name: "quarter_tab_1",
       label: "Quarter 3",
     },
     {
       index: 4,
       id: 4,
-      name: "quarter_tab_1",
       label: "Quarter 4",
     },
   ];
@@ -104,26 +100,23 @@ const ViewLessonPlan = () => {
     setAnchorEl(null);
   };
 
-  const pdf = "/mock.pdf";
-
-  //
   const [activeTab, setActiveTab] = useState(1);
   const [lessonPlans, setLessonPlans] = useState([]);
 
+  const fetchLessonPlans = async () => {
+    try {
+      console.log("loading true");
+      const data = await getLessonPlan();
+      setLessonPlans(data);
+    } catch (e) {
+      console.log("Error boss:", e);
+    } finally {
+      console.log("loading false");
+    }
+  };
+
   useEffect(() => {
     if (loading) return;
-
-    const fetchLessonPlans = async () => {
-      try {
-        console.log("loading true");
-        const data = await getLessonPlan();
-        setLessonPlans(data);
-      } catch (e) {
-        console.log("Error boss:", e);
-      } finally {
-        console.log("loading false");
-      }
-    };
     fetchLessonPlans();
   }, [loading]);
 
@@ -220,7 +213,10 @@ const ViewLessonPlan = () => {
             </div>
 
             <div className="bg-white rounded-md flex flex-1 min-h-0 overflow-y-auto">
-              <TabContent data={filteredData} />
+              <TabContent
+                data={filteredData}
+                refreshLessonPlan={fetchLessonPlans}
+              />
             </div>
           </div>
         </div>

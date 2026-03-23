@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Profile } from "../../assets";
 import PDFDialog from "../dialog/PDFDialog";
 
-const TabContent = ({ data }) => {
+const TabContent = ({ data, refreshLessonPlan }) => {
   const [selectedItem, setSelectedItem] = useState();
 
   const reviewStatusStyles = {
@@ -84,7 +84,11 @@ const TabContent = ({ data }) => {
       })}
 
       {selectedItem && (
-        <PDFDialog data={selectedItem} onClose={() => setSelectedItem(null)} />
+        <PDFDialog
+          data={selectedItem}
+          onClose={() => setSelectedItem(null)}
+          refreshLessonPlan={refreshLessonPlan}
+        />
       )}
     </div>
   );

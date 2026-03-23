@@ -5,7 +5,7 @@ import ConfirmDialog from "./ConfirmDialog.jsx";
 import { CiCircleCheck, CiWarning } from "../../icons/index.js";
 import SuccessDialog from "./SuccessDialog.jsx";
 
-const PDFDialog = ({ data, onClose }) => {
+const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
   const [openReview, setOpenReview] = useState(false);
   const [successfulSaveDialog, setSuccessfulSaveDialog] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,9 @@ const PDFDialog = ({ data, onClose }) => {
     try {
       setLoading(true);
       const response = await reviewLessonPlan(lessonPlanID, status, feedBack);
+      refreshLessonPlan();
       if (response.status === 200) {
+        console.log("true");
         setSuccessDialog(true);
       } else {
         console.log("rawr");

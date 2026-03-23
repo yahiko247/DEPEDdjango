@@ -3,6 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser,PermissionsMixin
 from django.contrib.auth.base_user import BaseUserManager
 from django.core.exceptions import ValidationError
 import uuid
+from .services import *
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+import os
+from django.conf import settings
+
 
 class AppUserManager(BaseUserManager):
     def create_user(self, first_name, middle_initial, last_name, subject, grade_level, email, password=None):
@@ -109,14 +115,35 @@ class LessonPlan(models.Model):
      feedback = models.TextField(blank=True, null=False)
      created_at = models.DateField(auto_now_add=True)
      reviewed_at = models.DateField(blank=True, null=True)
-     
-    #  certificate = models.FileField(upload)
+     certificate = models.FileField(null=True, blank=True)
+     #will have to make a different one again still not tested
+    #  verification_code = models.UUIDField(default=uuid.uuid1, editable=False, blank=True, null=True, unique=False)
+
+     def save(self, *args, **kwargs):
+        old = None
+        if self.pk:
+            old = LessonPlan.objects.get(pk=self.pk)
+
+        super().save(*args, **kwargs)
+
+        if self.status == "Approved":
+            if not self.certificate:
+                generate_certificate(self)  # ✅ FIXED
+
+        elif self.status in ["Pending", "Rejected"]:
+            if self.certificate:
+                self.certificate.delete(save=False)
+                self.certificate = None
+                super().save(update_fields=["certificate"])
+
      @property
      def is_late(self):
         return self.created_at > self.quarter.deadline
 
      def __str__(self):
           return f" {self.teacher.first_name} {self.teacher.last_name}  review_id: {self.plan_id}"
+     
+     
      
      
 class ReviewedLessonPlan(models.Model):

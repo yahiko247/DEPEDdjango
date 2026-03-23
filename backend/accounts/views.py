@@ -8,9 +8,29 @@ from .models import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from typing import Any
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework_simplejwt.views import TokenObtainPairView
+
+
+class VerifyCertificateView(APIView):
+    def get(self, request, code):
+        lesson = get_object_or_404(LessonPlan, verfication_code = code)
+
+        if lesson != "Approved":
+            return Response({"invalid":"This Certificate is no longer valid"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        file_path = lesson.certificate.path
+        try:
+            with open(file_path, "rb") as f:
+                response = FileResponse(f, as_attachment=False, content_type = 'application/pdf')
+                response['Content-Disposition'] = (
+                    f'inline; filename="{lesson.teacher.first_name}_{lesson.id}.pdf"'
+                )
+                return response
+        except FileNotFoundError:
+            return Http404("Certificate file not found")
 
 
 class CreateTokenAPIView(TokenObtainPairView):
