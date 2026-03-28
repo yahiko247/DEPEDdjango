@@ -117,24 +117,37 @@ class LessonPlan(models.Model):
      reviewed_at = models.DateField(blank=True, null=True)
      certificate = models.FileField(null=True, blank=True)
      #will have to make a different one again still not tested
-    #  verification_code = models.UUIDField(default=uuid.uuid1, editable=False, blank=True, null=True, unique=False)
-
+     verification_code = models.UUIDField(default=uuid.uuid1, editable=False, blank=True, null=True, unique=True)
+     qr_code = models.ImageField(upload_to="qr/", null=True, blank=True)
      def save(self, *args, **kwargs):
         old = None
         if self.pk:
-            old = LessonPlan.objects.get(pk=self.pk)
+               old = LessonPlan.objects.filter(pk=self.pk).first()
 
         super().save(*args, **kwargs)
+
+        if old and old.status == self.status:
+            return
 
         if self.status == "Approved":
             if not self.certificate:
                 generate_certificate(self)  # ✅ FIXED
 
+            if not self.qr_code:
+                qr_path = generate_qr(self)
+                self.qr_code = f"qr/{self.verification_code}.png"
+                super().save(update_fields=["qr_code"])
+
         elif self.status in ["Pending", "Rejected"]:
             if self.certificate:
                 self.certificate.delete(save=False)
                 self.certificate = None
-                super().save(update_fields=["certificate"])
+
+            if self.qr_code:
+                self.qr_code.delete(save=False)
+                self.qr_code = None
+
+            super().save(update_fields=["certificate", "qr_code"])
 
      @property
      def is_late(self):

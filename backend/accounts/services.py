@@ -38,14 +38,14 @@ def generate_certificate(lesson):
 
 def generate_qr(lesson):
         #url from urls.py which connect to views
-        url = f"http://localhost:8000/verify/certificate/{lesson.verification_code}/"
+        url = f"http://localhost:8000/api/verify/certificate/{lesson.verification_code}/"
 
         img = qrcode.make(url)
 
         qr_dir = os.path.join(settings.MEDIA_ROOT, "qr")
         os.makedirs(qr_dir, exist_ok=True)
 
-        qr_path = os.path.join(qr_dir, f"{lesson.id}.png")
+        qr_path = os.path.join(qr_dir, f"{lesson.verification_code}.png")
         img.save(qr_path)
 
         return qr_path

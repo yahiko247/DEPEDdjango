@@ -15,8 +15,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 
 class VerifyCertificateView(APIView):
+    permission_classes = (permissions.AllowAny,)
     def get(self, request, code):
-        lesson = get_object_or_404(LessonPlan, verfication_code = code)
+        lesson = get_object_or_404(LessonPlan, verification_code = code)
 
         if lesson != "Approved":
             return Response({"invalid":"This Certificate is no longer valid"}, status=status.HTTP_400_BAD_REQUEST)
