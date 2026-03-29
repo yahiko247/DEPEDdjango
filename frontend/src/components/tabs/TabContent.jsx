@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Profile } from "../../assets";
 import PDFDialog from "../dialog/PDFDialog";
 
-const TabContent = ({ data, refreshLessonPlan }) => {
+const TabContent = ({ data, refreshLessonPlan, loading }) => {
   const [selectedItem, setSelectedItem] = useState();
 
   const reviewStatusStyles = {
@@ -14,6 +14,10 @@ const TabContent = ({ data, refreshLessonPlan }) => {
   useEffect(() => {
     console.log("Data:", data);
   });
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (data.length === 0) {
     return (

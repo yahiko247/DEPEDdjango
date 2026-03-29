@@ -94,9 +94,14 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
               ${loading ? "opacity-0 pointer-events-none" : "opacity-100"}`}
           >
             <div className="flex w-full flex-col gap-y-5 flex-1  ">
-              <div className="flex flex-row items-center font-bold gap-x-2">
-                <TextComponent text={"Active School Year:"} />
-                <div>{selectedYear?.school_year}</div>
+              <div className="flex flex-row items-center gap-x-2">
+                <div className="font-bold">
+                  Active School Year: {selectedYear?.school_year}
+                </div>
+
+                <button className="text-xs btn btn-outline">
+                  Create School Year
+                </button>
               </div>
 
               {deadlines.map((deadline) => (

@@ -7,7 +7,7 @@ import SuccessDialog from "./SuccessDialog.jsx";
 
 const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
   const [openReview, setOpenReview] = useState(false);
-  const [successfulSaveDialog, setSuccessfulSaveDialog] = useState(false);
+  const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(data.status ?? "");
   const [feedBack, setFeedBack] = useState(data.feedback ?? "");
@@ -33,6 +33,11 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCloseAll = () => {
+    setConfirmDialog(false);
+    onClose();
   };
 
   return (
@@ -69,6 +74,7 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
           </span>
 
           <textarea
+            disabled={data?.status == "Approved"}
             className="border border-gray-300 rounded-lg bg-gray-100 p-2 resize-none h-20 w-full"
             value={feedBack}
             placeholder="Feedback (Optional)"
@@ -79,7 +85,8 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
             <button
               className="w-30  xs:w-40 btn btn-success rounded-full text-white"
               onClick={() => {
-                handleReviewLessonPlan(lessonPlanID, status, feedBack);
+                setConfirmDialog(true);
+                // handleReviewLessonPlan(lessonPlanID, status, feedBack);
               }}
             >
               SAVE
@@ -98,14 +105,30 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
         isOpen={successDialog}
         onClose={() => setSuccessDialog(false)}
       />
-      {successfulSaveDialog && (
-        <ConfirmDialog
-          headerText={"Success!"}
-          message={"Successfully Reviewed Lesson Plan!"}
-          onClose={() => setSuccessfulSaveDialog(false)}
-          logo={<CiCircleCheck className="size-30" />}
-        />
-      )}
+
+      <ConfirmDialog
+        isOpen={confirmDialog}
+        closeAll={handleCloseAll}
+        headerText="Confirm"
+        onClose={() => setConfirmDialog(false)}
+        confirmButton={() =>
+          handleReviewLessonPlan(lessonPlanID, status, feedBack)
+        }
+      >
+        Are you sure you want to update this lesson plan to:{" "}
+        <span
+          className={`font-bold ${
+            status === "Approved"
+              ? "text-success"
+              : status === "Rejected"
+                ? "text-error"
+                : "text-warning"
+          }`}
+        >
+          {status}
+        </span>
+      </ConfirmDialog>
+
       {openReview && (
         <ReviewDialog
           lessonPlanID={lessonPlanID}

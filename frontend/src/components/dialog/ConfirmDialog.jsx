@@ -1,30 +1,45 @@
 import React from "react";
 import { FaReact } from "../../icons/index.js";
-const ConfirmDialog = ({ onClose, headerText, message, logo }) => {
+const ConfirmDialog = ({
+  isOpen,
+  closeAll,
+  onClose,
+  headerText,
+  children,
+  confirmButton,
+}) => {
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white w-1/4 max-w-5xl h-60 rounded-lg flex flex-col gap-y-5 p-2"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-        <div className="flex border-b justify-between">
-          <h2 className="font-semibold">{headerText ?? "Header"}</h2>
-          <button onClick={onClose}>✕</button>
+    <>
+      <dialog open={isOpen} className="modal">
+        <div className="modal-box relative">
+          <button
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={onClose}
+          >
+            X
+          </button>
+          <h3 className="font-bold text-lg">{headerText}</h3>
+          <p className="py-4">{children}</p>
+          <div className="flex flex-row justify-evenly">
+            <button
+              className="btn btn-outline"
+              onClick={() => {
+                closeAll();
+                confirmButton();
+              }}
+            >
+              Confirm
+            </button>
+            <button className="btn btn-outline" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
         </div>
-
-        <div className="flex w-full  justify-center items-center">
-          {logo ?? <FaReact className="size-30" />}
-        </div>
-
-        <div className="flex w-full justify-center">
-          {message ?? "Dialog Message"}
-        </div>
-      </div>
-    </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    </>
   );
 };
 

@@ -8,7 +8,7 @@ from .models import *
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
 from typing import Any
-from django.http import FileResponse, Http404
+from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -20,7 +20,7 @@ class VerifyCertificateView(APIView):
         lesson = get_object_or_404(LessonPlan, verification_code = code)
         print(lesson.status)
         if lesson.status != "Approved":
-            return Response({"invalid":"This Certificate is no longer valid"}, status=status.HTTP_400_BAD_REQUEST)
+            return HttpResponse({"invalid":"This Certificate is no longer valid"}, status=status.HTTP_400_BAD_REQUEST)
         
         file_path = lesson.certificate.path
         print(file_path)

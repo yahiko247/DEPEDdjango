@@ -90,6 +90,7 @@ const ViewLessonPlan = () => {
   // Menu for account icon
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
   const menuOpen = Boolean(anchorEl);
 
   const handleMenuOpen = (event) => {
@@ -105,12 +106,14 @@ const ViewLessonPlan = () => {
 
   const fetchLessonPlans = async () => {
     try {
+      setDataLoading(true);
       console.log("loading true");
       const data = await getLessonPlan();
       setLessonPlans(data);
     } catch (e) {
       console.log("Error boss:", e);
     } finally {
+      setDataLoading(false);
       console.log("loading false");
     }
   };
@@ -216,6 +219,7 @@ const ViewLessonPlan = () => {
               <TabContent
                 data={filteredData}
                 refreshLessonPlan={fetchLessonPlans}
+                loading={dataLoading}
               />
             </div>
           </div>
