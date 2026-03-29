@@ -66,7 +66,7 @@ class LessonPlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LessonPlan
-        fields = ["plan_id", "teacher","year_id", "school_year", "quarter_id", "quarter","lesson_plan", "status", "feedback", "created_at", "deadline", "is_late"]
+        fields = ["plan_id", "teacher","year_id", "school_year", "quarter_id", "quarter","lesson_plan", "status", "feedback", "created_at", "deadline", "qr_code","is_late"]
 
 class UpdateLessonPlanSerializer(serializers.ModelSerializer):
     class Meta:

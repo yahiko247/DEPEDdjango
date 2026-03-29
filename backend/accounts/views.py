@@ -18,18 +18,18 @@ class VerifyCertificateView(APIView):
     permission_classes = (permissions.AllowAny,)
     def get(self, request, code):
         lesson = get_object_or_404(LessonPlan, verification_code = code)
-
-        if lesson != "Approved":
+        print(lesson.status)
+        if lesson.status != "Approved":
             return Response({"invalid":"This Certificate is no longer valid"}, status=status.HTTP_400_BAD_REQUEST)
         
         file_path = lesson.certificate.path
+        print(file_path)
         try:
-            with open(file_path, "rb") as f:
-                response = FileResponse(f, as_attachment=False, content_type = 'application/pdf')
-                response['Content-Disposition'] = (
-                    f'inline; filename="{lesson.teacher.first_name}_{lesson.id}.pdf"'
-                )
-                return response
+            return FileResponse(
+                open(lesson.certificate.path, "rb"),
+                as_attachment=False,
+                filename=f"{lesson.teacher.last_name,}_{lesson.plan_id}.pdf"
+            )
         except FileNotFoundError:
             return Http404("Certificate file not found")
 

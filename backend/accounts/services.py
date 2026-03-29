@@ -38,7 +38,7 @@ def generate_certificate(lesson):
 
 def generate_qr(lesson):
         #url from urls.py which connect to views
-        url = f"http://localhost:8000/api/verify/certificate/{lesson.verification_code}/"
+        url = f"http://localhost:8000/api/verify/certificate/{lesson.verification_code}"
 
         img = qrcode.make(url)
 
