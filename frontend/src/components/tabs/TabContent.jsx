@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Profile } from "../../assets";
 import PDFDialog from "../dialog/PDFDialog";
+import LessonPlanSkeleton from "../skeleton/LessonPlanSkeleton";
 
 const TabContent = ({ data, refreshLessonPlan, loading }) => {
   const [selectedItem, setSelectedItem] = useState();
@@ -16,7 +17,7 @@ const TabContent = ({ data, refreshLessonPlan, loading }) => {
   });
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LessonPlanSkeleton />;
   }
 
   if (data.length === 0) {
@@ -68,7 +69,7 @@ const TabContent = ({ data, refreshLessonPlan, loading }) => {
           >
             <img
               src={item.teacher.profilepic}
-              className="rounded-full size-8 bg-cover border border-blue-500 hidden md:block"
+              className="rounded-full size-8 bg-cover border border-black hidden md:block"
             />
             <div className="font-bold">
               {item.teacher.first_name} {item.teacher.middle_initial}{" "}
