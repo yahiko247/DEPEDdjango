@@ -94,7 +94,7 @@ class Quarter(models.Model):
           unique_together = ('school_year','quarter_number')
 
      quarter_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
-     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="school_year")
+     school_year = models.ForeignKey(SchoolYear, on_delete=models.CASCADE, related_name="quarters")
      quarter_number = models.PositiveSmallIntegerField()
      deadline = models.DateField(blank=True, null=True)
 

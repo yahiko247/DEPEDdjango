@@ -15,10 +15,15 @@ export const getSchoolYears = async () => {
   }
 };
 
-export const createSchoolYear = async () => {
+export const createSchoolYear = async (year_start, year_end, deadlines) => {
   try {
-    const response = await api.post("schoolyear/");
-    return response.data;
+    console.log("deadlines:", deadlines);
+    const response = await api.post("schoolyear/", {
+      year_start: year_start,
+      year_end: year_end,
+      quarters: deadlines,
+    });
+    return response;
   } catch (e) {
     throw e;
   }

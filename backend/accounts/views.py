@@ -98,12 +98,11 @@ class SchoolYearView(APIView):
         role = request.user.role
 
         if role == "Principal" or role == "PRINCIPAL":
-            serializer = SchoolYearSerializer(data=data)
+            serializer = CreateSchoolYearSerializer(data=data)
 
             if serializer.is_valid():
-                year = serializer.save()
-                for i in range(1,5):
-                    Quarter.objects.create(school_year = year, quarter_number=i)
+
+                serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             else:
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

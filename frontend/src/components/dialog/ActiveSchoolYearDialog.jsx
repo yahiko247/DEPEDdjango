@@ -9,10 +9,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import DialogSkeleton from "../skeleton/DialogSkeleton";
 import CreateSchoolYearDialog from "./CreateSchoolYearDialog";
 
-const TextComponent = ({ text }) => {
-  return <div className="text-xs md:text-base">{text}</div>;
-};
-
 const ActiveSchoolYearDialog = ({ onClose }) => {
   const [deadlines, setDeadlines] = useState([]);
   const [selectedYear, setSelectedYear] = useState();
@@ -41,9 +37,7 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
     } catch (e) {
       throw e;
     } finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
+      setLoading(false);
     }
   };
 
@@ -128,6 +122,7 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
                   >
                     <div>Quarter {deadline.quarter_number}:</div>
                     <input
+                      //set minimum for deadline and maximum also
                       type="date"
                       value={deadline.deadline}
                       onChange={(e) =>

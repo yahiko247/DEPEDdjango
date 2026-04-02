@@ -27,6 +27,24 @@ class GetTeacherSerializer(serializers.ModelSerializer):
         model = UserModel
         fields = ["UID", "first_name", "middle_initial", "last_name", "subject", "grade_level", "email", "role", "profilepic"]
 
+
+
+class QuarterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quarter
+        fields = ["quarter_id", "quarter_number", "deadline"]
+        read_only = ["school_year"]
+
+class UpdateQuarterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quarter
+        fields = ["quarter_id", "deadline"]
+
+class PostLessonPlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LessonPlan
+        fields = ["plan_id", "lesson_plan", "status", "feedback", "created_at", "quarter"]
+
 class SchoolYearSerializer(serializers.ModelSerializer):
     school_year = serializers.SerializerMethodField()
     
@@ -44,15 +62,71 @@ class SchoolYearSerializer(serializers.ModelSerializer):
             )
         return data
     
+class CreateSchoolYearSerializer(serializers.ModelSerializer):
+    quarters = QuarterSerializer(many=True)
+
+    class Meta:
+        model = SchoolYear
+        fields = ["year_id", "year_start", "year_end", "quarters"]
+    
+    def get_school_year(self,obj):
+        return f"{obj.year_start.year}-{obj.year_end.year}"
+
+    def validate(self, data):
+        year_start = data.get("year_start")
+        year_end = data.get("year_end")
+        quarters = data.get("quarters", [])
+        if year_start > year_end:
+            raise serializers.ValidationError(
+                "End date cannot be earlier than start date"
+            )
+        
+        for q in quarters:
+            deadline = q.get("deadline")
+
+            if deadline is None:
+                raise serializers.ValidationError(
+                    f"Quarter {q.get('quarter_number')} has no deadline"
+                )
+
+            if deadline < year_start or deadline > year_end:
+                raise serializers.ValidationError(
+                    f"Quarter {q.get('quarter_number')} deadline must be between "
+                    f"{year_start} and {year_end}"
+                )
+        return data
+    
+    def create(self, validated_data):
+        quarters_data = validated_data.pop("quarters")
+        school_year_id = SchoolYear.objects.create(**validated_data)
+        
+        for q in quarters_data:
+            Quarter.objects.create(
+                school_year = school_year_id,
+                quarter_number = q["quarter_number"],
+                deadline = q["deadline"]
+            )
+        return school_year_id
+    
+
 class UpdateSchoolYearSerializer(serializers.ModelSerializer):
+    school_year = serializers.SerializerMethodField()
+
     class Meta:
         model = SchoolYear
         fields = ["year_start", "year_end", "is_active"]
 
-class PostLessonPlanSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = LessonPlan
-        fields = ["plan_id", "lesson_plan", "status", "feedback", "created_at", "quarter"]
+    def get_school_year(self,obj):
+        return f"{obj.year_start.year}-{obj.year_end.year}"
+
+    def validate(self, data):
+        if data["year_end"] < data["year_start"]:
+            raise serializers.ValidationError(
+                "End date cannot be earlier than start date"
+            )
+        return data
+        
+
 
 class LessonPlanSerializer(serializers.ModelSerializer):
     teacher = GetTeacherSerializer(read_only=True)
@@ -78,16 +152,6 @@ class ReviewedLessonPlanSerializer(serializers.ModelSerializer):
         model = ReviewedLessonPlan
         fields = ["reviewed_by","lesson_plan"]
 
-
-class QuarterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quarter
-        fields = ["quarter_id", "school_year", "quarter_number", "deadline"]
-
-class UpdateQuarterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Quarter
-        fields = ["quarter_id", "deadline"]
 
 
 # class UserRegistrationSerializer(serializers.ModelSerializer):
