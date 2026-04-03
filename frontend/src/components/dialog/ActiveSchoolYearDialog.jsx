@@ -8,6 +8,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import DialogSkeleton from "../skeleton/DialogSkeleton";
 import CreateSchoolYearDialog from "./CreateSchoolYearDialog";
+import SuccessAlert from "../alerts/SuccessAlert";
 
 const ActiveSchoolYearDialog = ({ onClose }) => {
   const [deadlines, setDeadlines] = useState([]);
@@ -72,6 +73,9 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
 
   return (
     <>
+      {/* <div className="toast toast-top toast-end z-1000">
+        <SuccessAlert />
+      </div> */}
       <div
         className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2"
         onClick={onClose}
@@ -161,6 +165,7 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
       <CreateSchoolYearDialog
         isOpen={createSYOpen}
         onClose={() => setCreateSYOpen(false)}
+        fetchSchoolYear={fetchSchoolYear}
       />
     </>
   );

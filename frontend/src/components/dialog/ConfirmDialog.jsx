@@ -1,5 +1,6 @@
 import React from "react";
 import { FaReact } from "../../icons/index.js";
+import ErrorAlert from "../alerts/ErrorAlert.jsx";
 const ConfirmDialog = ({
   isOpen,
   closeAll,
@@ -35,6 +36,7 @@ const ConfirmDialog = ({
             </button>
           </div>
         </div>
+
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>

@@ -98,7 +98,7 @@ class CreateSchoolYearSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         quarters_data = validated_data.pop("quarters")
-        school_year_id = SchoolYear.objects.create(**validated_data)
+        school_year_id = SchoolYear.objects.create(is_active=True, **validated_data)
         
         for q in quarters_data:
             Quarter.objects.create(
