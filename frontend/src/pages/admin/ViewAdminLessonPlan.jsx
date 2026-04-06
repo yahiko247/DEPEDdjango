@@ -228,11 +228,10 @@ const ViewLessonPlan = () => {
 
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {activeSchoolYearDialog && (
-        <ActiveSchoolYearDialog
-          onClose={() => setActiveSchoolYearDialog(false)}
-        />
-      )}
+      <ActiveSchoolYearDialog
+        isOpen={activeSchoolYearDialog}
+        onClose={() => setActiveSchoolYearDialog(false)}
+      />
     </div>
   );
 };

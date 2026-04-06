@@ -85,7 +85,7 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
       <div className="toast toast-top toast-end z-1000">
         <ErrorAlert show={showError} message={"Please complete all fields"} />
       </div>
-      <dialog className="modal flex flex-col justify-center" open={isOpen}>
+      <dialog className="modal" open={isOpen}>
         <div className="modal-box">
           <h3 className="font-bold text-lg">Create School Year</h3>
 
@@ -118,7 +118,7 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
                 key={q.quarter_number}
                 className="flex flex-row justify-between items-center"
               >
-                <div>Quarter ${q.quarter_number} Deadline</div>
+                <div>Quarter {q.quarter_number} Deadline</div>
                 <input
                   min={yearStart}
                   max={yearEnd}

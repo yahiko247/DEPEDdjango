@@ -10,7 +10,7 @@ import DialogSkeleton from "../skeleton/DialogSkeleton";
 import CreateSchoolYearDialog from "./CreateSchoolYearDialog";
 import SuccessAlert from "../alerts/SuccessAlert";
 
-const ActiveSchoolYearDialog = ({ onClose }) => {
+const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
   const [deadlines, setDeadlines] = useState([]);
   const [selectedYear, setSelectedYear] = useState();
   const [loading, setLoading] = useState(false);
@@ -76,7 +76,64 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
       {/* <div className="toast toast-top toast-end z-1000">
         <SuccessAlert />
       </div> */}
-      <div
+
+      <dialog className="modal" open={isOpen}>
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Set Active School Year</h3>
+          <div className="flex border-b"></div>
+
+          <div className="flex w-full flex-col gap-y-5 flex-1  ">
+            <div className="flex flex-row items-center gap-x-2 pt-3">
+              <div className="font-bold">
+                Active School Year: {selectedYear?.school_year}
+              </div>
+
+              <button
+                className="text-xs btn btn-outline"
+                onClick={() => setCreateSYOpen(true)}
+              >
+                Create School Year
+              </button>
+            </div>
+
+            {deadlines.map((deadline) => (
+              <div
+                key={deadline.quarter_id}
+                className="flex flex-row items-center gap-x-2 w-full"
+              >
+                <div>Quarter {deadline.quarter_number}:</div>
+                <input
+                  //set minimum for deadline and maximum also
+                  type="date"
+                  value={deadline.deadline}
+                  onChange={(e) =>
+                    handleDeadlineChange(deadline.quarter_id, e.target.value)
+                  }
+                  className="input input-bordered w-1/2"
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-row justify-evenly pt-5">
+            <button
+              className="btn btn-outline"
+              onClick={() => {
+                handleDeadlineSave();
+              }}
+            >
+              Confirm
+            </button>
+            <button className="btn btn-outline" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={onClose}>close</button>
+        </form>
+      </dialog>
+      {/* <div
         className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-2"
         onClick={onClose}
       >
@@ -84,7 +141,7 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
           className="bg-white w-3/4 md:w-1/2 xl:w-1/4  max-w-5xl h-3/4 md:h-1/2 rounded-lg flex flex-col p-2 gap-y-4"
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Header */}
+          
           <div className="flex border-b justify-between">
             <h2 className="font-semibold">Set Active School Year</h2>
             <div className="btn btn-soft " onClick={handleClose}>
@@ -141,8 +198,9 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
                 ))}
               </div>
 
-              {/* add a success for updating before reset */}
               <div className="flex flex-row justify-evenly w-full">
+                
+            
                 <button
                   className="w-30  xs:w-40 btn btn-success rounded-full text-white"
                   onClick={() => {
@@ -161,7 +219,7 @@ const ActiveSchoolYearDialog = ({ onClose }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       <CreateSchoolYearDialog
         isOpen={createSYOpen}
         onClose={() => setCreateSYOpen(false)}

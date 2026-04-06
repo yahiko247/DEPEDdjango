@@ -88,13 +88,11 @@ const TabContent = ({ data, refreshLessonPlan, loading }) => {
         );
       })}
 
-      {selectedItem && (
-        <PDFDialog
-          data={selectedItem}
-          onClose={() => setSelectedItem(null)}
-          refreshLessonPlan={refreshLessonPlan}
-        />
-      )}
+      <PDFDialog
+        data={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        refreshLessonPlan={refreshLessonPlan}
+      />
     </div>
   );
 };

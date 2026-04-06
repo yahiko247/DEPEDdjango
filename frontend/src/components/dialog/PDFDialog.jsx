@@ -42,6 +42,60 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
 
   return (
     <>
+      <dialog open={data} className="modal ">
+        <div className="modal-box flex flex-col w-11/12 max-w-5xl h-[90vh] gap-y-2">
+          <div className="p-4 border-b flex justify-between">
+            <h2 className="font-semibold">Lesson Plan Preview</h2>
+            <button onClick={onClose}>✕</button>
+          </div>
+
+          <div className="flex flex-row flex-1 items-center">
+            <iframe src={`${data.lesson_plan}`} className="w-full h-full" />
+          </div>
+          <span>
+            Status:
+            <select
+              className="w-30 bg-gray-200 h-7 rounded-md"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+            >
+              <option value="Pending">Pending</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </span>
+
+          <textarea
+            disabled={data?.status == "Approved"}
+            className="border border-gray-300 rounded-lg bg-gray-100 p-2 resize-none h-20 w-full"
+            value={feedBack}
+            placeholder="Feedback (Optional)"
+            onChange={(e) => setFeedBack(e.target.value)}
+          ></textarea>
+
+          <div className="w-full flex flex-row justify-evenly gap-x-2">
+            <button
+              className="btn btn-outline flex-1 md:flex-none md:w-44"
+              onClick={() => {
+                setConfirmDialog(true);
+                // handleReviewLessonPlan(lessonPlanID, status, feedBack);
+              }}
+            >
+              Save
+            </button>
+            <button
+              className="btn btn-outline flex-1 md:flex-none md:w-44"
+              onClick={onClose}
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button onClick={onClose}>close</button>
+        </form>
+      </dialog>
+
       <div
         className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
         onClick={onClose}
