@@ -113,8 +113,8 @@ class SchoolYearView(APIView):
         role = request.user.role
 
         if role == "Principal" or role == "PRINCIPAL":
-            school_year_list = SchoolYear.objects.all()
-            serializer = SchoolYearSerializer(school_year_list, many=True)
+            school_year_list = SchoolYear.objects.get(is_active=True)
+            serializer = SchoolYearSerializer(school_year_list)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response({"Unauthorized":"Only the Principal is allowed to view this"}, status=status.HTTP_401_UNAUTHORIZED)

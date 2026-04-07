@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaReact } from "../../icons/index.js";
 import ErrorAlert from "../alerts/ErrorAlert.jsx";
 const ConfirmDialog = ({
@@ -8,28 +8,46 @@ const ConfirmDialog = ({
   headerText,
   children,
   confirmButton,
+  loading,
 }) => {
+  const handleClose = () => {
+    if (loading) return;
+    onClose();
+  };
   return (
     <>
-      <dialog open={isOpen} className="modal">
+      <dialog
+        open={isOpen}
+        className="modal"
+        onCancel={(e) => {
+          if (loading) e.preventDefault();
+        }}
+      >
         <div className="modal-box relative">
           <button
             className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            onClick={onClose}
+            onClick={handleClose}
           >
-            X
+            ✕
           </button>
           <h3 className="font-bold text-lg">{headerText}</h3>
           <p className="py-4">{children}</p>
           <div className="flex flex-row justify-evenly">
             <button
+              disabled={loading}
               className="btn btn-outline"
               onClick={() => {
-                closeAll();
+                // closeAll();
                 confirmButton();
               }}
             >
-              Confirm
+              {loading ? (
+                <span>
+                  <div className="loading loading-spinner loading-md" /> Saving
+                </span>
+              ) : (
+                "Save"
+              )}
             </button>
             <button className="btn btn-outline" onClick={onClose}>
               Cancel
@@ -38,7 +56,14 @@ const ConfirmDialog = ({
         </div>
 
         <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            className={loading ? "cursor-default" : "cursor-pointer"}
+          >
+            close
+          </button>
         </form>
       </dialog>
     </>

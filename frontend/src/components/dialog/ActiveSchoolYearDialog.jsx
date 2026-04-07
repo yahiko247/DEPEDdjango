@@ -9,10 +9,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import DialogSkeleton from "../skeleton/DialogSkeleton";
 import CreateSchoolYearDialog from "./CreateSchoolYearDialog";
 import SuccessAlert from "../alerts/SuccessAlert";
+import ErrorAlert from "../alerts/ErrorAlert";
+import ConfirmDialog from "./ConfirmDialog";
 
 const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
   const [deadlines, setDeadlines] = useState([]);
   const [selectedYear, setSelectedYear] = useState();
+  const [yearStart, setYearStart] = useState();
+  const [yearEnd, setYearEnd] = useState();
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [createSYOpen, setCreateSYOpen] = useState(false);
 
@@ -23,20 +30,27 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
   };
 
   const fetchSchoolYear = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
       setLoading(true);
       const data = await getSchoolYears();
-      console.log(data);
-      const activeYear = data.find((year) => year.is_active);
-      console.log("Active year:", activeYear.school_year);
+      console.log("deadlines", data);
+      console.log("boang", data.is_active);
+      // const activeYear = data.find((year) => year.is_active);
+      const activeYear = data.is_active;
+      console.log("Active year:", data.school_year);
       if (activeYear) {
-        setSelectedYear(activeYear);
-        console.log("active", activeYear.year_id);
+        setSelectedYear(data.school_year);
+        setYearStart(data.year_start);
+        setYearEnd(data.year_end);
+        console.log("active", data.year_id);
 
-        fetchQuarterDeadlines(activeYear.year_id);
+        fetchQuarterDeadlines(data.year_id);
       }
     } catch (e) {
-      throw e;
+      setErrorMessage(e);
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -47,10 +61,21 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
   }, []);
 
   const handleDeadlineSave = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
-      updateQuarterDeadline(deadlines);
+      setLoading(true);
+      await updateQuarterDeadline(deadlines);
+      setSuccessMessage("Successfully updated deadlines");
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 2000);
+      handleCloseAll();
     } catch (e) {
-      console.log(e);
+      setErrorMessage("Failed to update deadlines");
+      console.error(e);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,22 +85,35 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
     );
   };
 
-  const handleClose = () => {
+  const handleCloseAll = () => {
+    setShowConfirm(false);
+    onClose();
+  };
+
+  const handleConfirmButton = () => {
     const hasEmptyDeadline = deadlines.some((d) => !d.deadline);
 
     if (hasEmptyDeadline) {
-      console.log("rahhh");
+      setErrorMessage("Please complete all the fields");
       return;
     }
 
-    onClose();
+    setShowConfirm(true);
   };
 
   return (
     <>
-      {/* <div className="toast toast-top toast-end z-1000">
-        <SuccessAlert />
-      </div> */}
+      {successMessage && (
+        <div className="toast toast-top toast-end z-1000">
+          <SuccessAlert message={"Successfully updated fields"} />
+        </div>
+      )}
+
+      {errorMessage && (
+        <div className="toast toast-top toast-end z-1000">
+          <ErrorAlert message={"Please complete all fields"} />
+        </div>
+      )}
 
       <dialog className="modal" open={isOpen}>
         <div className="modal-box">
@@ -85,7 +123,7 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
           <div className="flex w-full flex-col gap-y-5 flex-1  ">
             <div className="flex flex-row items-center gap-x-2 pt-3">
               <div className="font-bold">
-                Active School Year: {selectedYear?.school_year}
+                Active School Year: {selectedYear}
               </div>
 
               <button
@@ -104,6 +142,8 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
                 <div>Quarter {deadline.quarter_number}:</div>
                 <input
                   //set minimum for deadline and maximum also
+                  min={yearStart}
+                  max={yearEnd}
                   type="date"
                   value={deadline.deadline}
                   onChange={(e) =>
@@ -119,7 +159,9 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
             <button
               className="btn btn-outline"
               onClick={() => {
-                handleDeadlineSave();
+                handleConfirmButton();
+                // handleDeadlineSave();
+                // handleClose();
               }}
             >
               Confirm
@@ -225,6 +267,30 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
         onClose={() => setCreateSYOpen(false)}
         fetchSchoolYear={fetchSchoolYear}
       />
+
+      <ConfirmDialog
+        isOpen={showConfirm}
+        closeAll={handleCloseAll}
+        onClose={() => {
+          setShowConfirm(false);
+        }}
+        headerText={"Confirm Changes"}
+        confirmButton={handleDeadlineSave}
+        loading={loading}
+      >
+        <div className="flex flex-col gap-y-4">
+          Are you sure you want to confirm these changes?
+          {deadlines.map((deadline) => (
+            <div
+              key={deadline.quarter_id}
+              className="flex flex-row items-center gap-x-2 w-full font-bold"
+            >
+              <div>Quarter {deadline.quarter_number} Deadline:</div>
+              <div>{deadline.deadline}</div>
+            </div>
+          ))}
+        </div>
+      </ConfirmDialog>
     </>
   );
 };

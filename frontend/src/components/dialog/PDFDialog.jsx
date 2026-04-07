@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReviewDialog from "./ReviewDialog";
 import { reviewLessonPlan } from "../../api/lessonPlanApi";
 import ConfirmDialog from "./ConfirmDialog.jsx";
@@ -39,6 +39,10 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
     setConfirmDialog(false);
     onClose();
   };
+
+  useEffect(() => {
+    console.log("Data:", data);
+  }, []);
 
   return (
     <>

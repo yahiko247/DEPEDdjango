@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 
-const ErrorAlert = ({ message, show }) => {
+const ErrorAlert = ({ message }) => {
   return (
-    <div
-      role="alert"
-      className={`${show ? "flex" : "hidden"} alert alert-error`}
-    >
+    <div role="alert" className={`alert alert-error`}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="h-6 w-6 shrink-0 stroke-current"

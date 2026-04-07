@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { createSchoolYear } from "../../api/principalApi";
 import ConfirmDialog from "./ConfirmDialog";
 import ErrorAlert from "../alerts/ErrorAlert";
+import SuccessAlert from "../alerts/SuccessAlert";
 
 const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
   const [yearStart, setYearStart] = useState();
@@ -14,7 +15,8 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
   ]);
   const [loading, setLoading] = useState(false);
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
-  const [showError, setShowError] = useState(false);
+  const [successMessage, setSuccessMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   //for testing if its SHS or not
   const [isSeniorHigh, setIsSeniorHigh] = useState(false);
@@ -39,15 +41,17 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
   ];
 
   const beforeOpenConfirmDialog = () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
     if (!yearStart || !yearEnd || deadlines.some((q) => !q.deadline)) {
-      setShowError(true);
+      setErrorMessage("Please fill in all fields");
       setTimeout(() => {
-        setShowError(false);
+        setErrorMessage(null);
       }, 3000);
 
       return;
     }
-    setShowError(false);
+
     setOpenConfirmDialog(true);
   };
 
@@ -65,16 +69,23 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
   };
 
   const handleSubmit = async (yearStart, yearEnd, deadlines) => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
       console.log("deadlines crate:", deadlines);
       setLoading(true);
       const response = await createSchoolYear(yearStart, yearEnd, deadlines);
       if (response.status === 201) {
         fetchSchoolYear();
+        setSuccessMessage("Successfully Created School Year");
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
+        handleCloseAllModal();
       }
     } catch (e) {
-      setShowError(true);
-      console.log("Error:", e);
+      setErrorMessage("An Unexpected Error Occured");
+      console.error(e);
     } finally {
       setLoading(false);
     }
@@ -82,9 +93,17 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
 
   return (
     <>
-      <div className="toast toast-top toast-end z-1000">
-        <ErrorAlert show={showError} message={"Please complete all fields"} />
-      </div>
+      {successMessage && (
+        <div className="toast toast-top toast-end z-1000">
+          <SuccessAlert message={successMessage} />
+        </div>
+      )}
+      {errorMessage && (
+        <div className="toast toast-top toast-end z-1000">
+          <ErrorAlert message={errorMessage} />
+        </div>
+      )}
+
       <dialog className="modal" open={isOpen}>
         <div className="modal-box">
           <h3 className="font-bold text-lg">Create School Year</h3>
@@ -149,7 +168,6 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
             <button
               className="btn btn-outline"
               onClick={() => {
-                setShowError(false);
                 onClose();
               }}
             >
