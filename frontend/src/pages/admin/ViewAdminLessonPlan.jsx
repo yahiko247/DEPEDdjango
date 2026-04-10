@@ -26,6 +26,7 @@ import { useEffect } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 import "react-toastify/dist/ReactToastify.css";
+import SuccessAlert from "../../components/alerts/SuccessAlert.jsx";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
@@ -187,6 +188,7 @@ const ViewLessonPlan = () => {
               />
             ))}
           </div>
+
           {/*Quarter View Lesson Plan Section*/}
           <div className="flex flex-col flex-1 border border-white bg-white rounded-md w-full min-h-0 px-4 py-4">
             {/*All Lesson Plan Submissions Text*/}

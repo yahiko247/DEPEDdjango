@@ -1,35 +1,39 @@
 import React, { useEffect, useState } from "react";
-import ReviewDialog from "./ReviewDialog";
 import { reviewLessonPlan } from "../../api/lessonPlanApi";
 import ConfirmDialog from "./ConfirmDialog.jsx";
-import { CiCircleCheck, CiWarning } from "../../icons/index.js";
-import SuccessDialog from "./SuccessDialog.jsx";
-
-const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
-  const [openReview, setOpenReview] = useState(false);
+const PDFDialog = ({
+  data,
+  onClose,
+  refreshLessonPlan,
+  setSuccessMessage,
+  setErrorMessage,
+}) => {
   const [confirmDialog, setConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState(data.status ?? "");
   const [feedBack, setFeedBack] = useState(data.feedback ?? "");
   const [lessonPlanID, setLessonPlanID] = useState(data.plan_id ?? "");
-  const [successDialog, setSuccessDialog] = useState(false);
 
   if (!data) return null;
 
   const handleReviewLessonPlan = async (lessonPlanID, status, feedBack) => {
     try {
+      setSuccessMessage(null);
+      setErrorMessage(null);
       setLoading(true);
       const response = await reviewLessonPlan(lessonPlanID, status, feedBack);
-      refreshLessonPlan();
+
       if (response.status === 200) {
-        console.log("true");
-        setSuccessDialog(true);
-      } else {
-        console.log("rawr");
-        // setSuccessDialog(true);
+        setSuccessMessage("Successfully reviewed lesson plan");
+        handleCloseAll();
+        refreshLessonPlan();
+        setTimeout(() => {
+          setSuccessMessage(null);
+        }, 3000);
       }
     } catch (e) {
-      console.log("Internal Server Error");
+      setErrorMessage("Server Error");
+      console.err(e);
     } finally {
       setLoading(false);
     }
@@ -159,14 +163,8 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
         </div>
       </div>
 
-      <SuccessDialog
-        isOpen={successDialog}
-        onClose={() => setSuccessDialog(false)}
-      />
-
       <ConfirmDialog
         isOpen={confirmDialog}
-        closeAll={handleCloseAll}
         headerText="Confirm"
         onClose={() => setConfirmDialog(false)}
         confirmButton={() =>
@@ -186,15 +184,6 @@ const PDFDialog = ({ data, onClose, refreshLessonPlan }) => {
           {status}
         </span>
       </ConfirmDialog>
-
-      {openReview && (
-        <ReviewDialog
-          lessonPlanID={lessonPlanID}
-          status={status}
-          feedBack={feedBack}
-          onClose={() => setOpenReview(false)}
-        />
-      )}
     </>
   );
 };

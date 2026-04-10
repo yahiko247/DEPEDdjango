@@ -105,13 +105,13 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
     <>
       {successMessage && (
         <div className="toast toast-top toast-end z-1000">
-          <SuccessAlert message={"Successfully updated fields"} />
+          <SuccessAlert message={successMessage} />
         </div>
       )}
 
       {errorMessage && (
         <div className="toast toast-top toast-end z-1000">
-          <ErrorAlert message={"Please complete all fields"} />
+          <ErrorAlert message={errorMessage} />
         </div>
       )}
 

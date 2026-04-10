@@ -223,28 +223,32 @@ class LessonPlanView(APIView):
         role = request.user.role
 
         try:
-            if role == "PRINCIPAL" or role == "Principal":
-           
-                queryset = LessonPlan.objects.select_related(
+            base_queryset = LessonPlan.objects.select_related(
                         "teacher",
                         "quarter",
                         "quarter__school_year"
                 )
+            
+            if role == "PRINCIPAL" or role == "Principal":
+                queryset = base_queryset
 
             elif role == 'Teacher' or role == 'TEACHER':
-                queryset = LessonPlan.objects.select_related(
-                        "teacher",
-                        "quarter",
-                        "quarter__school_year"
-                    ).filter(teacher=user)
-            
+                queryset = base_queryset.filter(teacher=user)
+
             else:
                 return Response({"error":"Unauthorized"},status=status.HTTP_403_FORBIDDEN)
             
+            school_year = request.query_params.get("school_year")
+
+            if school_year:
+                queryset = queryset.filter(quarter__school_year__year_id=school_year)
+            else:
+                queryset = queryset.filter(quarter__school_year__is_active=True)
+                
             quarter_number = request.query_params.get("quarter")
             status_param = request.query_params.get("status")
             is_late = request.query_params.get("is_late")
-            school_year = request.query_params.get("school_year")
+            
 
             if quarter_number:
                 queryset = queryset.filter(

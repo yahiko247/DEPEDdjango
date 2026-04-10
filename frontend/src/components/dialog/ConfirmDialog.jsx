@@ -3,7 +3,6 @@ import { FaReact } from "../../icons/index.js";
 import ErrorAlert from "../alerts/ErrorAlert.jsx";
 const ConfirmDialog = ({
   isOpen,
-  closeAll,
   onClose,
   headerText,
   children,
@@ -49,7 +48,11 @@ const ConfirmDialog = ({
                 "Save"
               )}
             </button>
-            <button className="btn btn-outline" onClick={onClose}>
+            <button
+              disabled={loading}
+              className="btn btn-outline"
+              onClick={onClose}
+            >
               Cancel
             </button>
           </div>
@@ -58,7 +61,11 @@ const ConfirmDialog = ({
         <form method="dialog" className="modal-backdrop">
           <button
             onClick={(e) => {
-              e.preventDefault();
+              if (loading) {
+                e.preventDefault();
+              } else {
+                onClose();
+              }
             }}
             className={loading ? "cursor-default" : "cursor-pointer"}
           >

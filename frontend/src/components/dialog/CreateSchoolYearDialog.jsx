@@ -71,9 +71,9 @@ const CreateSchoolYearDialog = ({ isOpen, onClose, fetchSchoolYear }) => {
   const handleSubmit = async (yearStart, yearEnd, deadlines) => {
     setErrorMessage(null);
     setSuccessMessage(null);
+    setLoading(true);
     try {
       console.log("deadlines crate:", deadlines);
-      setLoading(true);
       const response = await createSchoolYear(yearStart, yearEnd, deadlines);
       if (response.status === 201) {
         fetchSchoolYear();
