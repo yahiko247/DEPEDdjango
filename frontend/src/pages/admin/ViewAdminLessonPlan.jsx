@@ -27,6 +27,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 
 import "react-toastify/dist/ReactToastify.css";
 import SuccessAlert from "../../components/alerts/SuccessAlert.jsx";
+import { statCounts } from "../../api/principalApi.js";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
@@ -34,32 +35,41 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 
 const ViewLessonPlan = () => {
   const { user, loading } = useAuth();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
+  const [dataLoading, setDataLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState(1);
+  const [lessonPlans, setLessonPlans] = useState([]);
+  const menuOpen = Boolean(anchorEl);
+  const [counts, setCounts] = useState({
+    teacher_count: 0,
+    lesson_plan_count: 0,
+    pending_lesson_plan: 0,
+    approved_lesson_plan: 0,
+  });
+
   const cardData = [
     {
-      index: 1,
+      key: "teacher_count",
       title: "Total Teachers",
-      amount: 0,
       icon: <MdPerson className="size-6" />,
       colorClass: "border-blue-500/30 bg-blue-500/30",
     },
     {
-      index: 2,
+      key: "lesson_plan_count",
       title: "Total Submission",
-      amount: 0,
       icon: <TfiWrite className="size-6" />,
       colorClass: "border-green-500/30 bg-green-500/30",
     },
     {
-      index: 3,
+      key: "pending_lesson_plan",
       title: "Pending Review",
-      amount: 0,
       icon: <MdOutlinePendingActions className="size-6" />,
       colorClass: "border-orange-500/30 bg-orange-500/30",
     },
     {
-      index: 4,
+      key: "approved_lesson_plan",
       title: "Approved",
-      amount: 0,
       icon: <FaCheck className="size-6" />,
       colorClass: "border-green-500/30 bg-green-500/30",
     },
@@ -88,12 +98,6 @@ const ViewLessonPlan = () => {
     },
   ];
 
-  // Menu for account icon
-  const [anchorEl, setAnchorEl] = useState(null);
-  const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
-  const [dataLoading, setDataLoading] = useState(false);
-  const menuOpen = Boolean(anchorEl);
-
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -102,8 +106,14 @@ const ViewLessonPlan = () => {
     setAnchorEl(null);
   };
 
-  const [activeTab, setActiveTab] = useState(1);
-  const [lessonPlans, setLessonPlans] = useState([]);
+  const fetchStats = async () => {
+    try {
+      const response = await statCounts();
+      setCounts(response.data);
+    } catch (e) {
+      console.error("Stats Fetch Error:", e);
+    }
+  };
 
   const fetchLessonPlans = async () => {
     try {
@@ -122,6 +132,7 @@ const ViewLessonPlan = () => {
   useEffect(() => {
     if (loading) return;
     fetchLessonPlans();
+    fetchStats();
   }, [loading]);
 
   const filteredData = useMemo(() => {
@@ -183,7 +194,7 @@ const ViewLessonPlan = () => {
               <StatusCards
                 title={card.title}
                 icon={card.icon}
-                data={card.amount}
+                data={counts[card.key]}
                 colorClass={card.colorClass}
               />
             ))}

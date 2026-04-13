@@ -82,10 +82,23 @@ class CountView(APIView):
         role = request.user.role
         
         if role == "Principal" or role == "PRINCIPAL":
+            active_plans = LessonPlan.objects.filter(quarter__school_year__is_active=True)
+            #add a is_active for teacher
             teacher_query = get_user_model().objects.filter(role = "Teacher").count()
-            lesson_plan_query = LessonPlan.objects.count()
+            total_lesson_plan = active_plans.count()
+            pending = active_plans.filter(status__iexact="Pending").count()
+            approved = active_plans.filter(status__iexact="Approved").count()
+
+            data = {
+                "teacher_count":teacher_query, 
+                "lesson_plan_count":total_lesson_plan, 
+                "pending_lesson_plan":pending, 
+                "approved_lesson_plan":approved 
+                }
+
             
-            return Response({"teacher_count":teacher_query, "lesson_plan_count":lesson_plan_query}, status=status.HTTP_200_OK)
+            
+            return Response(data, status=status.HTTP_200_OK)
         else:
             return Response({"error":"Unauthorized"}, status=status.HTTP_401_UNAUTHORIZED)
 

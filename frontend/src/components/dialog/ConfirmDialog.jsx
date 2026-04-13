@@ -30,7 +30,7 @@ const ConfirmDialog = ({
             ✕
           </button>
           <h3 className="font-bold text-lg">{headerText}</h3>
-          <p className="py-4">{children}</p>
+          <div className="py-4">{children}</div>
           <div className="flex flex-row justify-evenly">
             <button
               disabled={loading}

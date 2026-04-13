@@ -72,3 +72,12 @@ export const updateQuarterDeadline = async (deadlines) => {
     throw e;
   }
 };
+
+export const statCounts = async () => {
+  try {
+    const response = await api.get("count/");
+    return response;
+  } catch (e) {
+    throw e;
+  }
+};
