@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getUser();
+    console.log("UseEffect Auth Context ran WTF");
   }, []);
 
   return (

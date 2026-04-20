@@ -1,4 +1,5 @@
 import axios from "axios";
+import interceptorApi from "./interceptorApi";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
@@ -7,7 +8,7 @@ const api = axios.create({
 
 export const getLoginUserdata = async () => {
   try {
-    const reponse = await api.get("/djoser/users/me/");
+    const reponse = await interceptorApi.get("/djoser/users/me/");
     return reponse.data;
   } catch (e) {
     throw e;

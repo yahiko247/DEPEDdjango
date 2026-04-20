@@ -27,10 +27,11 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/subview" element={<SubView />} />
           <Route path="/quaterview" element={<QuarterView />} />
+          <Route path="/view" element={<ViewAdminLessonPlan />} />
         </Route>
 
         {/*public route paning duha eh sulod lang nis protected inig ma human nkas role*/}
-        <Route path="/view" element={<ViewAdminLessonPlan />} />
+
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/quarter" element={<QuarterlyView />} />
       </Routes>
