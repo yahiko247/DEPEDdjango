@@ -11,7 +11,8 @@ from typing import Any
 from django.http import FileResponse, Http404, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
-from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 
 
 class VerifyCertificateView(APIView):
@@ -61,6 +62,40 @@ class CreateTokenAPIView(TokenObtainPairView):
             secure=False, # True in production
             samesite="Lax",
         )
+
+        return new_response
+    
+class CreateAccessTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        refresh = request.COOKIES.get("refresh")
+
+        if not refresh:
+            return Response({"error": "Refresh Token is required"}, status=status.HTTP_400_BAD_REQUEST)
+        request.data["refresh"] = refresh 
+        response = super().post(request, *args, **kwargs)
+        access = response.data.get("access")
+        refresh = response.data.get("refresh")
+
+        
+
+        new_response = Response ({"accessToken": access})
+
+        new_response.set_cookie(
+            key="access",
+            value=access,
+            httponly=True,
+            secure=False,
+            samesite="Lax"
+        )
+
+        if refresh:
+            new_response.set_cookie(
+                key="refresh",
+                value=refresh,
+                httponly=True,
+                secure=False,
+                samesite="Lax"
+            )
 
         return new_response
 

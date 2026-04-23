@@ -17,7 +17,8 @@ urlpatterns = [
     path("reviewlessonplan/<uuid:plan_id>/",views.LessonPlanView.as_view(),name="review-lesson-plan"),
     path("verify/certificate/<uuid:code>",views.VerifyCertificateView.as_view(), name="verify-qr"),
     path("user/", views.UserInfoAPIView.as_view(), name="current-user"),
-    path('auth/jwt/create/',views.CreateTokenAPIView.as_view(), name="login-user"),
+    path("auth/jwt/create/",views.CreateTokenAPIView.as_view(), name="login-user"),
+    path("auth/jwt/refresh/",views.CreateAccessTokenRefreshView.as_view(),name="access-via-refresh-token"),
     # path("register/", views.UserRegistrationAPIView.as_view(), name="register-user"),
     # path("login/", views.UserLoginAPIView.as_view(), name="login-user"),
 ]

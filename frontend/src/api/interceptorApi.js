@@ -21,7 +21,7 @@ interceptorApi.interceptors.response.use(
       try {
         console.log("I'm hungry");
         //add this route in the backend auth/jwt/refresh
-        await axios.post("/auth/jwt/refresh");
+        await api.post("/auth/jwt/refresh/");
 
         return interceptorApi(originalRequest);
       } catch (e) {
