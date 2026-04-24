@@ -34,7 +34,7 @@ const AppBar = styled(MuiAppBar)(({ theme }) => ({
 }));
 
 const ViewLessonPlan = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const [activeSchoolYearDialog, setActiveSchoolYearDialog] = useState(false);
   const [dataLoading, setDataLoading] = useState(false);
@@ -177,7 +177,7 @@ const ViewLessonPlan = () => {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem>Log out</MenuItem>
+            <MenuItem onClick={logout}>Log out</MenuItem>
           </Menu>
         </Toolbar>
       </span>

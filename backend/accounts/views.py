@@ -45,7 +45,7 @@ class CreateTokenAPIView(TokenObtainPairView):
         refresh = response.data.get("refresh")
 
         # Create new clean response
-        new_response = Response({"accessToken": access, "refreshToken":refresh})
+        new_response = Response({"Success":"User Logged In"}, status=status.HTTP_200_OK)
 
         new_response.set_cookie(
             key="access",
@@ -78,7 +78,7 @@ class CreateAccessTokenRefreshView(TokenRefreshView):
 
         
 
-        new_response = Response ({"accessToken": access})
+        new_response = Response ({"Success": "Refreshed Access Token"}, status=status.HTTP_200_OK)
 
         new_response.set_cookie(
             key="access",
@@ -98,17 +98,26 @@ class CreateAccessTokenRefreshView(TokenRefreshView):
             )
 
         return new_response
-
+    
 class UserLogoutAPIView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
     def post(self, request, *args, **kwargs):
         try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
+            refresh_token = request.COOKIES.get("refresh")
+
+            if refresh_token:
+
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            
+            response = Response({"Success":"User Logged Out"},status=status.HTTP_205_RESET_CONTENT)
+
+            response.delete_cookie("access")
+            response.delete_cookie("refresh")
+
+            return response
         except Exception as e:
-            return Response(status= status.HTTP_400_BAD_REQUEST)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class CountView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
@@ -407,16 +416,6 @@ class ReviewedByLessonPlan(APIView):
 #         return Response(data, status=status.HTTP_200_OK)
     
 
-class UserLogoutAPIView(GenericAPIView):
-    permission_classes = (IsAuthenticated,)
-    def post(self, request, *args, **kwargs):
-        try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-            return Response(status=status.HTTP_205_RESET_CONTENT)
-        except Exception as e:
-            return Response(status= status.HTTP_400_BAD_REQUEST)
 
 class UserInfoAPIView(RetrieveAPIView):
     permission_classes = (IsAuthenticated,)

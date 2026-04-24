@@ -36,3 +36,12 @@ export const registerUser = async (registerCredentials) => {
     throw e;
   }
 };
+
+export const logoutUser = async () => {
+  try {
+    const response = await api.post("/logout/");
+    return response;
+  } catch (e) {
+    throw e;
+  }
+};

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import spinner from "../assets/loadingtransparen.svg";
 
-export default function Loading({ children, delay = 3000 }) {
+export default function Loading({ children, delay = 2000 }) {
   const [showSpinner, setShowSpinner] = useState(true);
 
   useEffect(() => {

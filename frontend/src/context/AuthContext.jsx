@@ -1,6 +1,6 @@
 import React from "react";
 import { createContext, useContext, useEffect, useState } from "react";
-import { getLoginUserdata, loginUser } from "../api/authApi";
+import { getLoginUserdata, loginUser, logoutUser } from "../api/authApi";
 
 const AuthContext = createContext();
 
@@ -35,7 +35,14 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = async () => {
-    setUser(null);
+    try {
+      await logoutUser();
+    } catch (e) {
+      throw e;
+    } finally {
+      setLoading(false);
+      setUser(null);
+    }
   };
 
   useEffect(() => {
