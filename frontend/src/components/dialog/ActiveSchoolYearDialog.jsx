@@ -11,54 +11,57 @@ import CreateSchoolYearDialog from "./CreateSchoolYearDialog";
 import SuccessAlert from "../alerts/SuccessAlert";
 import ErrorAlert from "../alerts/ErrorAlert";
 import ConfirmDialog from "./ConfirmDialog";
+import { useSchoolYear } from "../../context/SchoolYearProvider";
 
 const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
-  const [deadlines, setDeadlines] = useState([]);
-  const [selectedYear, setSelectedYear] = useState();
-  const [yearStart, setYearStart] = useState();
-  const [yearEnd, setYearEnd] = useState();
+  const { yearStart, yearEnd, selectedYear, deadlines } = useSchoolYear();
+
+  // const [deadlines, setDeadlines] = useState([]);
+  // const [selectedYear, setSelectedYear] = useState();
+  // const [yearStart, setYearStart] = useState();
+  // const [yearEnd, setYearEnd] = useState();
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [createSYOpen, setCreateSYOpen] = useState(false);
 
-  const fetchQuarterDeadlines = async (year_id) => {
-    const data = await getQuarterDeadlines(year_id);
-    console.log("quarters", data);
-    setDeadlines(data);
-  };
+  // const fetchQuarterDeadlines = async (year_id) => {
+  //   const data = await getQuarterDeadlines(year_id);
+  //   console.log("quarters", data);
+  //   setDeadlines(data);
+  // };
 
-  const fetchSchoolYear = async () => {
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    try {
-      setLoading(true);
-      const data = await getSchoolYears();
-      console.log("deadlines", data);
-      console.log("boang", data.is_active);
-      // const activeYear = data.find((year) => year.is_active);
-      const activeYear = data.is_active;
-      console.log("Active year:", data.school_year);
-      if (activeYear) {
-        setSelectedYear(data.school_year);
-        setYearStart(data.year_start);
-        setYearEnd(data.year_end);
-        console.log("active", data.year_id);
+  // const fetchSchoolYear = async () => {
+  //   setErrorMessage(null);
+  //   setSuccessMessage(null);
+  //   try {
+  //     setLoading(true);
+  //     const data = await getSchoolYears();
+  //     console.log("deadlines", data);
+  //     console.log("boang", data.is_active);
+  //     // const activeYear = data.find((year) => year.is_active);
+  //     const activeYear = data.is_active;
+  //     console.log("Active year:", data.school_year);
+  //     if (activeYear) {
+  //       setSelectedYear(data.school_year);
+  //       setYearStart(data.year_start);
+  //       setYearEnd(data.year_end);
+  //       console.log("active", data.year_id);
 
-        fetchQuarterDeadlines(data.year_id);
-      }
-    } catch (e) {
-      setErrorMessage(e);
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
+  //       fetchQuarterDeadlines(data.year_id);
+  //     }
+  //   } catch (e) {
+  //     setErrorMessage(e);
+  //     console.error(e);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchSchoolYear();
-  }, []);
+  // useEffect(() => {
+  //   fetchSchoolYear();
+  // }, []);
 
   const handleDeadlineSave = async () => {
     setErrorMessage(null);
