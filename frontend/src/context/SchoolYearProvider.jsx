@@ -5,7 +5,11 @@ import React, {
   createContext,
   useMemo,
 } from "react";
-import { getQuarterDeadlines, getSchoolYears } from "../api/principalApi";
+import {
+  getQuarterDeadlines,
+  getSchoolYears,
+  updateQuarterDeadline,
+} from "../api/principalApi";
 
 const SchoolYearContext = createContext();
 
@@ -14,14 +18,44 @@ export const SchoolYearProvider = ({ children }) => {
   const [yearStart, setYearStart] = useState(null);
   const [yearEnd, setYearEnd] = useState(null);
   const [deadlines, setDeadlines] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const fetchQuarterDeadlines = async (year_id) => {
     const data = await getQuarterDeadlines(year_id);
     setDeadlines(data);
   };
 
+  const handleDeadlineChange = (id, newDate) => {
+    setDeadlines((prev) =>
+      prev.map((q) => (q.quarter_id === id ? { ...q, deadline: newDate } : q)),
+    );
+  };
+
+  const handleDeadlineSave = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    try {
+      setLoading(true);
+      await updateQuarterDeadline(deadlines);
+      setSuccessMessage("Successfully updated deadlines");
+      setTimeout(() => {
+        setSuccessMessage(null);
+      }, 3000);
+    } catch (e) {
+      setTimeout(() => {
+        setErrorMessage("Failed to update deadlines");
+      }, 2000);
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchSchoolYear = async () => {
+    setErrorMessage(null);
+    setSuccessMessage(null);
     try {
       setLoading(true);
       const data = await getSchoolYears();
@@ -44,19 +78,34 @@ export const SchoolYearProvider = ({ children }) => {
     console.log("School Year Provider ran WTF");
   }, []);
 
-  //   const value = useMemo(() => {
-  //     yearStart,
-  //     yearEnd,
-  //     schoolYear,
-  //     deadlines,
-  //     loading,
-  //     refreshSchoolYear: fetchSchoolYear,
-  //   }, [yearStart, yearEnd, schoolYear, deadlines, loading])
+  const value = useMemo(
+    () => ({
+      yearStart,
+      yearEnd,
+      schoolYear,
+      deadlines,
+      loading,
+      successMessage,
+      errorMessage,
+      setSuccessMessage,
+      setErrorMessage,
+      fetchSchoolYear,
+      handleDeadlineChange,
+      handleDeadlineSave,
+    }),
+    [
+      yearStart,
+      yearEnd,
+      schoolYear,
+      deadlines,
+      loading,
+      successMessage,
+      errorMessage,
+    ],
+  );
 
   return (
-    <SchoolYearContext.Provider
-      value={{ yearStart, yearEnd, schoolYear, deadlines, loading, fet }}
-    >
+    <SchoolYearContext.Provider value={value}>
       {children}
     </SchoolYearContext.Provider>
   );

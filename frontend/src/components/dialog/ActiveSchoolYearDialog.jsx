@@ -14,94 +14,47 @@ import ConfirmDialog from "./ConfirmDialog";
 import { useSchoolYear } from "../../context/SchoolYearProvider";
 
 const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
-  const { yearStart, yearEnd, selectedYear, deadlines } = useSchoolYear();
+  const {
+    yearStart,
+    yearEnd,
+    selectedYear,
+    deadlines,
+    successMessage,
+    errorMessage,
+    setSuccessMessage,
+    setErrorMessage,
+    fetchSchoolYear,
+    handleDeadlineChange,
+    handleDeadlineSave,
+  } = useSchoolYear();
 
-  // const [deadlines, setDeadlines] = useState([]);
-  // const [selectedYear, setSelectedYear] = useState();
-  // const [yearStart, setYearStart] = useState();
-  // const [yearEnd, setYearEnd] = useState();
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [createSYOpen, setCreateSYOpen] = useState(false);
-
-  // const fetchQuarterDeadlines = async (year_id) => {
-  //   const data = await getQuarterDeadlines(year_id);
-  //   console.log("quarters", data);
-  //   setDeadlines(data);
-  // };
-
-  // const fetchSchoolYear = async () => {
-  //   setErrorMessage(null);
-  //   setSuccessMessage(null);
-  //   try {
-  //     setLoading(true);
-  //     const data = await getSchoolYears();
-  //     console.log("deadlines", data);
-  //     console.log("boang", data.is_active);
-  //     // const activeYear = data.find((year) => year.is_active);
-  //     const activeYear = data.is_active;
-  //     console.log("Active year:", data.school_year);
-  //     if (activeYear) {
-  //       setSelectedYear(data.school_year);
-  //       setYearStart(data.year_start);
-  //       setYearEnd(data.year_end);
-  //       console.log("active", data.year_id);
-
-  //       fetchQuarterDeadlines(data.year_id);
-  //     }
-  //   } catch (e) {
-  //     setErrorMessage(e);
-  //     console.error(e);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchSchoolYear();
-  // }, []);
-
-  const handleDeadlineSave = async () => {
-    setErrorMessage(null);
-    setSuccessMessage(null);
-    try {
-      setLoading(true);
-      await updateQuarterDeadline(deadlines);
-      setSuccessMessage("Successfully updated deadlines");
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 2000);
-      handleCloseAll();
-    } catch (e) {
-      setErrorMessage("Failed to update deadlines");
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeadlineChange = (id, newDate) => {
-    setDeadlines((prev) =>
-      prev.map((q) => (q.quarter_id === id ? { ...q, deadline: newDate } : q)),
-    );
-  };
-
-  const handleCloseAll = () => {
-    setShowConfirm(false);
-    onClose();
-  };
 
   const handleConfirmButton = () => {
     const hasEmptyDeadline = deadlines.some((d) => !d.deadline);
 
     if (hasEmptyDeadline) {
       setErrorMessage("Please complete all the fields");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 3000);
       return;
     }
 
     setShowConfirm(true);
+  };
+
+  const confirmButtonSave = () => {
+    handleDeadlineSave();
+
+    handleCloseAll();
+  };
+
+  const handleCloseAll = () => {
+    setShowConfirm(false);
+    onClose();
   };
 
   return (
@@ -278,7 +231,7 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
           setShowConfirm(false);
         }}
         headerText={"Confirm Changes"}
-        confirmButton={handleDeadlineSave}
+        confirmButton={confirmButtonSave}
         loading={loading}
       >
         <div className="flex flex-col gap-y-4">

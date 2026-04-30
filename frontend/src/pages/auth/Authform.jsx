@@ -104,15 +104,12 @@ export default function AuthForm() {
       toast.success("Login Successful");
 
       const role = await userData.role;
-      console.log("AuthForm User:", userData);
-      console.log("user:", role);
       if (role === "Principal") {
         navigate("/view");
       } else {
         navigate("/dashboard");
       }
     } catch (e) {
-      console.log("AuthForm User:", user);
       const message = e?.response?.data;
       console.log("error", e);
       if (message.detail) {
