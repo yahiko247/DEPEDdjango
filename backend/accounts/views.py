@@ -337,7 +337,8 @@ class LessonPlanView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except Exception as e:
-            print("ERror",e)
+            print("Get Lesson Plan Error",e)
+            return Response({'error':'Internal Server Error'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     
     def patch (self,request,plan_id):
@@ -380,6 +381,23 @@ class ReviewedByLessonPlan(APIView):
         else:
             return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
+
+class NotificationView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+    def get(self,request):
+        
+        user_id = request.user.UID
+
+        try:
+            if user_id:
+                queryset = Notification.objects.filter(user = user_id).order_by('-created_at')
+                serializer = NotificationSerializer(queryset, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            else:
+                return Response ({'error': 'Unauthorized'}, status=status.HTTP_401_UNAUTHORIZED)
+        except Exception as e:
+            print("Notification Error:", e)
+            return Response({'error':'Internal Server Error'},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 

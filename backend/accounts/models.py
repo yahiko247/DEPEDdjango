@@ -103,10 +103,6 @@ class Quarter(models.Model):
     
 
 class LessonPlan(models.Model):
-    # STATUS_CHOICES = [
-    #     ("PENDING", "Pending"),
-    #     ("APPROVED", "Approved"),
-    #     ("REJECTED", "Rejected")]
      plan_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      teacher = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=False, blank=False, related_name="lesson_plan")
      quarter = models.ForeignKey(Quarter, on_delete=models.CASCADE, blank=False, null=False, related_name="quarters")
@@ -116,7 +112,6 @@ class LessonPlan(models.Model):
      created_at = models.DateField(auto_now_add=True)
      reviewed_at = models.DateField(blank=True, null=True)
      certificate = models.FileField(null=True, blank=True)
-     #will have to make a different one again still not tested
      verification_code = models.UUIDField(default=uuid.uuid1, editable=False, blank=True, null=True, unique=True)
      qr_code = models.ImageField(upload_to="qr/", null=True, blank=True)
      def save(self, *args, **kwargs):
@@ -131,7 +126,7 @@ class LessonPlan(models.Model):
 
         if self.status == "Approved":
             if not self.certificate:
-                generate_certificate(self)  # ✅ FIXED
+                generate_certificate(self) 
 
             if not self.qr_code:
                 qr_path = generate_qr(self)
@@ -167,3 +162,15 @@ class ReviewedLessonPlan(models.Model):
 
      def __str__(self):
           return f" Reviewer: {self.reviewed_by.first_name} {self.reviewed_by.last_name} Reviewee: {self.lesson_plan.teacher.first_name} {self.lesson_plan.teacher.last_name} Reviewed at: {self.reviewed_at}"
+     
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    link = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f" Notification for {self.user.first_name} {self.user.last_name}. Message: {self.message}"

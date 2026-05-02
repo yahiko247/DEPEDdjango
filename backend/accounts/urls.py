@@ -19,6 +19,7 @@ urlpatterns = [
     path("user/", views.UserInfoAPIView.as_view(), name="current-user"),
     path("auth/jwt/create/",views.CreateTokenAPIView.as_view(), name="login-user"),
     path("auth/jwt/refresh/",views.CreateAccessTokenRefreshView.as_view(),name="access-via-refresh-token"),
+    path("notifications/",views.NotificationView.as_view(), name="notifications"),
     # path("register/", views.UserRegistrationAPIView.as_view(), name="register-user"),
     # path("login/", views.UserLoginAPIView.as_view(), name="login-user"),
 ]
