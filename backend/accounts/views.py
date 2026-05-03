@@ -256,11 +256,19 @@ class LessonPlanView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
+        print(f"User: {request.user}")
+        print(f"Is Authenticated: {request.user.is_authenticated}")
         data = request.data
         teacher_id = request.user.UID
         role = request.user.role
+        teacher_frst_name = request.user.first_name
+        teacher_last_name = request.user.last_name
+        print("firstname:",teacher_frst_name)
+        print("lastname:",teacher_last_name)
         print(role)
         serializer = PostLessonPlanSerializer(data=data)
+
+
 
         if not teacher_id:
             return Response({'error':'Teacher ID is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -269,6 +277,12 @@ class LessonPlanView(APIView):
             return Response({'error':'Only a Teacher can create a lesson plan'}, status=status.HTTP_403_FORBIDDEN)
         
         if serializer.is_valid():
+            principal_user = CustomUser.objects.get(role='Principal')
+            Notification.objects.create(
+                user=principal_user,
+                message=f"{teacher_frst_name}  {teacher_last_name} submitted a Lesson Plan",
+                link='http://localhost:5173/view'
+            )
             serializer.save(teacher = request.user)
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         else:
@@ -344,9 +358,12 @@ class LessonPlanView(APIView):
     def patch (self,request,plan_id):
         data = request.data
         user_id = request.user.UID
+        
 
         user  = CustomUser.objects.get(UID = user_id)
         lesson_plan = get_object_or_404(LessonPlan, plan_id = plan_id)
+        teacher = CustomUser.objects.get(UID = lesson_plan.teacher.UID)
+        principal = CustomUser.objects.get(role = 'Principal')
         serializer = UpdateLessonPlanSerializer(lesson_plan, data=data, partial=True)
 
         if serializer.is_valid():
@@ -354,6 +371,12 @@ class LessonPlanView(APIView):
             
             lesson_plan.reviewed_at = timezone.now()
             lesson_plan.save(update_fields=["reviewed_at"])
+
+            Notification.objects.create(
+                user=teacher,
+                message=f"{principal.first_name}  {principal.last_name} {data['status']} your Lesson Plan",
+                link='testing'
+            )
 
             ReviewedLessonPlan.objects.create(
                 reviewed_by = user,

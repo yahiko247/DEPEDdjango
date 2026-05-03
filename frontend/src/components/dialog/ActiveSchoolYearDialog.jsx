@@ -17,7 +17,7 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
   const {
     yearStart,
     yearEnd,
-    selectedYear,
+    schoolYear,
     deadlines,
     successMessage,
     errorMessage,
@@ -78,9 +78,7 @@ const ActiveSchoolYearDialog = ({ onClose, isOpen }) => {
 
           <div className="flex w-full flex-col gap-y-5 flex-1  ">
             <div className="flex flex-row items-center gap-x-2 pt-3">
-              <div className="font-bold">
-                Active School Year: {selectedYear}
-              </div>
+              <div className="font-bold">Active School Year: {schoolYear}</div>
 
               <button
                 className="text-xs btn btn-outline"

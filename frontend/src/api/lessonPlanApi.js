@@ -10,7 +10,7 @@ const accessToken = localStorage.getItem("accessToken");
 
 export const getLessonPlan = async (params) => {
   try {
-    const response = await api.get("/lessonplan", {
+    const response = await api.get("/lessonplan/", {
       params,
     });
     return response.data;
