@@ -78,7 +78,7 @@ class SchoolYear(models.Model):
      year_id = models.UUIDField(primary_key=True, default=uuid.uuid1, editable=False)
      year_start = models.DateField(blank=False, null=False)
      year_end = models.DateField(blank=False, null=False)
-     is_active = models.BooleanField(default=False)
+     is_active = models.BooleanField(default=True)
 
      def save(self, *args, **kwargs):
         if self.is_active:

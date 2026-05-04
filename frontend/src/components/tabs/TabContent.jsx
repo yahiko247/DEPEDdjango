@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Profile } from "../../assets";
 import PDFDialog from "../dialog/PDFDialog";
 import LessonPlanSkeleton from "../skeleton/LessonPlanSkeleton";
@@ -6,6 +7,7 @@ import SuccessAlert from "../alerts/SuccessAlert";
 import ErrorAlert from "../alerts/ErrorAlert";
 
 const TabContent = ({ data, refreshLessonPlan, loading }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedItem, setSelectedItem] = useState();
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
@@ -17,8 +19,24 @@ const TabContent = ({ data, refreshLessonPlan, loading }) => {
   };
 
   useEffect(() => {
-    console.log("Data:", data);
-  });
+    const planIdFromURL = searchParams.get("planId");
+
+    if (planIdFromURL && data.length > 0) {
+      const foundItem = data.find(
+        (item) => item.plan_id.toString() === planIdFromURL,
+      );
+
+      console.log("planId", foundItem.plan_id);
+      if (foundItem) {
+        setSelectedItem(foundItem);
+      }
+    }
+  }, [searchParams, data]);
+
+  const handleClose = () => {
+    setSearchParams({}, { replace: true });
+    setSelectedItem(null);
+  };
 
   if (loading) {
     return <LessonPlanSkeleton />;
@@ -109,7 +127,7 @@ const TabContent = ({ data, refreshLessonPlan, loading }) => {
         {selectedItem && (
           <PDFDialog
             data={selectedItem}
-            onClose={() => setSelectedItem(null)}
+            onClose={handleClose}
             refreshLessonPlan={refreshLessonPlan}
             setSuccessMessage={setSuccessMessage}
             setErrorMessage={setErrorMessage}

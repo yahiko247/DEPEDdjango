@@ -256,19 +256,13 @@ class LessonPlanView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
-        print(f"User: {request.user}")
-        print(f"Is Authenticated: {request.user.is_authenticated}")
         data = request.data
-        teacher_id = request.user.UID
-        role = request.user.role
-        teacher_frst_name = request.user.first_name
-        teacher_last_name = request.user.last_name
-        print("firstname:",teacher_frst_name)
-        print("lastname:",teacher_last_name)
-        print(role)
+        user = request.user
+        teacher_id = user.UID
+        role = user.role
+        principal_user = CustomUser.objects.get(role='Principal')
+    
         serializer = PostLessonPlanSerializer(data=data)
-
-
 
         if not teacher_id:
             return Response({'error':'Teacher ID is required'}, status=status.HTTP_400_BAD_REQUEST)
@@ -277,13 +271,14 @@ class LessonPlanView(APIView):
             return Response({'error':'Only a Teacher can create a lesson plan'}, status=status.HTTP_403_FORBIDDEN)
         
         if serializer.is_valid():
-            principal_user = CustomUser.objects.get(role='Principal')
+            lesson_plan = serializer.save(teacher = request.user)
+            
             Notification.objects.create(
                 user=principal_user,
-                message=f"{teacher_frst_name}  {teacher_last_name} submitted a Lesson Plan",
-                link='http://localhost:5173/view'
+                message=f"{user.first_name}  {user.last_name} submitted a Lesson Plan",
+                link=f'http://localhost:5173/view/?planId={lesson_plan.plan_id}'
             )
-            serializer.save(teacher = request.user)
+            
             return Response (serializer.data,status=status.HTTP_201_CREATED)
         else:
             return Response (serializer.errors, status=status.HTTP_400_BAD_REQUEST)
