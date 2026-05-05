@@ -80,7 +80,7 @@ export default function Dashboard() {
 
       try {
         const response = await axios.get(
-          "http://192.168.1.106:8000/api/user/",
+          "http://192.168.1.105:8000/api/user/",
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -150,7 +150,7 @@ export default function Dashboard() {
           {isLoggedIn ? (
             <h2>Hello teacher {username}. Thanks for logging in!</h2>
           ) : (
-            <h2>Please Login</h2>
+            <h2 className="bg-red-500 text-white p-4" >Please Login</h2>
           )}
         </Box>
         <Gridbox />
