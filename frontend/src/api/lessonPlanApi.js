@@ -5,9 +5,6 @@ const api = axios.create({
   withCredentials: true,
 });
 
-//putting accesstoken as localstorage is temporary we need to put it to cookies
-const accessToken = localStorage.getItem("accessToken");
-
 export const getLessonPlan = async (params) => {
   try {
     const response = await api.get("/lessonplan/", {
@@ -25,10 +22,8 @@ export const submitLessonPlan = async (lessonPlan, quarter) => {
   formData.append("quarter", quarter);
   try {
     const response = await api.post("/lessonplan/", formData);
-    console.log("Access Token:", accessToken);
-    return response.data;
+    return response;
   } catch (e) {
-    console.log("Access Token:", accessToken);
     throw e;
   }
 };

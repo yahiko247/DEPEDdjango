@@ -79,12 +79,9 @@ export default function Dashboard() {
       }
 
       try {
-        const response = await axios.get(
-          "http://192.168.1.30:8000/api/user/",
-          {
-            withCredentials: true,
-          },
-        );
+        const response = await axios.get("http://192.168.1.30:8000/api/user/", {
+          withCredentials: true,
+        });
 
         setIsLoggedIn(true);
         setFirstName(response.data.first_name);
@@ -137,35 +134,14 @@ export default function Dashboard() {
         </Toolbar>
       </AppBar>
 
-      <Box
-        sx={{
-          flexGrow: 1,
-          minHeight: "100vh",
-          position: "relative",
-          backgroundImage: `url(${Background})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center center",
-          backgroundAttachment: "fixed",
-          pt: { xs: "56px", sm: "64px" }, // padding-top equal to AppBar
-        }}
+      <div
+        className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
+        style={{ backgroundImage: `url(${Background})` }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            textAlign: "center",
-            mb: 2,
-            color: "white",
-            pt: { xs: "56px", sm: "64px" },
-          }}
-        >
-          {isLoggedIn ? (
-            <h2>Hello teacher {firstName}. Thanks for logging in!</h2>
-          ) : (
-            <h2>Please Login</h2>
-          )}
-        </Box>
+        {/*This Gridbox is both my lesson plan and submit lesson plan*/}
         <Gridbox />
-      </Box>
+      </div>
+
       <ToastContainer position="top-right" autoClose={3000} />
     </Box>
   );

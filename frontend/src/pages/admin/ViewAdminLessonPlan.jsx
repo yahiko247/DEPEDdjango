@@ -50,24 +50,28 @@ const ViewLessonPlan = () => {
 
   const cardData = [
     {
+      index: 1,
       key: "teacher_count",
       title: "Total Teachers",
       icon: <MdPerson className="size-6" />,
       colorClass: "border-blue-500/30 bg-blue-500/30",
     },
     {
+      index: 2,
       key: "lesson_plan_count",
       title: "Total Submission",
       icon: <TfiWrite className="size-6" />,
       colorClass: "border-green-500/30 bg-green-500/30",
     },
     {
+      index: 3,
       key: "pending_lesson_plan",
       title: "Pending Review",
       icon: <MdOutlinePendingActions className="size-6" />,
       colorClass: "border-orange-500/30 bg-orange-500/30",
     },
     {
+      index: 4,
       key: "approved_lesson_plan",
       title: "Approved",
       icon: <FaCheck className="size-6" />,
@@ -191,12 +195,14 @@ const ViewLessonPlan = () => {
           {/*Status Cards*/}
           <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
             {cardData.map((card) => (
-              <StatusCards
-                title={card.title}
-                icon={card.icon}
-                data={counts[card.key]}
-                colorClass={card.colorClass}
-              />
+              <div key={card.index}>
+                <StatusCards
+                  title={card.title}
+                  icon={card.icon}
+                  data={counts[card.key]}
+                  colorClass={card.colorClass}
+                />
+              </div>
             ))}
           </div>
 
