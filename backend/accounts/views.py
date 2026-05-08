@@ -169,12 +169,14 @@ class SchoolYearView(APIView):
     def get(self, request):
         role = request.user.role
 
-        if role == "Principal" or role == "PRINCIPAL":
+        try:
             school_year_list = SchoolYear.objects.get(is_active=True)
             serializer = SchoolYearSerializer(school_year_list)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response({"Unauthorized":"Only the Principal is allowed to view this"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        except Exception as e:
+
+            return Response({"error":e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def patch(self, request, year_id):
         role = request.user.role
@@ -202,18 +204,20 @@ class QuarterView(APIView):
 
     def get(self,request, year_id):
         role = request.user.role
-         
-        if not year_id:
-            return Response({'error':'Year ID is required'}, status=status.HTTP_400_BAD_REQUEST)
-        
-        if role == "Principal" or role == "PRINCIPAL":
+
+        try:
+            if not year_id:
+                return Response({'error':'Year ID is required'}, status=status.HTTP_400_BAD_REQUEST)
+            
             year = get_object_or_404(SchoolYear, year_id=year_id)
             quarters = Quarter.objects.filter(school_year = year)
             serializer = QuarterSerializer(quarters, many=True)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response ({'Unauthorized':"Principal is the only one that can access this"}, status=status.HTTP_401_UNAUTHORIZED)
+        
+        except Exception as e:
+            return Response({'error': e},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     def patch(self, request):
         data = request.data
