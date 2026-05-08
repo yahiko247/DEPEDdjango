@@ -7,6 +7,7 @@ import Loading from "./components/Loading";
 import ViewAdminLessonPlan from "./pages/admin/ViewAdminLessonPlan";
 import SubView from "./components/quatersub/subview";
 import QuarterView from "./components/quaterview/quaterview";
+import ListSubmit from "./components/sectionpages/ViewLessoTeacherPlan";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/subview" element={<SubView />} />
           <Route path="/quaterview" element={<QuarterView />} />
           <Route path="/view" element={<ViewAdminLessonPlan />} />
+          <Route path="/submitlist" element={<ListSubmit />} />
         </Route>
       </Routes>
     </BrowserRouter>
