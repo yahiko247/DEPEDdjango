@@ -21,7 +21,7 @@ import { Background, DEPED } from "../../assets";
 //teacher ni na dashboard
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  backgroundColor: "#2c8aad98",
+  backgroundColor: "#2c8aad23",
 }));
 
 export default function Dashboard() {
