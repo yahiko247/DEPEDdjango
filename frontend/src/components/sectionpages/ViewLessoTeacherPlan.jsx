@@ -14,27 +14,27 @@ import { useNavigate } from "react-router-dom";
 import Submitlist from "../sectionpages/SubmitList";
 import { Background, DEPED } from "../../assets";
 import { useParams } from "react-router-dom";
+import { useSchoolYear } from "../../context/SchoolYearProvider";
 
 const AppBar = styled(MuiAppBar)({
   backgroundColor: "#2c8aad98",
 });
 
 export default function ListSubmit() {
+  const { schoolYear, deadlines } = useSchoolYear();
 
   // const [anchorEl, setAnchorEl] = React.useState(null);
   // const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
   // const handleMenuClose = () => setAnchorEl(null);
 
   const navigate = useNavigate();
-  const { quarterId } = useParams();
-  console.log(quarterId);
 
   return (
     <Box
       sx={{
         display: "flex",
         height: "100vh",
-        overflow: "hidden", 
+        overflow: "hidden",
         flexDirection: "column",
       }}
     >
@@ -79,23 +79,21 @@ export default function ListSubmit() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundAttachment: "fixed",
-          pt: { xs: "56px", sm: "64px" }, 
+          pt: { xs: "56px", sm: "64px" },
           color: "white",
           textAlign: "center",
           mb: 2,
         }}
       >
-       
         <Box
           sx={{
             width: "100%",
-            maxHeight: "100%", 
+            maxHeight: "100%",
             overflowY: "auto",
           }}
         ></Box>
 
         <Submitlist />
-        
       </Box>
     </Box>
   );

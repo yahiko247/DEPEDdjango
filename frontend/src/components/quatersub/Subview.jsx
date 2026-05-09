@@ -3,6 +3,7 @@ import { Background, LessonPlan } from "../../assets";
 import Cards from "../cards/Cards";
 import Submit from "../modal/SubmitModal";
 import { useSchoolYear } from "../../context/SchoolYearProvider";
+import TeacherLayout from "../layouts/TeacherLayout";
 
 const SubView = () => {
   const { schoolYear, deadlines } = useSchoolYear();
@@ -43,25 +44,23 @@ const SubView = () => {
   };
 
   return (
-    <div
-      className="min-w-screen min-h-screen relative flex items-center justify-center bg-cover bg-center bg-fixed pt-14 sm:pt-16 flex-col sm:flex-row gap-6 p-2"
-      style={{ backgroundImage: `url(${Background})` }}
-    >
-      <div className="grid grid-cols-2 gap-4">
-        {deadlines.map((q) => {
-          const assets = cardData[q.quarter_number];
-          return (
-            <Cards
-              key={q.quarter_id}
-              title={assets.title}
-              subtitle={assets.subtitle}
-              image={assets.image}
-              onClick={() => handleOpenModal(q.quarter_id)}
-            />
-          );
-        })}
-      </div>
-
+    <>
+      <TeacherLayout>
+        <div className="grid grid-cols-2 gap-4">
+          {deadlines.map((q) => {
+            const assets = cardData[q.quarter_number];
+            return (
+              <Cards
+                key={q.quarter_id}
+                title={assets.title}
+                subtitle={assets.subtitle}
+                image={assets.image}
+                onClick={() => handleOpenModal(q.quarter_id)}
+              />
+            );
+          })}
+        </div>
+      </TeacherLayout>
       {/* Modal */}
       {isOpen && (
         <Submit
@@ -70,7 +69,7 @@ const SubView = () => {
           quarter={selectedQuarter}
         />
       )}
-    </div>
+    </>
   );
 };
 

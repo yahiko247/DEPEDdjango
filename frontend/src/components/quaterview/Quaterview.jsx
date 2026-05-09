@@ -1,10 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Background, LessonPlan } from "../../assets";
 import Cards from "../cards/Cards";
+import Loading from "../Loading";
+import { getLessonPlan } from "../../api/lessonPlanApi";
+import { useAuth } from "../../context/AuthContext";
 
 const QuarterView = () => {
   const navigate = useNavigate();
+  const { user, loading, logout } = useAuth();
+  const [lessonPlans, setLessonPlans] = useState([]);
+  const [dataLoading, setDataLoading] = useState(false);
+
+  const fetchLessonPlans = async () => {
+    try {
+      setDataLoading(true);
+      console.log("loading true");
+      const data = await getLessonPlan();
+      setLessonPlans(data);
+    } catch (e) {
+      console.log("Error boss:", e);
+    } finally {
+      setDataLoading(false);
+      console.log("loading false");
+    }
+  };
+
+  useEffect(() => {
+    fetchLessonPlans();
+  }, [loading]);
 
   const cardData = [
     {
@@ -44,8 +68,15 @@ const QuarterView = () => {
             key={card.index}
             title={card.title}
             subtitle={card.subtitle}
-            onClick={() => navigate(`/submitlist`)}
             image={card.image}
+            onClick={() => {
+              const filteredPlans = lessonPlans.filter(
+                (plan) => plan.quarter == card.index,
+              );
+              navigate(`/submitlist?q=${card.index}`, {
+                state: { submissions: filteredPlans },
+              });
+            }}
           />
         ))}
       </div>

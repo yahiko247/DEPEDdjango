@@ -18,15 +18,13 @@ import Gridbox from "../../components/GridBoxs/Gridbox";
 
 import { Background, DEPED } from "../../assets";
 import { useAuth } from "../../context/AuthContext";
-import TeacherLayout from "../../components/layouts/TeacherLayout";
 
-//teacher ni na dashboard
+const TeacherLayout = ({ children }) => {
+  const AppBar = styled(MuiAppBar)(({ theme }) => ({
+    backgroundColor: "#2c8aad23",
+  }));
 
-const AppBar = styled(MuiAppBar)(({ theme }) => ({
-  backgroundColor: "#2c8aad23",
-}));
-
-export default function Dashboard({ children }) {
+  const { logout } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [firstName, setFirstName] = useState("");
   const navigate = useNavigate();
@@ -43,78 +41,10 @@ export default function Dashboard({ children }) {
     setAnchorEl(null);
   };
 
-  const handleLogout = async () => {
-    try {
-      const refreshToken = localStorage.getItem("refreshToken");
-
-      if (refreshToken) {
-        await axios.post(`${BASE_URL}/auth/jwt/blacklist/`, {
-          refresh: refreshToken,
-        });
-      }
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-
-      toast.success("Logged out", {
-        onClose: () => navigate("/"),
-      });
-    } catch (error) {
-      console.error("Logout error", error.response?.data || error.message);
-
-      // Even if blacklist fails, still logout locally
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      navigate("/");
-    }
-  };
-
-  // Check login status
-  useEffect(() => {
-    const checkLoggedInUser = async () => {
-      const token = localStorage.getItem("accessToken");
-
-      if (!token) {
-        setIsLoggedIn(false);
-        setFirstName("");
-        return;
-      }
-
-      try {
-        const response = await axios.get("http://192.168.1.30:8000/api/user/", {
-          withCredentials: true,
-        });
-
-        setIsLoggedIn(true);
-        setFirstName(response.data.first_name);
-      } catch (error) {
-        console.error("Invalid token", error);
-        setIsLoggedIn(false);
-        setFirstName("");
-        //remove for the meantime for testing
-        // optional but recommended
-        // localStorage.removeItem("accessToken");
-      }
-    };
-
-    checkLoggedInUser();
-  }, []);
-
-  const { logout } = useAuth();
-
   return (
-    <TeacherLayout>
-      {/*This Gridbox is both my lesson plan and submit lesson plan*/}
-      <Gridbox />
-    </TeacherLayout>
-  );
-}
-
-{
-  /* <Box sx={{ display: "flex" }}>
+    <div className="flex flex-col w-screen h-screen">
       <CssBaseline />
-
-      <AppBar position="fixed">
+      <span className="bg-blue-400 ">
         <Toolbar>
           <Box
             component="img"
@@ -132,6 +62,7 @@ export default function Dashboard({ children }) {
           >
             <AccountCircle />
           </IconButton>
+
           <Menu
             id="account-menu"
             anchorEl={anchorEl}
@@ -141,12 +72,19 @@ export default function Dashboard({ children }) {
             transformOrigin={{ vertical: "top", horizontal: "right" }}
           >
             <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-            <MenuItem onClick={handleLogout}>Log out</MenuItem>
+            <MenuItem onClick={logout}>Log out</MenuItem>
           </Menu>
         </Toolbar>
-      </AppBar>
+      </span>
 
-      
-      <ToastContainer position="top-right" autoClose={3000} />
-    </Box> */
-}
+      <div
+        className="relative flex flex-1 items-center justify-center bg-cover bg-center bg-fixed flex-row gap-6 p-2"
+        style={{ backgroundImage: `url(${Background})` }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
+export default TeacherLayout;
