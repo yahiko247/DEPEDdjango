@@ -1,8 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Background, LessonPlan } from "../../assets";
 import Cards from "../cards/Cards";
 
 const QuarterView = () => {
+  const navigate = useNavigate();
+
   const cardData = [
     {
       index: 1,
@@ -38,11 +41,12 @@ const QuarterView = () => {
       <div className="grid grid-cols-2 gap-4">
         {cardData.map((card) => (
           <Cards
+            key={card.index}
             title={card.title}
             subtitle={card.subtitle}
-            onClick={() => navigate(`/quarter/${card.index}`)}
+            onClick={() => navigate(`/submitlist`)}
             image={card.image}
-          ></Cards>
+          />
         ))}
       </div>
     </div>
