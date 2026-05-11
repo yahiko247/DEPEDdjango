@@ -131,6 +131,7 @@ class LessonPlan(models.Model):
             if not self.qr_code:
                 qr_path = generate_qr(self)
                 self.qr_code = f"qr/{self.verification_code}.png"
+                # self.qr_code = f"qr/{self.verification_code}.png"
                 super().save(update_fields=["qr_code"])
 
         elif self.status in ["Pending", "Rejected"]:
