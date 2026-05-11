@@ -6,7 +6,7 @@ import AuthForm from "./pages/auth/Authform";
 import Loading from "./components/Loading";
 import ViewAdminLessonPlan from "./pages/admin/ViewAdminLessonPlan";
 import SubView from "./components/quatersub/Subview";
-import QuarterView from "./components/quaterview/quaterview";
+import QuarterView from "./components/quaterview/Quaterview";
 import ListSubmit from "./components/sectionpages/ViewLessoTeacherPlan";
 
 function App() {
