@@ -5,11 +5,9 @@ from django.contrib.auth.admin import UserAdmin
 
 # Register your models here.
 
-@admin.register(CustomUser)
-class CustomAdminUser(UserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
-
-    model = CustomUser
-
+admin.site.register(CustomUser)
 admin.site.register(LessonPlan)
+admin.site.register(ReviewedLessonPlan)
+admin.site.register(SchoolYear)
+admin.site.register(Quarter)
+admin.site.register(Notification)

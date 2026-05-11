@@ -26,12 +26,18 @@ SECRET_KEY = 'django-insecure-a2yjg2!e3t^#c7k+z70w61p!+v+562q4^)a6w(l1#*unn%2t^-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+ALLOWED_HOSTS = ["*",]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = ['http://localhost:5173', 'http://192.168.1.30:5173']
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
 # Application definition
@@ -62,6 +68,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -138,16 +146,16 @@ REST_FRAMEWORK={
         'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'accounts.authentication.CookieJWTAuthentication',
     ),
 }
 
 DJOSER = {
     "LOGIN_FIELD" : "email",
-    "USER_CREATE_PASSWORD_RETYPE" : True,
-    "USER_CHANGED_EMAIL_CONFIRMATION" : True,
-    "PASSWORD_CHANGED_EMAIL_CONFIRMATION" : True,
-    "SEND_CONFIRMATION_EMAIL" : True,
+    "USER_CREATE_PASSWORD_RETYPE" : False,
+    "USER_CHANGED_EMAIL_CONFIRMATION" : False,
+    "PASSWORD_CHANGED_EMAIL_CONFIRMATION" : False,
+    "SEND_CONFIRMATION_EMAIL" : False,
     "SET_USERNAME_RETYPE" : True,
     "SET_PASSWORD_RETYPE" : True,
     "PASSWORD_RESET_CONFIRM_URL" : 'api/password/reset/confirm/{uid}/{token}',
@@ -162,9 +170,11 @@ DJOSER = {
     },
 }
 
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "UPDATE_LAST_LOGIN": False,
@@ -179,8 +189,13 @@ SIMPLE_JWT = {
     "LEEWAY": 0,
 
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_COOKIE": "access",          
+    "AUTH_COOKIE_REFRESH": "refresh",
+    "AUTH_COOKIE_SECURE": False,       # True in production (HTTPS)
+    "AUTH_COOKIE_HTTP_ONLY": True,
+    "AUTH_COOKIE_SAMESITE": "Lax",
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
-    "USER_ID_FIELD": "id",
+    "USER_ID_FIELD": "UID",
     "USER_ID_CLAIM": "user_id",
     "USER_AUTHENTICATION_RULE": "rest_framework_simplejwt.authentication.default_user_authentication_rule",
     "ON_LOGIN_SUCCESS": "rest_framework_simplejwt.serializers.default_on_login_success",
