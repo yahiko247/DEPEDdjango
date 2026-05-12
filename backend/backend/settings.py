@@ -24,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-a2yjg2!e3t^#c7k+z70w61p!+v+562q4^)a6w(l1#*unn%2t^-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 
-ALLOWED_HOSTS = ["https://depe-ddjango.vercel.app",]  #I add the vercel url here
+ALLOWED_HOSTS = ["*",]  #I add the vercel url here
 
 CORS_ALLOW_CREDENTIALS = True
 
@@ -138,7 +138,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # I add this line for collectstatic
+# STATIC_ROOT = BASE_DIR / 'staticfiles'  # I add this line for collectstatic
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -192,7 +192,7 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_COOKIE": "access",          
     "AUTH_COOKIE_REFRESH": "refresh",
-    "AUTH_COOKIE_SECURE": True,       # True in production (HTTPS) #I change this from false to true
+    "AUTH_COOKIE_SECURE": False,       # True in production (HTTPS) #I change this from false to true
     "AUTH_COOKIE_HTTP_ONLY": True,
     "AUTH_COOKIE_SAMESITE": "Lax",
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZATION",
