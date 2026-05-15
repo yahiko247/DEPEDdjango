@@ -1,32 +1,52 @@
 import axios from "axios";
 
-const interceptorApi = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
-  withCredentials: true,
-});
-
 const api = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
 });
 
-interceptorApi.interceptors.response.use(
+let isRefreshing = false;
+let failedQueue = [];
+
+const processQueue = (error) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+    }
+  });
+};
+
+api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        }).then(() => {
+          return api(originalRequest);
+        });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
-        console.log("I'm hungry");
-        //add this route in the backend auth/jwt/refresh
         await api.post("/auth/jwt/refresh/");
-
-        return interceptorApi(originalRequest);
+        processQueue(null);
+        return new Promise((resolve) => {
+          setTimeout(() => {
+            resolve(api(originalRequest));
+          }, 50);
+        });
       } catch (e) {
-        console.error("Interceptor Error, Completely normal", e);
+        processQueue(e);
+        window.location.replace("/");
+        // console.error("Interceptor Error, Completely normal", e);
         return Promise.reject(e);
+      } finally {
+        isRefreshing = false;
       }
     }
 
@@ -34,4 +54,4 @@ interceptorApi.interceptors.response.use(
   },
 );
 
-export default interceptorApi;
+export default api;

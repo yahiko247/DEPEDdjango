@@ -71,12 +71,13 @@ class CreateAccessTokenRefreshView(TokenRefreshView):
 
         if not refresh:
             return Response({"error": "Refresh Token is required"}, status=status.HTTP_400_BAD_REQUEST)
+        
         request.data["refresh"] = refresh 
+
         response = super().post(request, *args, **kwargs)
+
         access = response.data.get("access")
         refresh = response.data.get("refresh")
-
-        
 
         new_response = Response ({"Success": "Refreshed Access Token"}, status=status.HTTP_200_OK)
 

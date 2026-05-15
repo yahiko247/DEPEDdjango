@@ -195,14 +195,13 @@ const ViewLessonPlan = () => {
           {/*Status Cards*/}
           <div className="grid grid-cols-2 lg:flex lg:flex-row w-full gap-6">
             {cardData.map((card) => (
-              <div key={card.index}>
-                <StatusCards
-                  title={card.title}
-                  icon={card.icon}
-                  data={counts[card.key]}
-                  colorClass={card.colorClass}
-                />
-              </div>
+              <StatusCards
+                key={card.index}
+                title={card.title}
+                icon={card.icon}
+                data={counts[card.key]}
+                colorClass={card.colorClass}
+              />
             ))}
           </div>
 
