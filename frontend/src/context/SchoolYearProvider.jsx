@@ -69,7 +69,7 @@ export const SchoolYearProvider = ({ children }) => {
         fetchQuarterDeadlines(data.year_id);
       }
     } catch (e) {
-      console.error(e);
+      console.error("School Year", e);
     } finally {
       setLoading(false);
     }

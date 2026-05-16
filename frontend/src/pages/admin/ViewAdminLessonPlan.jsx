@@ -28,6 +28,7 @@ import { useAuth } from "../../context/AuthContext.jsx";
 import "react-toastify/dist/ReactToastify.css";
 import SuccessAlert from "../../components/alerts/SuccessAlert.jsx";
 import { statCounts } from "../../api/principalApi.js";
+import { useAlerts } from "../../context/AlertsContext.jsx";
 
 const AppBar = styled(MuiAppBar)(({ theme }) => ({
   backgroundColor: "#2c8aad98",
@@ -143,6 +144,35 @@ const ViewLessonPlan = () => {
     return lessonPlans.filter((item) => item.quarter === activeTab);
   }, [lessonPlans, activeTab]);
 
+  //testing for mock notifs
+  const { setNotification, addNotification } = useAlerts();
+  const mockSuccessMessages = [
+    "Quarter 1 Lesson Plan approved!",
+    "Profile updated successfully.",
+    "System connected to Django backend.",
+  ];
+
+  const triggerRandomSuccess = () => {
+    const randomMsg =
+      mockSuccessMessages[
+        Math.floor(Math.random() * mockSuccessMessages.length)
+      ];
+    addNotification(randomMsg, "success");
+  };
+
+  const simulatePollingBurst = () => {
+    // This simulates 3 notifications arriving simultaneously from backend polling
+    addNotification("Polling: Checked for updates...", "success");
+
+    setTimeout(() => {
+      addNotification("Polling: Found new school year data!", "success");
+    }, 100); // 100ms later
+
+    setTimeout(() => {
+      addNotification("Polling ALERT: Admin modified Q2 deadline!", "error");
+    }, 200); // 200ms later
+  };
+
   return (
     <div className="flex flex-col w-screen h-screen">
       <CssBaseline />
@@ -160,6 +190,18 @@ const ViewLessonPlan = () => {
             onClick={() => setActiveSchoolYearDialog(true)}
           >
             Set Active School Year
+          </div>
+          <div
+            className="btn btn-outline text-xs w-30"
+            onClick={triggerRandomSuccess}
+          >
+            Test for Notif
+          </div>
+          <div
+            className="btn btn-outline text-xs w-30"
+            onClick={simulatePollingBurst}
+          >
+            Polling Burst
           </div>
 
           <IconButton

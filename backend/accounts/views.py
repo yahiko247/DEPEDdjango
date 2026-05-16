@@ -176,8 +176,7 @@ class SchoolYearView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         except Exception as e:
-
-            return Response({"error":e}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({"error":"Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
     def patch(self, request, year_id):
         role = request.user.role
