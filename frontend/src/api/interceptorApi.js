@@ -5,14 +5,23 @@ const api = axios.create({
   withCredentials: true,
 });
 
+const refreshApi = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
+  withCredentials: true,
+});
+
 let isRefreshing = false;
 let failedQueue = [];
 
-const processQueue = (error) => {
+const processQueue = (error, token = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
     }
   });
+  failedQueue = [];
 };
 
 api.interceptors.response.use(
@@ -21,6 +30,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
+      printlog;
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -33,13 +43,10 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post("/auth/jwt/refresh/");
+        await refreshApi.post("/auth/jwt/refresh/");
         processQueue(null);
-        return new Promise((resolve) => {
-          setTimeout(() => {
-            resolve(api(originalRequest));
-          }, 50);
-        });
+
+        return api(originalRequest);
       } catch (e) {
         processQueue(e);
         window.location.replace("/");

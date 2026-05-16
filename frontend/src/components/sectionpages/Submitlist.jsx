@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import { FaFileAlt } from "react-icons/fa"; // File icon from react-icons
 import PDFDialogTeacher from "../dialog/PDFDialogTeacher";
+import { MdDownload } from "../../icons/index.js";
 
 const QuarterSubmission = () => {
   const navigate = useNavigate();
@@ -12,6 +13,12 @@ const QuarterSubmission = () => {
   const submissions = location.state?.submissions || [];
 
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const reviewStatusStyles = {
+    Pending: "text-yellow-500",
+    Approved: "text-green-500",
+    Rejected: "text-red-500",
+  };
 
   useEffect(() => {
     console.log(quarter);
@@ -56,6 +63,8 @@ const QuarterSubmission = () => {
             const hasQR = sub.qr_code !== null;
             const isLate = sub.is_late;
             const lateLabel = isLate ? "Late" : "On Time";
+            const reviewClass =
+              reviewStatusStyles[sub.status] || "text-gray-500";
             const formattedDate = new Date(sub.created_at).toLocaleString(
               "en-US",
               {
@@ -73,8 +82,14 @@ const QuarterSubmission = () => {
                 className="w-full grid grid-cols-4 md:grid-cols-5 text-xs md:text-sm items-center justify-items-center text-black border border-gray-300 rounded-full h-12"
               >
                 <div className="hidden md:block">{formattedDate}</div>
-                <div>{lateLabel}</div>
-                <div>{sub.status}</div>
+                <div
+                  className={`${isLate ? "text-red-500" : "text-green-500"}`}
+                >
+                  {lateLabel}
+                </div>
+                <div className={`font-semibold ${reviewClass}`}>
+                  {sub.status}
+                </div>
                 <div
                   className="btn btn-outline text-xs md:text-sm h-6 w-10 md:h-8 md:w-12"
                   onClick={() => {
@@ -90,7 +105,7 @@ const QuarterSubmission = () => {
                   rel="noopener"
                   className={`text-xs md:text-sm ${hasQR ? "btn btn-outline h-6 w-auto md:h-8" : ""}`}
                 >
-                  {hasQR ? "Download" : "None"}
+                  {hasQR ? <MdDownload /> : "None"}
                 </a>
               </div>
             );

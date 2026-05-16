@@ -1,12 +1,14 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import SuccessAlert from "../components/alerts/SuccessAlert";
 import ErrorAlert from "../components/alerts/ErrorAlert";
+import Notifications from "../components/alerts/Notifications";
 
 const AlertsContext = createContext();
 
 export const AlertsProvider = ({ children }) => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     if (successMessage) {
@@ -38,6 +40,12 @@ export const AlertsProvider = ({ children }) => {
       {errorMessage && (
         <div className="toast toast-top toast-end z-1000">
           <ErrorAlert message={errorMessage} />
+        </div>
+      )}
+
+      {notification && (
+        <div className="toast toast-top toast-end z-1000">
+          <Notifications message={notification} />
         </div>
       )}
     </AlertsContext.Provider>
